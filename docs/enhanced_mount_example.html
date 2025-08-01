@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream - Enhanced Mount Points</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .mount-points-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .status-live {
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-fallback {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .quality-high {
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .quality-medium {
+            background: #f39c12;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .quality-standard {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 LegacyStream Audio Server</h1>
+            <p>Enhanced Mount Points Display</p>
+        </div>
+        
+        <div class="mount-points-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mount Point</th>
+                        <th>Server Type</th>
+                        <th>Protocol</th>
+                        <th>Format</th>
+                        <th>Quality</th>
+                        <th>Listeners</th>
+                        <th>Started</th>
+                        <th>Current Song</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>/live</strong></td>
+                        <td>LegacyStream Audio Server</td>
+                        <td>❄️ ICECAST</td>
+                        <td>MP3</td>
+                        <td><span class="quality-high">High</span></td>
+                        <td>42</td>
+                        <td>Jan 15, 2024 14:30</td>
+                        <td>Bohemian Rhapsody</td>
+                        <td><span class="status-live">Live</span></td>
+                        <td>
+                            <a href="/live" class="btn btn-primary">Listen</a>
+                            <a href="/live/status" class="btn btn-secondary">Details</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>/classic</strong></td>
+                        <td>LegacyStream Audio Server</td>
+                        <td>📢 SHOUTCAST</td>
+                        <td>MP3</td>
+                        <td><span class="quality-medium">Medium</span></td>
+                        <td>28</td>
+                        <td>Jan 15, 2024 15:45</td>
+                        <td>Hotel California</td>
+                        <td><span class="status-live">Live</span></td>
+                        <td>
+                            <a href="/classic" class="btn btn-primary">Listen</a>
+                            <a href="/classic/status" class="btn btn-secondary">Details</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>/backup</strong></td>
+                        <td>LegacyStream Audio Server</td>
+                        <td>❄️ ICECAST</td>
+                        <td>MP3</td>
+                        <td><span class="quality-standard">Standard</span></td>
+                        <td>15</td>
+                        <td>Jan 15, 2024 16:20</td>
+                        <td>Stairway to Heaven</td>
+                        <td><span class="status-fallback">Fallback</span></td>
+                        <td>
+                            <a href="/backup" class="btn btn-primary">Listen</a>
+                            <a href="/backup/status" class="btn btn-secondary">Details</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center; color: white;">
+            <h3>Enhanced Features</h3>
+            <p>• Server Type and Description Display</p>
+            <p>• Quality Indicators (High, Medium, Low, Standard)</p>
+            <p>• Started Time Information</p>
+            <p>• Comprehensive Stream Details</p>
+            <p>• Server Information and URLs</p>
+        </div>
+    </div>
+</body>
+</html> 
