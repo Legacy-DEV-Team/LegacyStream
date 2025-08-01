@@ -1,6 +1,7 @@
 #include "core/ServerManager.h"
 #include "core/Configuration.h"
 #include "core/Logger.h"
+#include "core/PerformanceManager.h"
 #include "streaming/HttpServer.h"
 #include "streaming/StreamManager.h"
 #include "streaming/RelayManager.h"
@@ -70,6 +71,12 @@ void ServerManager::initializeComponents()
 {
     auto& config = Configuration::instance();
     
+    // Initialize performance manager first
+    auto& perfManager = PerformanceManager::instance();
+    if (!perfManager.initialize()) {
+        throw std::runtime_error("Failed to initialize PerformanceManager");
+    }
+    
     // Initialize SSL manager first
     m_sslManager = std::make_unique<SSLManager>();
     m_certificateManager = std::make_unique<SSL::CertificateManager>();
@@ -112,6 +119,10 @@ void ServerManager::initializeComponents()
         m_shoutCastServer = std::make_unique<Protocols::SHOUTcastServer>();
         m_shoutCastServer->setStreamManager(m_streamManager.get());
     }
+    
+    // Start performance monitoring
+    perfManager.startResourceMonitoring();
+    perfManager.optimizeIOCP();
     
     // Connect signals
     connect(m_httpServer.get(), &HttpServer::connectionAccepted,
@@ -271,6 +282,10 @@ void ServerManager::shutdown()
         stopServers();
     }
     
+    // Stop performance monitoring
+    auto& perfManager = PerformanceManager::instance();
+    perfManager.stopResourceMonitoring();
+    
     // Clean up components
     m_webInterface.reset();
     m_statisticRelayManager.reset();
@@ -283,6 +298,9 @@ void ServerManager::shutdown()
     m_httpServer.reset();
     m_certificateManager.reset();
     m_sslManager.reset();
+    
+    // Shutdown performance manager
+    perfManager.shutdown();
     
     m_initialized.store(false);
     
@@ -305,9 +323,11 @@ ServerManager::ServerStats ServerManager::getStats() const
         stats.activeStreams = m_streamManager->getActiveStreamCount();
     }
     
-    // Get system stats (simplified - would need platform-specific implementation)
-    stats.cpuUsage = 0.0; // TODO: Implement CPU usage monitoring
-    stats.memoryUsage = 0.0; // TODO: Implement memory usage monitoring
+    // Get system stats from performance manager
+    auto& perfManager = PerformanceManager::instance();
+    auto perfStats = perfManager.getPerformanceStats();
+    stats.cpuUsage = perfStats.cpuUsage;
+    stats.memoryUsage = perfStats.memoryUsage;
     
     return stats;
 }

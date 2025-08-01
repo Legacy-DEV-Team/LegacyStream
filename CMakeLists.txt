@@ -23,11 +23,13 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(LEGACYSTREAM_CORE_SOURCES
     src/core/Configuration.cpp
     src/core/ServerManager.cpp
+    src/core/PerformanceManager.cpp
 )
 
 set(LEGACYSTREAM_CORE_HEADERS
     include/core/Configuration.h
     include/core/ServerManager.h
+    include/core/PerformanceManager.h
 )
 
 # GUI module
