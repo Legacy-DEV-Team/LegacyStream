@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - LegacyStream Documentation</title>
+    <meta name="description" content="Complete API documentation for LegacyStream server endpoints and WebSocket interfaces">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#documentation" class="nav-link">Documentation</a>
+                    <a href="index.html#api" class="nav-link">API</a>
+                    <a href="index.html#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header> 
+
+<main class="main-content">
+    <div class="content-header">
+        <h1>API Reference</h1>
+        <p>Complete API documentation for LegacyStream server endpoints and WebSocket interfaces.</p>
+    </div>
+
+    <div class="content-grid">
+        <aside class="content-sidebar">
+            <nav class="sidebar-nav">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#stream-endpoints">Stream Endpoints</a></li>
+                    <li><a href="#server-endpoints">Server Endpoints</a></li>
+                    <li><a href="#websocket-api">WebSocket API</a></li>
+                    <li><a href="#error-codes">Error Codes</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="content-main">
+            <section id="overview">
+                <h2>API Overview</h2>
+                <p>The LegacyStream API provides programmatic access to server statistics, stream management, and real-time monitoring capabilities.</p>
+                
+                <div class="info-box">
+                    <h4>Base URL</h4>
+                    <p>All API endpoints are relative to: <code>http://localhost:8000/api</code></p>
+                </div>
+
+                <h3>Response Format</h3>
+                <p>All API responses are returned in JSON format with the following structure:</p>
+                <pre class="code-block"><code>{
+  "success": true,
+  "data": {
+    // Response data here
+  },
+  "timestamp": "2024-01-15T10:30:00Z"
+}</code></pre>
+            </section>
+
+            <section id="authentication">
+                <h2>Authentication</h2>
+                <p>Most API endpoints require authentication using HTTP Basic Auth or API keys.</p>
+                
+                <h3>HTTP Basic Authentication</h3>
+                <pre class="code-block"><code>curl -u "admin:password" \
+  http://localhost:8000/api/server/stats</code></pre>
+
+                <h3>API Key Authentication</h3>
+                <pre class="code-block"><code>curl -H "X-API-Key: your-api-key" \
+  http://localhost:8000/api/server/stats</code></pre>
+            </section>
+
+            <section id="stream-endpoints">
+                <h2>Stream Endpoints</h2>
+                
+                <div class="api-endpoints">
+                    <div class="endpoint">
+                        <code>GET /api/streams</code>
+                        <span>List all active streams</span>
+                    </div>
+                    <div class="endpoint">
+                        <code>GET /api/streams/{mount}</code>
+                        <span>Get stream information</span>
+                    </div>
+                    <div class="endpoint">
+                        <code>POST /api/streams/{mount}/start</code>
+                        <span>Start a stream</span>
+                    </div>
+                    <div class="endpoint">
+                        <code>POST /api/streams/{mount}/stop</code>
+                        <span>Stop a stream</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="server-endpoints">
+                <h2>Server Endpoints</h2>
+                
+                <div class="api-endpoints">
+                    <div class="endpoint">
+                        <code>GET /api/server/stats</code>
+                        <span>Get server statistics</span>
+                    </div>
+                    <div class="endpoint">
+                        <code>GET /api/server/performance</code>
+                        <span>Get performance metrics</span>
+                    </div>
+                    <div class="endpoint">
+                        <code>POST /api/server/restart</code>
+                        <span>Restart the server</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="websocket-api">
+                <h2>WebSocket API</h2>
+                <p>Real-time updates are available via WebSocket connections.</p>
+                
+                <h3>Connection</h3>
+                <pre class="code-block"><code>const ws = new WebSocket('ws://localhost:8000/ws');
+
+ws.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log('Received:', data);
+};</code></pre>
+
+                <h3>Message Types</h3>
+                <div class="url-list">
+                    <div class="url-item">
+                        <strong>stream_update</strong>
+                        <code>{"type": "stream_update", "mount": "/live", "listeners": 1250}</code>
+                        <span class="description">Real-time stream statistics</span>
+                    </div>
+                    <div class="url-item">
+                        <strong>server_stats</strong>
+                        <code>{"type": "server_stats", "cpu": 45.2, "memory": 67.8}</code>
+                        <span class="description">Server performance metrics</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="error-codes">
+                <h2>Error Codes</h2>
+                
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Message</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>400</td>
+                            <td>Bad Request</td>
+                            <td>Invalid request parameters</td>
+                        </tr>
+                        <tr>
+                            <td>401</td>
+                            <td>Unauthorized</td>
+                            <td>Authentication required</td>
+                        </tr>
+                        <tr>
+                            <td>404</td>
+                            <td>Not Found</td>
+                            <td>Resource not found</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Internal Server Error</td>
+                            <td>Server error occurred</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>LegacyStream © 2025 All Rights Reserved.</p>
+                <p>Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

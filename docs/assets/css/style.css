@@ -189,6 +189,7 @@ a:hover {
 
 .btn-primary:hover {
     background-color: var(--accent-secondary);
+    color: white;
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
@@ -201,6 +202,7 @@ a:hover {
 
 .btn-secondary:hover {
     background-color: var(--bg-tertiary);
+    color: var(--text-primary);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
@@ -397,7 +399,6 @@ a:hover {
 /* Documentation Section */
 .documentation {
     padding: 6rem 0;
-    background-color: var(--bg-secondary);
 }
 
 .docs-grid {
@@ -486,7 +487,6 @@ a:hover {
 /* Download Section */
 .download {
     padding: 6rem 0;
-    background-color: var(--bg-secondary);
 }
 
 .download-options {
@@ -559,52 +559,106 @@ a:hover {
 
 /* Footer */
 .footer {
-    background-color: var(--bg-tertiary);
-    padding: 4rem 0 2rem;
+    padding: 2rem 0 1rem;
     border-top: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
 }
+
+
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .footer-section h3,
 .footer-section h4 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: var(--text-primary);
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.footer-section h3::after,
+.footer-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 1px;
 }
 
 .footer-section p {
     color: var(--text-secondary);
-    margin-bottom: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+    line-height: 1.7;
+    font-size: 0.95rem;
 }
 
 .footer-section ul {
     list-style: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 .footer-section ul li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.footer-section ul li:hover {
+    transform: translateX(5px);
 }
 
 .footer-section ul li a {
     color: var(--text-secondary);
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: inline-block;
+    padding: 0.25rem 0;
+    position: relative;
+}
+
+.footer-section ul li a::before {
+    content: '→';
+    margin-right: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: var(--accent-primary);
 }
 
 .footer-section ul li a:hover {
     color: var(--accent-primary);
 }
 
+.footer-section ul li a:hover::before {
+    opacity: 1;
+}
+
 .footer-bottom {
     text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
     color: var(--text-muted);
+    position: relative;
+    z-index: 1;
 }
+
+
 
 /* Documentation Layout */
 .main-content {

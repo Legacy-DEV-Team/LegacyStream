@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics & Monitoring - LegacyStream Documentation</title>
+    <meta name="description" content="Performance monitoring and statistic relay system for LegacyStream">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#documentation" class="nav-link">Documentation</a>
+                    <a href="index.html#api" class="nav-link">API</a>
+                    <a href="index.html#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <h3 class="sidebar-title">Table of Contents</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#overview" class="sidebar-link">Overview</a></li>
+                            <li><a href="#performance-monitoring" class="sidebar-link">Performance Monitoring</a></li>
+                            <li><a href="#statistic-relay" class="sidebar-link">Statistic Relay System</a></li>
+                            <li><a href="#web-interface-stats" class="sidebar-link">Web Interface Statistics</a></li>
+                            <li><a href="#api-endpoints" class="sidebar-link">API Endpoints</a></li>
+                            <li><a href="#configuration" class="sidebar-link">Configuration</a></li>
+                            <li><a href="#troubleshooting" class="sidebar-link">Troubleshooting</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Content -->
+                <div class="content">
+                    <section id="overview">
+                        <h1>Statistics & Monitoring</h1>
+                        <p>LegacyStream provides comprehensive monitoring and statistics capabilities to help you track server performance, stream health, and relay statistics to external services.</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3>Real-time Performance</h3>
+                                <p>Monitor CPU usage, memory consumption, and I/O performance in real-time</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Stream Analytics</h3>
+                                <p>Track listener counts, bitrates, and stream quality metrics</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Statistic Relay</h3>
+                                <p>Automatically relay statistics to external IceCast and SHOUTcast servers</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="performance-monitoring">
+                        <h2>Performance Monitoring</h2>
+                        <p>The PerformanceManager component provides comprehensive system monitoring and optimization capabilities.</p>
+
+                        <h3>System Metrics</h3>
+                        <p>Monitor the following system metrics in real-time:</p>
+                        <ul>
+                            <li><strong>CPU Usage:</strong> Current CPU utilization percentage</li>
+                            <li><strong>Memory Usage:</strong> RAM consumption and allocation patterns</li>
+                            <li><strong>I/O Performance:</strong> Network and disk I/O statistics</li>
+                            <li><strong>Thread Performance:</strong> Worker thread efficiency and load distribution</li>
+                        </ul>
+
+                        <h3>Performance Optimization</h3>
+                        <p>Automatic optimization features include:</p>
+                        <ul>
+                            <li><strong>Memory Pooling:</strong> Efficient memory allocation and deallocation</li>
+                            <li><strong>IOCP Optimization:</strong> Windows I/O Completion Port optimization</li>
+                            <li><strong>Buffer Management:</strong> Intelligent buffer sizing and recycling</li>
+                            <li><strong>Thread Management:</strong> Dynamic thread pool sizing</li>
+                        </ul>
+
+                        <div class="code-block">
+                            <h4>Performance Statistics Structure</h4>
+                            <pre><code class="language-cpp">struct PerformanceStats {
+    double cpuUsage;           // CPU usage percentage
+    double memoryUsage;        // Memory usage percentage
+    qint64 totalMemory;        // Total memory in bytes
+    qint64 availableMemory;    // Available memory in bytes
+    qint64 networkBytesIn;     // Network bytes received
+    qint64 networkBytesOut;    // Network bytes sent
+    int activeConnections;     // Active client connections
+    int workerThreads;         // Active worker threads
+    double avgResponseTime;    // Average response time in ms
+};</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="statistic-relay">
+                        <h2>Statistic Relay System</h2>
+                        <p>The statistic relay system automatically forwards stream statistics to external IceCast and SHOUTcast servers.</p>
+
+                        <h3>Supported Protocols</h3>
+                        <div class="protocol-grid">
+                            <div class="protocol-card">
+                                <h4>IceCast Relay</h4>
+                                <p>Relay statistics to IceCast servers with authentication</p>
+                                <ul>
+                                    <li>Host and port configuration</li>
+                                    <li>Username and password authentication</li>
+                                    <li>Mount point alias support</li>
+                                    <li>Automatic retry on failure</li>
+                                </ul>
+                            </div>
+                            <div class="protocol-card">
+                                <h4>SHOUTcast Relay</h4>
+                                <p>Relay statistics to SHOUTcast servers</p>
+                                <ul>
+                                    <li>Host and port configuration</li>
+                                    <li>Password authentication</li>
+                                    <li>Session ID support (v2)</li>
+                                    <li>Fallback authentication</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Configuration</h3>
+                        <p>Configure statistic relay in your configuration file:</p>
+                        <div class="code-block">
+                            <h4>Example Configuration</h4>
+                            <pre><code class="language-ini">[Server]
+Location=My Streaming Server
+Hostname=stream.example.com
+SourcePassword=sourcepass123
+RelayPassword=relaypass456
+AdminUsername=admin
+AdminPassword=adminpass789
+
+[StatisticRelay]
+Enabled=true
+UpdateInterval=30
+
+[IcecastRelay]
+Enabled=true
+Host=icecast.example.com
+Port=8001
+Username=admin
+Password=adminpass789
+Alias=/live
+
+[ShoutcastRelay]
+Enabled=true
+Host=shoutcast.example.com
+Port=8000
+Password=relaypass456
+SID=1</code></pre>
+                        </div>
+
+                        <h3>Authentication Fallback</h3>
+                        <p>The system uses a fallback authentication mechanism:</p>
+                        <ul>
+                            <li>If relay-specific credentials are not provided, global server credentials are used</li>
+                            <li>IceCast relay uses admin username/password from server settings</li>
+                            <li>SHOUTcast relay uses relay password from server settings</li>
+                            <li>Server hostname is automatically used for URL construction</li>
+                        </ul>
+                    </section>
+
+                    <section id="web-interface-stats">
+                        <h2>Web Interface Statistics</h2>
+                        <p>The web interface provides real-time statistics and monitoring capabilities.</p>
+
+                        <h3>Real-time Dashboard</h3>
+                        <p>Access comprehensive statistics through the web interface:</p>
+                        <ul>
+                            <li><strong>Server Statistics:</strong> CPU, memory, network usage</li>
+                            <li><strong>Stream Statistics:</strong> Listeners, bitrates, quality metrics</li>
+                            <li><strong>Mount Point Details:</strong> Server type, description, format, started time</li>
+                            <li><strong>Relay Status:</strong> Connection status and relay statistics</li>
+                        </ul>
+
+                        <h3>WebSocket Updates</h3>
+                        <p>Real-time updates via WebSocket connections:</p>
+                        <div class="code-block">
+                            <h4>WebSocket Message Format</h4>
+                            <pre><code class="language-json">{
+  "type": "stats_update",
+  "timestamp": 1640995200,
+  "data": {
+    "cpu_usage": 45.2,
+    "memory_usage": 67.8,
+    "active_connections": 125,
+    "total_listeners": 342,
+    "mount_points": [...]
+  }
+}</code></pre>
+                        </div>
+
+                        <h3>Analytics Dashboard</h3>
+                        <p>Advanced analytics and visualization features:</p>
+                        <ul>
+                            <li>Historical performance charts</li>
+                            <li>Listener trend analysis</li>
+                            <li>Stream quality metrics</li>
+                            <li>Relay performance monitoring</li>
+                        </ul>
+                    </section>
+
+                    <section id="api-endpoints">
+                        <h2>API Endpoints</h2>
+                        <p>Access statistics programmatically through REST API endpoints.</p>
+
+                        <h3>Server Statistics</h3>
+                        <div class="endpoint-grid">
+                            <div class="endpoint-card">
+                                <h4>GET /api/stats</h4>
+                                <p>Get comprehensive server statistics</p>
+                                <pre><code class="language-json">{
+  "cpu_usage": 45.2,
+  "memory_usage": 67.8,
+  "total_memory": 8589934592,
+  "available_memory": 2768240640,
+  "network_bytes_in": 1048576,
+  "network_bytes_out": 2097152,
+  "active_connections": 125,
+  "worker_threads": 8,
+  "avg_response_time": 12.5
+}</code></pre>
+                            </div>
+                            <div class="endpoint-card">
+                                <h4>GET /api/mountpoints</h4>
+                                <p>Get detailed mount point information</p>
+                                <pre><code class="language-json">[
+  {
+    "path": "/live",
+    "listeners": 45,
+    "bitrate": 128,
+    "format": "MP3",
+    "server_type": "IceCast",
+    "description": "Live Stream",
+    "started": "2024-01-01T12:00:00Z",
+    "quality": "High"
+  }
+]</code></pre>
+                            </div>
+                        </div>
+
+                        <h3>Relay Statistics</h3>
+                        <div class="endpoint-grid">
+                            <div class="endpoint-card">
+                                <h4>GET /api/relay/status</h4>
+                                <p>Get relay connection status</p>
+                                <pre><code class="language-json">{
+  "icecast": {
+    "connected": true,
+    "last_update": "2024-01-01T12:00:00Z",
+    "error_count": 0
+  },
+  "shoutcast": {
+    "connected": true,
+    "last_update": "2024-01-01T12:00:00Z",
+    "error_count": 0
+  }
+}</code></pre>
+                            </div>
+                            <div class="endpoint-card">
+                                <h4>GET /api/analytics</h4>
+                                <p>Get analytics data</p>
+                                <pre><code class="language-json">{
+  "listener_trends": [...],
+  "performance_metrics": [...],
+  "relay_statistics": [...]
+}</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="configuration">
+                        <h2>Configuration</h2>
+                        <p>Configure monitoring and statistics features through the configuration system.</p>
+
+                        <h3>Performance Settings</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Setting</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EnablePerformanceMonitoring</td>
+                                    <td>Enable real-time performance monitoring</td>
+                                    <td>true</td>
+                                </tr>
+                                <tr>
+                                    <td>PerformanceUpdateInterval</td>
+                                    <td>Performance stats update interval (seconds)</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>MemoryPoolSize</td>
+                                    <td>Memory pool size in MB</td>
+                                    <td>256</td>
+                                </tr>
+                                <tr>
+                                    <td>WorkerThreads</td>
+                                    <td>Number of worker threads</td>
+                                    <td>8</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Relay Settings</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Setting</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EnableStatisticRelay</td>
+                                    <td>Enable statistic relay system</td>
+                                    <td>false</td>
+                                </tr>
+                                <tr>
+                                    <td>RelayUpdateInterval</td>
+                                    <td>Relay update interval (seconds)</td>
+                                    <td>30</td>
+                                </tr>
+                                <tr>
+                                    <td>RelayRetryAttempts</td>
+                                    <td>Number of retry attempts on failure</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>RelayTimeout</td>
+                                    <td>Relay connection timeout (seconds)</td>
+                                    <td>10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section id="troubleshooting">
+                        <h2>Troubleshooting</h2>
+                        <p>Common issues and solutions for statistics and monitoring.</p>
+
+                        <h3>Performance Issues</h3>
+                        <div class="troubleshooting-grid">
+                            <div class="troubleshooting-card">
+                                <h4>High CPU Usage</h4>
+                                <p><strong>Symptoms:</strong> Server becomes unresponsive, high CPU utilization</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Reduce worker thread count</li>
+                                    <li>Increase memory pool size</li>
+                                    <li>Check for memory leaks</li>
+                                    <li>Optimize codec settings</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>Memory Issues</h4>
+                                <p><strong>Symptoms:</strong> Out of memory errors, slow performance</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Increase memory pool size</li>
+                                    <li>Enable memory compression</li>
+                                    <li>Check for memory leaks</li>
+                                    <li>Reduce buffer sizes</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Relay Issues</h3>
+                        <div class="troubleshooting-grid">
+                            <div class="troubleshooting-card">
+                                <h4>Connection Failures</h4>
+                                <p><strong>Symptoms:</strong> Relay statistics not updating</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Verify host and port settings</li>
+                                    <li>Check authentication credentials</li>
+                                    <li>Ensure network connectivity</li>
+                                    <li>Check firewall settings</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>Authentication Errors</h4>
+                                <p><strong>Symptoms:</strong> 401/403 errors from relay servers</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Verify username/password</li>
+                                    <li>Check credential fallback settings</li>
+                                    <li>Ensure proper permissions</li>
+                                    <li>Test with manual authentication</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Web Interface Issues</h3>
+                        <div class="troubleshooting-grid">
+                            <div class="troubleshooting-card">
+                                <h4>Statistics Not Updating</h4>
+                                <p><strong>Symptoms:</strong> Web interface shows stale data</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Check WebSocket connections</li>
+                                    <li>Verify update intervals</li>
+                                    <li>Check browser console for errors</li>
+                                    <li>Restart web interface</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>API Endpoint Errors</h4>
+                                <p><strong>Symptoms:</strong> 404/500 errors from API calls</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Verify endpoint URLs</li>
+                                    <li>Check server status</li>
+                                    <li>Review API documentation</li>
+                                    <li>Check authentication headers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>LegacyStream © 2025 All Rights Reserved.</p>
+                <p>Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance - LegacyStream Documentation</title>
+    <meta name="description" content="Optimization strategies and best practices for LegacyStream">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#documentation" class="nav-link">Documentation</a>
+                    <a href="index.html#api" class="nav-link">API</a>
+                    <a href="index.html#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <h3 class="sidebar-title">Table of Contents</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#overview" class="sidebar-link">Overview</a></li>
+                            <li><a href="#system-requirements" class="sidebar-link">System Requirements</a></li>
+                            <li><a href="#optimization-strategies" class="sidebar-link">Optimization Strategies</a></li>
+                            <li><a href="#memory-management" class="sidebar-link">Memory Management</a></li>
+                            <li><a href="#iocp-optimization" class="sidebar-link">IOCP Optimization</a></li>
+                            <li><a href="#network-optimization" class="sidebar-link">Network Optimization</a></li>
+                            <li><a href="#codec-optimization" class="sidebar-link">Codec Optimization</a></li>
+                            <li><a href="#monitoring-tools" class="sidebar-link">Monitoring Tools</a></li>
+                            <li><a href="#best-practices" class="sidebar-link">Best Practices</a></li>
+                            <li><a href="#troubleshooting" class="sidebar-link">Troubleshooting</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Content -->
+                <div class="content">
+                    <section id="overview">
+                        <h1>Performance Optimization</h1>
+                        <p>LegacyStream is designed for high-performance audio streaming with advanced optimization techniques. This guide covers strategies to maximize performance and minimize resource usage.</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3>Memory Pooling</h3>
+                                <p>Efficient memory allocation with pre-allocated pools</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>IOCP Optimization</h3>
+                                <p>Windows I/O Completion Port optimization for scalability</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Thread Management</h3>
+                                <p>Dynamic thread pool sizing and load balancing</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="system-requirements">
+                        <h2>System Requirements</h2>
+                        <p>Understanding the minimum and recommended system requirements for optimal performance.</p>
+
+                        <h3>Minimum Requirements</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Minimum</th>
+                                    <th>Recommended</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CPU</td>
+                                    <td>Dual-core 2.0 GHz</td>
+                                    <td>Quad-core 3.0 GHz+</td>
+                                </tr>
+                                <tr>
+                                    <td>RAM</td>
+                                    <td>4 GB</td>
+                                    <td>8 GB+</td>
+                                </tr>
+                                <tr>
+                                    <td>Storage</td>
+                                    <td>10 GB SSD</td>
+                                    <td>50 GB+ SSD</td>
+                                </tr>
+                                <tr>
+                                    <td>Network</td>
+                                    <td>100 Mbps</td>
+                                    <td>1 Gbps+</td>
+                                </tr>
+                                <tr>
+                                    <td>OS</td>
+                                    <td>Windows 10</td>
+                                    <td>Windows 11</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Performance Considerations</h3>
+                        <ul>
+                            <li><strong>CPU:</strong> More cores allow for better parallel processing of multiple streams</li>
+                            <li><strong>RAM:</strong> Higher memory capacity enables larger buffer pools and caching</li>
+                            <li><strong>Storage:</strong> SSD storage provides faster I/O operations for logging and caching</li>
+                            <li><strong>Network:</strong> Higher bandwidth supports more concurrent listeners</li>
+                        </ul>
+                    </section>
+
+                    <section id="optimization-strategies">
+                        <h2>Optimization Strategies</h2>
+                        <p>Key strategies for maximizing LegacyStream performance.</p>
+
+                        <h3>Resource Allocation</h3>
+                        <p>Optimal resource allocation based on your system capabilities:</p>
+                        <div class="code-block">
+                            <h4>Performance Configuration</h4>
+                            <pre><code class="language-ini">[Performance]
+# Memory pool size in MB (adjust based on available RAM)
+MemoryPoolSize=512
+
+# Number of worker threads (typically 2x CPU cores)
+WorkerThreads=8
+
+# I/O buffer size in KB
+IOBufferSize=64
+
+# Enable memory compression
+EnableMemoryCompression=true
+
+# Enable aggressive caching
+EnableAggressiveCaching=true
+
+# Network send buffer size in KB
+NetworkSendBuffer=128
+
+# Network receive buffer size in KB
+NetworkReceiveBuffer=128</code></pre>
+                        </div>
+
+                        <h3>Thread Pool Optimization</h3>
+                        <p>Optimal thread pool configuration:</p>
+                        <ul>
+                            <li><strong>I/O Threads:</strong> 2-4 threads for network I/O operations</li>
+                            <li><strong>Worker Threads:</strong> 2x CPU cores for stream processing</li>
+                            <li><strong>Background Threads:</strong> 1-2 threads for maintenance tasks</li>
+                            <li><strong>Total Threads:</strong> Should not exceed 2x CPU cores + 4</li>
+                        </ul>
+
+                        <h3>Buffer Management</h3>
+                        <p>Efficient buffer management strategies:</p>
+                        <ul>
+                            <li><strong>Pre-allocated Pools:</strong> Reduce memory allocation overhead</li>
+                            <li><strong>Buffer Recycling:</strong> Reuse buffers to minimize garbage collection</li>
+                            <li><strong>Size Optimization:</strong> Match buffer sizes to network MTU</li>
+                            <li><strong>Memory Alignment:</strong> Align buffers for optimal CPU access</li>
+                        </ul>
+                    </section>
+
+                    <section id="memory-management">
+                        <h2>Memory Management</h2>
+                        <p>Advanced memory management techniques for optimal performance.</p>
+
+                        <h3>Memory Pool Architecture</h3>
+                        <p>The MemoryPool component provides efficient memory allocation:</p>
+                        <div class="code-block">
+                            <h4>Memory Pool Configuration</h4>
+                            <pre><code class="language-cpp">struct MemoryPoolConfig {
+    size_t poolSize;           // Total pool size in bytes
+    size_t blockSize;          // Individual block size
+    size_t maxBlocks;          // Maximum number of blocks
+    bool enableCompression;    // Enable memory compression
+    bool enableRecycling;      // Enable block recycling
+    size_t alignment;          // Memory alignment in bytes
+};</code></pre>
+                        </div>
+
+                        <h3>Memory Optimization Techniques</h3>
+                        <div class="optimization-grid">
+                            <div class="optimization-card">
+                                <h4>Pool-based Allocation</h4>
+                                <p>Pre-allocate memory blocks of fixed sizes to avoid fragmentation</p>
+                                <ul>
+                                    <li>Reduces allocation overhead</li>
+                                    <li>Minimizes memory fragmentation</li>
+                                    <li>Improves cache locality</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Block Recycling</h4>
+                                <p>Reuse memory blocks instead of freeing and reallocating</p>
+                                <ul>
+                                    <li>Reduces garbage collection pressure</li>
+                                    <li>Maintains memory locality</li>
+                                    <li>Improves allocation speed</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Memory Compression</h4>
+                                <p>Compress unused memory to reduce physical RAM usage</p>
+                                <ul>
+                                    <li>Reduces memory pressure</li>
+                                    <li>Allows more concurrent streams</li>
+                                    <li>Minimal performance impact</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Memory Monitoring</h3>
+                        <p>Monitor memory usage to identify optimization opportunities:</p>
+                        <ul>
+                            <li><strong>Allocation Patterns:</strong> Track memory allocation frequency and sizes</li>
+                            <li><strong>Fragmentation:</strong> Monitor memory fragmentation levels</li>
+                            <li><strong>Cache Hit Rates:</strong> Track buffer cache efficiency</li>
+                            <li><strong>Memory Pressure:</strong> Monitor system memory availability</li>
+                        </ul>
+                    </section>
+
+                    <section id="iocp-optimization">
+                        <h2>IOCP Optimization</h2>
+                        <p>Windows I/O Completion Port optimization for maximum scalability.</p>
+
+                        <h3>IOCP Architecture</h3>
+                        <p>IOCP (I/O Completion Ports) provides efficient asynchronous I/O:</p>
+                        <div class="code-block">
+                            <h4>IOCP Configuration</h4>
+                            <pre><code class="language-cpp">struct IOCPConfig {
+    int maxConcurrentOperations;    // Maximum concurrent I/O operations
+    int threadPoolSize;             // IOCP thread pool size
+    int bufferSize;                 // I/O buffer size
+    bool enableScaling;             // Enable dynamic scaling
+    int scalingThreshold;           // Scaling threshold
+    int maxScalingFactor;           // Maximum scaling factor
+};</code></pre>
+                        </div>
+
+                        <h3>IOCP Optimization Strategies</h3>
+                        <div class="optimization-grid">
+                            <div class="optimization-card">
+                                <h4>Thread Pool Sizing</h4>
+                                <p>Optimal thread pool configuration for IOCP</p>
+                                <ul>
+                                    <li>Match thread count to CPU cores</li>
+                                    <li>Account for I/O wait time</li>
+                                    <li>Monitor thread utilization</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Buffer Management</h4>
+                                <p>Efficient buffer handling for IOCP operations</p>
+                                <ul>
+                                    <li>Pre-allocate I/O buffers</li>
+                                    <li>Use appropriate buffer sizes</li>
+                                    <li>Implement buffer pooling</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Scaling Optimization</h4>
+                                <p>Dynamic scaling based on load</p>
+                                <ul>
+                                    <li>Monitor completion rates</li>
+                                    <li>Adjust thread count dynamically</li>
+                                    <li>Balance CPU and I/O utilization</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>IOCP Best Practices</h3>
+                        <ul>
+                            <li><strong>Thread Affinity:</strong> Bind IOCP threads to specific CPU cores</li>
+                            <li><strong>Buffer Alignment:</strong> Align buffers for optimal CPU access</li>
+                            <li><strong>Completion Handling:</strong> Process completions in batches</li>
+                            <li><strong>Error Handling:</strong> Implement robust error recovery</li>
+                        </ul>
+                    </section>
+
+                    <section id="network-optimization">
+                        <h2>Network Optimization</h2>
+                        <p>Network performance optimization for high-throughput streaming.</p>
+
+                        <h3>Network Configuration</h3>
+                        <div class="code-block">
+                            <h4>Network Settings</h4>
+                            <pre><code class="language-ini">[Network]
+# TCP send buffer size in KB
+TCPSendBuffer=256
+
+# TCP receive buffer size in KB
+TCPReceiveBuffer=256
+
+# Enable TCP_NODELAY
+EnableTCPNoDelay=true
+
+# Enable TCP keep-alive
+EnableTCPKeepAlive=true
+
+# Keep-alive interval in seconds
+KeepAliveInterval=30
+
+# Maximum concurrent connections
+MaxConnections=1000
+
+# Connection timeout in seconds
+ConnectionTimeout=30
+
+# Enable connection pooling
+EnableConnectionPooling=true</code></pre>
+                        </div>
+
+                        <h3>Network Optimization Techniques</h3>
+                        <div class="optimization-grid">
+                            <div class="optimization-card">
+                                <h4>Buffer Optimization</h4>
+                                <p>Optimize network buffer sizes for your network</p>
+                                <ul>
+                                    <li>Match buffer size to network MTU</li>
+                                    <li>Use appropriate send/receive buffers</li>
+                                    <li>Enable TCP_NODELAY for low latency</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Connection Management</h4>
+                                <p>Efficient connection handling and pooling</p>
+                                <ul>
+                                    <li>Implement connection pooling</li>
+                                    <li>Use keep-alive connections</li>
+                                    <li>Implement connection limits</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Protocol Optimization</h4>
+                                <p>Optimize streaming protocols for performance</p>
+                                <ul>
+                                    <li>Use efficient codecs</li>
+                                    <li>Implement adaptive bitrate</li>
+                                    <li>Optimize metadata handling</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Bandwidth Management</h3>
+                        <ul>
+                            <li><strong>Quality Control:</strong> Adjust stream quality based on available bandwidth</li>
+                            <li><strong>Rate Limiting:</strong> Implement per-client rate limiting</li>
+                            <li><strong>Traffic Shaping:</strong> Prioritize audio traffic over other data</li>
+                            <li><strong>Compression:</strong> Use efficient audio compression algorithms</li>
+                        </ul>
+                    </section>
+
+                    <section id="codec-optimization">
+                        <h2>Codec Optimization</h2>
+                        <p>Audio codec optimization for quality and performance balance.</p>
+
+                        <h3>Codec Selection</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Codec</th>
+                                    <th>Quality</th>
+                                    <th>CPU Usage</th>
+                                    <th>Bandwidth</th>
+                                    <th>Best For</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MP3</td>
+                                    <td>Good</td>
+                                    <td>Low</td>
+                                    <td>128-320 kbps</td>
+                                    <td>Compatibility</td>
+                                </tr>
+                                <tr>
+                                    <td>AAC</td>
+                                    <td>Excellent</td>
+                                    <td>Medium</td>
+                                    <td>64-256 kbps</td>
+                                    <td>Quality</td>
+                                </tr>
+                                <tr>
+                                    <td>OGG Vorbis</td>
+                                    <td>Excellent</td>
+                                    <td>Medium</td>
+                                    <td>64-256 kbps</td>
+                                    <td>Open Source</td>
+                                </tr>
+                                <tr>
+                                    <td>FLAC</td>
+                                    <td>Lossless</td>
+                                    <td>High</td>
+                                    <td>500-1500 kbps</td>
+                                    <td>Archival</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Codec Optimization Strategies</h3>
+                        <div class="optimization-grid">
+                            <div class="optimization-card">
+                                <h4>Quality vs Performance</h4>
+                                <p>Balance audio quality with system performance</p>
+                                <ul>
+                                    <li>Use hardware acceleration when available</li>
+                                    <li>Optimize encoding parameters</li>
+                                    <li>Implement adaptive quality</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Bitrate Optimization</h4>
+                                <p>Optimize bitrates for different scenarios</p>
+                                <ul>
+                                    <li>Match bitrate to network capacity</li>
+                                    <li>Use variable bitrate encoding</li>
+                                    <li>Implement quality scaling</li>
+                                </ul>
+                            </div>
+                            <div class="optimization-card">
+                                <h4>Encoding Optimization</h4>
+                                <p>Optimize encoding process for performance</p>
+                                <ul>
+                                    <li>Use efficient encoding algorithms</li>
+                                    <li>Implement parallel encoding</li>
+                                    <li>Optimize buffer management</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="monitoring-tools">
+                        <h2>Monitoring Tools</h2>
+                        <p>Tools and techniques for monitoring performance and identifying bottlenecks.</p>
+
+                        <h3>Built-in Monitoring</h3>
+                        <p>LegacyStream provides comprehensive built-in monitoring:</p>
+                        <ul>
+                            <li><strong>Performance Dashboard:</strong> Real-time CPU, memory, and network metrics</li>
+                            <li><strong>Stream Analytics:</strong> Listener counts, bitrates, and quality metrics</li>
+                            <li><strong>Resource Monitoring:</strong> Memory pool usage and buffer statistics</li>
+                            <li><strong>Network Monitoring:</strong> Connection counts and bandwidth usage</li>
+                        </ul>
+
+                        <h3>External Monitoring</h3>
+                        <p>Additional monitoring tools and techniques:</p>
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card">
+                                <h4>System Monitoring</h4>
+                                <ul>
+                                    <li>Windows Performance Monitor</li>
+                                    <li>Resource Monitor</li>
+                                    <li>Task Manager</li>
+                                    <li>Process Explorer</li>
+                                </ul>
+                            </div>
+                            <div class="monitoring-card">
+                                <h4>Network Monitoring</h4>
+                                <ul>
+                                    <li>Wireshark</li>
+                                    <li>Netstat</li>
+                                    <li>Network Monitor</li>
+                                    <li>Bandwidth monitoring tools</li>
+                                </ul>
+                            </div>
+                            <div class="monitoring-card">
+                                <h4>Application Profiling</h4>
+                                <ul>
+                                    <li>Visual Studio Profiler</li>
+                                    <li>Intel VTune</li>
+                                    <li>PerfView</li>
+                                    <li>Custom profiling tools</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Performance Metrics</h3>
+                        <p>Key metrics to monitor for optimal performance:</p>
+                        <ul>
+                            <li><strong>CPU Usage:</strong> Should stay below 80% under normal load</li>
+                            <li><strong>Memory Usage:</strong> Monitor for memory leaks and fragmentation</li>
+                            <li><strong>Network I/O:</strong> Track bandwidth utilization and packet loss</li>
+                            <li><strong>Response Time:</strong> Monitor client connection response times</li>
+                            <li><strong>Error Rates:</strong> Track connection failures and timeouts</li>
+                        </ul>
+                    </section>
+
+                    <section id="best-practices">
+                        <h2>Best Practices</h2>
+                        <p>Proven strategies for achieving optimal performance with LegacyStream.</p>
+
+                        <h3>System Configuration</h3>
+                        <ul>
+                            <li><strong>Power Settings:</strong> Use "High Performance" power plan</li>
+                            <li><strong>Network Settings:</strong> Disable power management on network adapters</li>
+                            <li><strong>Storage:</strong> Use SSD storage for logs and cache</li>
+                            <li><strong>Memory:</strong> Ensure sufficient RAM for your workload</li>
+                        </ul>
+
+                        <h3>Application Configuration</h3>
+                        <ul>
+                            <li><strong>Thread Pool:</strong> Size based on CPU cores and workload</li>
+                            <li><strong>Memory Pools:</strong> Allocate based on available RAM</li>
+                            <li><strong>Network Buffers:</strong> Match to network capacity</li>
+                            <li><strong>Codec Settings:</strong> Balance quality and performance</li>
+                        </ul>
+
+                        <h3>Operational Practices</h3>
+                        <ul>
+                            <li><strong>Regular Monitoring:</strong> Monitor performance metrics continuously</li>
+                            <li><strong>Capacity Planning:</strong> Plan for peak usage scenarios</li>
+                            <li><strong>Backup Strategies:</strong> Implement redundancy for critical streams</li>
+                            <li><strong>Update Management:</strong> Keep system and application updated</li>
+                        </ul>
+
+                        <h3>Scaling Guidelines</h3>
+                        <div class="scaling-grid">
+                            <div class="scaling-card">
+                                <h4>Small Scale (1-100 listeners)</h4>
+                                <ul>
+                                    <li>Dual-core CPU, 4GB RAM</li>
+                                    <li>4-8 worker threads</li>
+                                    <li>256MB memory pool</li>
+                                    <li>100 Mbps network</li>
+                                </ul>
+                            </div>
+                            <div class="scaling-card">
+                                <h4>Medium Scale (100-1000 listeners)</h4>
+                                <ul>
+                                    <li>Quad-core CPU, 8GB RAM</li>
+                                    <li>8-16 worker threads</li>
+                                    <li>512MB memory pool</li>
+                                    <li>1 Gbps network</li>
+                                </ul>
+                            </div>
+                            <div class="scaling-card">
+                                <h4>Large Scale (1000+ listeners)</h4>
+                                <ul>
+                                    <li>8+ core CPU, 16GB+ RAM</li>
+                                    <li>16+ worker threads</li>
+                                    <li>1GB+ memory pool</li>
+                                    <li>10 Gbps network</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting">
+                        <h2>Troubleshooting</h2>
+                        <p>Common performance issues and their solutions.</p>
+
+                        <h3>Performance Issues</h3>
+                        <div class="troubleshooting-grid">
+                            <div class="troubleshooting-card">
+                                <h4>High CPU Usage</h4>
+                                <p><strong>Symptoms:</strong> Server becomes unresponsive, high CPU utilization</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Reduce worker thread count</li>
+                                    <li>Optimize codec settings</li>
+                                    <li>Check for memory leaks</li>
+                                    <li>Monitor for infinite loops</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>Memory Issues</h4>
+                                <p><strong>Symptoms:</strong> Out of memory errors, slow performance</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Increase memory pool size</li>
+                                    <li>Enable memory compression</li>
+                                    <li>Check for memory leaks</li>
+                                    <li>Reduce buffer sizes</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>Network Bottlenecks</h4>
+                                <p><strong>Symptoms:</strong> Dropped connections, poor audio quality</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Increase network buffer sizes</li>
+                                    <li>Optimize codec bitrates</li>
+                                    <li>Check network capacity</li>
+                                    <li>Implement rate limiting</li>
+                                </ul>
+                            </div>
+                            <div class="troubleshooting-card">
+                                <h4>I/O Performance</h4>
+                                <p><strong>Symptoms:</strong> Slow disk operations, high I/O wait</p>
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Use SSD storage</li>
+                                    <li>Optimize I/O buffer sizes</li>
+                                    <li>Implement I/O pooling</li>
+                                    <li>Monitor disk health</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Diagnostic Tools</h3>
+                        <p>Tools for diagnosing performance issues:</p>
+                        <ul>
+                            <li><strong>Performance Monitor:</strong> Track system resource usage</li>
+                            <li><strong>Event Viewer:</strong> Check for system errors and warnings</li>
+                            <li><strong>Resource Monitor:</strong> Monitor real-time resource usage</li>
+                            <li><strong>Network Monitor:</strong> Analyze network traffic patterns</li>
+                            <li><strong>Application Logs:</strong> Review application-specific logs</li>
+                        </ul>
+
+                        <h3>Performance Tuning</h3>
+                        <p>Systematic approach to performance tuning:</p>
+                        <ol>
+                            <li><strong>Baseline Measurement:</strong> Establish current performance baseline</li>
+                            <li><strong>Bottleneck Identification:</strong> Identify the limiting factor</li>
+                            <li><strong>Configuration Adjustment:</strong> Modify relevant settings</li>
+                            <li><strong>Testing:</strong> Measure performance impact</li>
+                            <li><strong>Iteration:</strong> Repeat until optimal performance</li>
+                        </ol>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>LegacyStream © 2025 All Rights Reserved.</p>
+                <p>Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 
