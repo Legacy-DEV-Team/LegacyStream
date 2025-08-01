@@ -497,30 +497,64 @@ a:hover {
 
 .download-card {
     background-color: var(--bg-primary);
-    padding: 2rem;
-    border-radius: 0.75rem;
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
     border: 1px solid var(--border-color);
     text-align: center;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.download-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .download-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+.download-card:hover::before {
+    opacity: 1;
 }
 
 .download-card h3 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .download-card p {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.download-card .btn {
+    margin-bottom: 1rem;
+    min-width: 200px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .download-card small {
     color: var(--text-muted);
     font-size: 0.875rem;
+    display: block;
+    margin-top: 0.5rem;
 }
 
 /* Footer */
