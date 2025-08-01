@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QWebSocketServer>
+#include <QWebSocket>
 #include <memory>
 
 namespace LegacyStream {
@@ -84,19 +86,32 @@ public:
     void setCustomJavaScript(const QString& js);
     void setCustomHTML(const QString& html);
 
+    // Interactive controls
+    void startStream(const QString& mountPoint);
+    void stopStream(const QString& mountPoint);
+    void restartStream(const QString& mountPoint);
+    void setStreamQuality(const QString& mountPoint, const QString& quality);
+    void setStreamBitrate(const QString& mountPoint, int bitrate);
+    void setStreamMetadata(const QString& mountPoint, const QString& title, const QString& artist);
+
     // Statistics and monitoring
     QJsonObject getMountPointsJson() const;
     QJsonObject getServerStatsJson() const;
     QJsonObject getRelayStatsJson() const;
+    QJsonObject getAnalyticsData() const;
     QString generateStatusPage() const;
     QString generateMountPointsPage() const;
     QString generateStreamPage(const QString& mountPoint) const;
+    QString generateAnalyticsPage() const;
+    QString generateMobilePage() const;
 
 signals:
     void mountPointAdded(const QString& mountPoint);
     void mountPointRemoved(const QString& mountPoint);
     void mountPointUpdated(const QString& mountPoint);
     void webInterfaceRequested(const QString& path, const QString& clientIP);
+    void streamControlRequested(const QString& mountPoint, const QString& action);
+    void analyticsDataUpdated(const QJsonObject& data);
 
 private slots:
     void onStreamConnected(const QString& mountPoint);
@@ -104,6 +119,13 @@ private slots:
     void onListenerConnected(const QString& mountPoint, const QString& clientIP);
     void onListenerDisconnected(const QString& mountPoint, const QString& clientIP);
     void updateStatistics();
+    
+    // WebSocket handling
+    void onWebSocketConnection();
+    void onWebSocketDisconnection();
+    void onWebSocketMessage(const QString& message);
+    void onWebSocketError(QAbstractSocket::SocketError error);
+    void broadcastToWebSockets(const QJsonObject& data);
 
 private:
     // HTTP request handlers
@@ -113,6 +135,9 @@ private:
     void handleStreamRequest(const QString& request, QString& response, QString& contentType);
     void handleApiRequest(const QString& request, QString& response, QString& contentType);
     void handleRelayApiRequest(const QString& request, QString& response, QString& contentType);
+    void handleAnalyticsRequest(const QString& request, QString& response, QString& contentType);
+    void handleMobileRequest(const QString& request, QString& response, QString& contentType);
+    void handleWebSocketRequest(const QString& request, QString& response, QString& contentType);
     void handleFaviconRequest(const QString& request, QString& response, QString& contentType);
     void handleCssRequest(const QString& request, QString& response, QString& contentType);
     void handleJsRequest(const QString& request, QString& response, QString& contentType);
@@ -123,12 +148,19 @@ private:
     QString generateStreamDetails(const QString& mountPoint) const;
     QString generatePlayerEmbed(const QString& mountPoint) const;
     QString generateStatisticsWidget() const;
+    QString generateAnalyticsWidget() const;
+    QString generateInteractiveControls(const QString& mountPoint) const;
+    QString generateMobileInterface() const;
     QString generateCustomHeader() const;
     QString generateCustomFooter() const;
 
     // CSS and JavaScript
     QString getDefaultCSS() const;
     QString getDefaultJavaScript() const;
+    QString getMobileCSS() const;
+    QString getMobileJavaScript() const;
+    QString getAnalyticsCSS() const;
+    QString getAnalyticsJavaScript() const;
     QString getCustomCSS() const;
     QString getCustomJavaScript() const;
 
@@ -139,11 +171,17 @@ private:
     QString getProtocolIcon(const QString& protocol) const;
     QString getCodecIcon(const QString& codec) const;
     QString escapeHtml(const QString& text) const;
+    QJsonObject createAnalyticsData() const;
+    QJsonObject createRealTimeData() const;
 
     // Component references
     HttpServer* m_httpServer = nullptr;
     StreamManager* m_streamManager = nullptr;
     StatisticRelay::StatisticRelayManager* m_statisticRelayManager = nullptr;
+
+    // WebSocket server
+    QWebSocketServer* m_webSocketServer = nullptr;
+    QList<QWebSocket*> m_webSocketClients;
 
     // Mount point data
     QMap<QString, MountPointInfo> m_mountPoints;
@@ -161,12 +199,21 @@ private:
     qint64 m_totalBytesServed = 0;
     qint64 m_serverUptime = 0;
 
+    // Analytics data
+    QJsonObject m_analyticsData;
+    QTimer* m_analyticsTimer;
+
     // Configuration
     bool m_enableWebInterface = true;
     bool m_enableRealTimeUpdates = true;
     bool m_enablePlayerEmbed = true;
     bool m_enableStatistics = true;
+    bool m_enableWebSockets = true;
+    bool m_enableInteractiveControls = true;
+    bool m_enableMobileResponsive = true;
+    bool m_enableAnalyticsDashboard = true;
     int m_updateInterval = 1000;  // milliseconds
+    int m_webSocketPort = 8081;   // WebSocket server port
 
     Q_DISABLE_COPY(WebInterface)
 };

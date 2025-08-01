@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find Qt6 components
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network Sql Charts)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network Sql Charts WebSockets)
 
 # Find OpenSSL
 find_package(OpenSSL REQUIRED)
@@ -122,7 +122,7 @@ add_library(LegacyStreamCodecs STATIC
 target_link_libraries(LegacyStreamCore Qt6::Core Qt6::Network)
 target_link_libraries(LegacyStreamGUI Qt6::Core Qt6::Widgets Qt6::Network)
 target_link_libraries(LegacyStreamSSL Qt6::Core OpenSSL::SSL OpenSSL::Crypto)
-target_link_libraries(LegacyStreamStreaming Qt6::Core Qt6::Network Qt6::Widgets)
+target_link_libraries(LegacyStreamStreaming Qt6::Core Qt6::Network Qt6::Widgets Qt6::WebSockets)
 target_link_libraries(LegacyStreamProtocols Qt6::Core Qt6::Network)
 target_link_libraries(LegacyStreamCodecs Qt6::Core)
 

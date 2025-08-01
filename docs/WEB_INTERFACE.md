@@ -2,323 +2,365 @@
 
 ## Overview
 
-LegacyStream includes a comprehensive web interface that runs on the streaming ports to display mount point information for IceCast and SHOUTcast protocols. This interface provides real-time statistics, stream management, and an embedded audio player for each mount point.
+The LegacyStream Web Interface provides a comprehensive, modern web-based user experience for managing and monitoring your audio streaming server. It features real-time updates, interactive controls, mobile-responsive design, and advanced analytics.
 
 ## Features
 
-### 🎵 Real-time Mount Point Display
-- **Enhanced Stream Information**: Shows all active mount points with server type, protocol, format, quality, and listener count
-- **Detailed Stream Data**: Server type, description, format, started time, bitrate, quality, listeners and more
-- **Current Track Display**: Real-time metadata showing current song, artist, album, and genre
-- **Stream Status**: Visual indicators for live streams vs fallback content
-- **Listener Statistics**: Peak listeners, current listeners, and bytes served
-- **Server Information**: Server name, genre, IRC, ICQ, AIM, and contact details
-- **URL Information**: Direct stream URLs, public URLs, and server URLs
+### 🌐 **Core Web Interface**
+- **Custom Web UX/UI** - Mount point display on IceCast/ShoutCast ports
+- **Enhanced Mount Point Display** - Server type, description, format, started time
+- **Quality Indicators** - Visual quality status with CSS styling
+- **Stream Details Page** - Comprehensive stream information display
+- **JSON API** - Programmatic access to server and stream statistics
+- **HTML5 Audio Player** - Embedded player within web interface
+- **Real-time Mount Point Updates** - Dynamic mount point information
+- **Server Information Display** - Location, hostname, metadata
+- **URL Information** - Stream URLs, public URLs, server URLs
 
-### 🎧 Embedded Audio Player
-- **HTML5 Audio Player**: Built-in player for each mount point
-- **Direct Stream URLs**: Easy access to stream URLs for external players
-- **Copy URL Functionality**: One-click copying of stream URLs
-- **Mobile Responsive**: Optimized for mobile devices and tablets
+### 🔄 **Real-time WebSocket Updates**
+- **Live Statistics** - Real-time updates without page refresh
+- **WebSocket Server** - Running on port 8081 by default
+- **Automatic Reconnection** - Handles connection drops gracefully
+- **JSON Data Streaming** - Structured data for easy consumption
+- **Client Management** - Multiple concurrent WebSocket connections
 
-### 📊 Real-time Statistics
-- **Server Overview**: Total streams, listeners, bytes served, and uptime
-- **Auto-refresh**: Statistics update every 5 seconds
-- **Visual Dashboard**: Modern, responsive design with gradient backgrounds
-- **Protocol Icons**: Visual indicators for IceCast (❄️) and SHOUTcast (📢)
+### 🎛️ **Interactive Controls**
+- **Stream Management** - Start, stop, restart streams via web interface
+- **Quality Settings** - Adjust stream quality (High, Medium, Low)
+- **Bitrate Control** - Set stream bitrate (32-320 kbps)
+- **Metadata Editing** - Update song title and artist information
+- **Real-time Feedback** - Immediate response to control actions
 
-### 🎨 Customizable Interface
-- **Custom CSS**: Ability to inject custom stylesheets
-- **Custom JavaScript**: Support for custom client-side functionality
-- **Custom HTML**: Custom header and footer content
-- **Theme Support**: Multiple theme options (planned)
+### 📱 **Mobile Responsive Design**
+- **Mobile-Optimized Interface** - Touch-friendly controls and navigation
+- **Responsive Layout** - Adapts to different screen sizes
+- **Mobile Navigation** - Tab-based navigation for mobile devices
+- **Touch Controls** - Large buttons and touch-friendly interactions
+- **Progressive Web App** - Can be installed on mobile devices
 
-## URL Structure
+### 📊 **Advanced Analytics Dashboard**
+- **Server Performance** - Real-time server metrics and statistics
+- **Listener Statistics** - Detailed listener analytics and trends
+- **Stream Analytics** - Individual stream performance data
+- **Network Usage** - Bandwidth and data transfer statistics
+- **Export Functionality** - Download analytics data as JSON
+- **Interactive Charts** - Visual representation of statistics
+
+## Pages and Routes
 
 ### Main Pages
-- **Root (`/`)**: Main dashboard with server overview and active streams
-- **Mount Points (`/mounts`)**: Detailed view of all mount points
-- **Status (`/status`)**: Server status and statistics
-
-### Stream Pages
-- **Stream Details (`/{mountpoint}`)**: Individual stream page with player and enhanced information
-- **Stream Status (`/{mountpoint}/status`)**: Detailed stream information including server details
-
-## Enhanced Mount Point Information
-
-The web interface now displays comprehensive information for each mount point:
-
-### Mount Points Table
-- **Server Type**: The type of server (e.g., "LegacyStream Audio Server")
-- **Protocol**: IceCast or SHOUTcast with visual icons
-- **Format**: Audio format (MP3, AAC, etc.)
-- **Quality**: Stream quality indicator (High, Medium, Low, Standard)
-- **Listeners**: Current listener count
-- **Started**: When the stream started
-- **Current Song**: Currently playing track
-- **Status**: Live or Fallback status
-
-### Stream Details Page
-- **Stream Overview**: Server type, description, quality, and status
-- **Technical Information**: Protocol, format, codec, bitrate, sample rate, channels
-- **Timing Information**: Started time, uptime
-- **Listener Information**: Current, peak, and maximum listeners
-- **Server Information**: Server name, genre, IRC, ICQ, AIM contact details
-- **URL Information**: Direct stream, public, and server URLs
-- **Current Track**: Song, artist, album, and genre information
-- **API Endpoints (`/api/*`)**: JSON endpoints for programmatic access
+- `/` - Main status page with server overview
+- `/mountpoints` - Mount points listing and management
+- `/analytics` - Advanced analytics dashboard
+- `/mobile` - Mobile-optimized interface
+- `/stream/{mountpoint}` - Individual stream details and controls
 
 ### API Endpoints
-- **`/api/stats`**: Server statistics in JSON format
-- **`/api/mounts`**: All mount points information
-- **`/api/mounts/{mountpoint}`**: Specific mount point details
+- `/api/stats` - Server statistics (GET)
+- `/api/mountpoints` - Mount points data (GET)
+- `/api/analytics` - Analytics data (GET)
+- `/api/relay` - Relay statistics (GET)
+- `/api/control` - Stream control (POST)
 
-## Interface Design
-
-### Modern UI Components
-
-#### Header Section
-```html
-<header class="header">
-    <h1>🎵 LegacyStream Audio Server</h1>
-    <p>High-Performance Audio Streaming Server</p>
-</header>
-```
-
-#### Statistics Widget
-```html
-<div class="stats-container">
-    <div class="stat-item">
-        <div class="stat-value">5</div>
-        <div class="stat-label">Active Streams</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-value">1,247</div>
-        <div class="stat-label">Total Listeners</div>
-    </div>
-    <!-- More stats... -->
-</div>
-```
-
-#### Mount Points Table
-```html
-<table>
-    <thead>
-        <tr>
-            <th>Mount Point</th>
-            <th>Protocol</th>
-            <th>Codec</th>
-            <th>Listeners</th>
-            <th>Current Song</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Dynamic content -->
-    </tbody>
-</table>
-```
-
-### Responsive Design
-
-The web interface is fully responsive and optimized for:
-- **Desktop**: Full-featured interface with all statistics
-- **Tablet**: Optimized layout with touch-friendly controls
-- **Mobile**: Simplified view with essential information
-
-### Color Scheme
-- **Primary**: Gradient blues (#667eea to #764ba2)
-- **Success**: Green (#27ae60) for live streams
-- **Warning**: Red (#e74c3c) for fallback streams
-- **Background**: Glassmorphism with backdrop blur
-
-## Integration with Streaming Protocols
-
-### IceCast Integration
-- **Protocol Detection**: Automatic detection of IceCast streams
-- **Metadata Support**: ICY metadata extraction and display
-- **Mount Point Management**: Dynamic mount point registration
-- **Listener Tracking**: Real-time listener count updates
-
-### SHOUTcast Integration
-- **v1/v2 Support**: Full compatibility with SHOUTcast protocols
-- **Legacy Client Support**: Maintains compatibility with older clients
-- **Directory Services**: Integration with SHOUTcast directory
-- **Metadata Injection**: Real-time metadata updates
+### WebSocket
+- `ws://hostname:8081` - Real-time data stream
 
 ## Configuration
 
 ### Web Interface Settings
 ```ini
 [WebInterface]
-Enabled=true
-UpdateInterval=1000
+EnableWebInterface=true
 EnableRealTimeUpdates=true
 EnablePlayerEmbed=true
 EnableStatistics=true
+EnableWebSockets=true
+EnableInteractiveControls=true
+EnableMobileResponsive=true
+EnableAnalyticsDashboard=true
+UpdateInterval=1000
+WebSocketPort=8081
+```
+
+### Customization
+```ini
+[WebInterface]
 CustomTheme=default
 CustomCSS=
 CustomJavaScript=
 CustomHTML=
 ```
 
-### Mount Point Configuration
-```ini
-[MountPoints]
-/live=icecast
-/radio=shoutcast
-/jazz=icecast
-/classical=shoutcast
+## Usage Examples
+
+### Accessing the Web Interface
+1. Start the LegacyStream server
+2. Open a web browser
+3. Navigate to `http://localhost:8080`
+4. The main status page will display
+
+### Using Interactive Controls
+1. Navigate to a stream page: `/stream/live`
+2. Use the control buttons to start/stop/restart streams
+3. Adjust quality settings using the dropdown
+4. Set bitrate using the number input
+5. Update metadata using the text inputs
+
+### Mobile Interface
+1. Navigate to `/mobile` on a mobile device
+2. Use the tab navigation to switch between sections
+3. Streams are displayed as cards with touch controls
+4. Statistics are optimized for mobile viewing
+
+### Analytics Dashboard
+1. Navigate to `/analytics`
+2. View real-time server performance metrics
+3. Monitor listener statistics and trends
+4. Export data using the export button
+5. Charts update automatically every 30 seconds
+
+### WebSocket Integration
+```javascript
+// Connect to WebSocket server
+const ws = new WebSocket('ws://localhost:8081');
+
+// Handle incoming messages
+ws.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log('Real-time update:', data);
+};
+
+// Send control commands
+ws.send(JSON.stringify({
+    action: 'controlStream',
+    mountPoint: '/live',
+    controlAction: 'start'
+}));
 ```
 
 ## API Reference
 
-### Mount Point Information Structure
+### Server Statistics API
 ```json
 {
-    "mountPoint": "/live",
-    "protocol": "icecast",
-    "codec": "mp3",
-    "bitrate": "128000",
-    "sampleRate": "44100",
-    "channels": "2",
-    "currentSong": "Bohemian Rhapsody",
-    "currentArtist": "Queen",
-    "currentAlbum": "A Night at the Opera",
-    "currentGenre": "Rock",
-    "listeners": 45,
-    "peakListeners": 67,
-    "bytesServed": 1234567890,
-    "uptime": 3600,
-    "isLive": true,
-    "hasFallback": true,
-    "fallbackFile": "fallback.mp3",
-    "lastUpdate": "2024-01-01T12:00:00Z"
+    "server": {
+        "uptime": 3600,
+        "totalListeners": 150,
+        "totalBytesServed": 1073741824,
+        "activeMountPoints": 3,
+        "peakListeners": 200
+    },
+    "mountPoints": [
+        {
+            "mountPoint": "/live",
+            "listeners": 50,
+            "peakListeners": 75,
+            "bytesServed": 536870912,
+            "uptime": 1800,
+            "quality": "High",
+            "isLive": true
+        }
+    ]
 }
 ```
 
-### Server Statistics Structure
+### Analytics API
 ```json
 {
-    "serverName": "LegacyStream Audio Server",
-    "serverVersion": "1.0.0",
-    "totalMountPoints": 5,
-    "totalListeners": 1247,
-    "totalBytesServed": "1234567890",
-    "serverUptime": 86400,
-    "formattedUptime": "1d 0h 0m 0s",
-    "formattedBytesServed": "1.15 GB"
-}
-```
-
-## Customization
-
-### Custom CSS Example
-```css
-/* Custom theme for dark mode */
-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    color: #ffffff;
-}
-
-.header {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-}
-
-.stat-item {
-    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
-}
-```
-
-### Custom JavaScript Example
-```javascript
-// Custom analytics tracking
-function trackStreamPlay(mountPoint) {
-    gtag('event', 'stream_play', {
-        'stream_name': mountPoint,
-        'protocol': getStreamProtocol(mountPoint)
-    });
-}
-
-// Custom player controls
-function addCustomControls() {
-    const audio = document.querySelector('audio');
-    if (audio) {
-        // Add custom controls
+    "server": {
+        "uptime": 3600,
+        "totalListeners": 150,
+        "totalBytesServed": 1073741824,
+        "activeMountPoints": 3,
+        "peakListeners": 200
+    },
+    "mountPoints": [
+        {
+            "mountPoint": "/live",
+            "listeners": 50,
+            "peakListeners": 75,
+            "bytesServed": 536870912,
+            "uptime": 1800,
+            "quality": "High",
+            "isLive": true
+        }
+    ],
+    "performance": {
+        "cpuUsage": 25.5,
+        "memoryUsage": 512,
+        "networkUsage": 1024
     }
 }
 ```
 
-## Security Features
+### Control API
+```json
+// POST /api/control
+{
+    "mountPoint": "/live",
+    "action": "start"
+}
 
-### Input Validation
-- **HTML Escaping**: All user-generated content is properly escaped
-- **URL Validation**: Mount point URLs are validated before processing
-- **XSS Protection**: Comprehensive protection against cross-site scripting
+// Response
+{
+    "status": "success",
+    "action": "start",
+    "mountPoint": "/live"
+}
+```
 
-### Access Control
-- **IP-based Restrictions**: Configurable IP allow/deny lists
-- **Rate Limiting**: Protection against abuse and DDoS
-- **SSL/TLS Support**: Full HTTPS support with certificate management
+## WebSocket Messages
 
-## Performance Optimization
+### Real-time Updates
+```json
+{
+    "type": "realTimeUpdate",
+    "timestamp": "2024-01-01T12:00:00Z",
+    "serverStats": { ... },
+    "mountPoints": { ... },
+    "analytics": { ... }
+}
+```
 
-### Caching Strategy
-- **Static Content**: CSS, JavaScript, and images are cached
-- **Dynamic Content**: JSON API responses are cached briefly
-- **HTML Generation**: Templates are pre-compiled for efficiency
+### Control Commands
+```json
+{
+    "action": "controlStream",
+    "mountPoint": "/live",
+    "controlAction": "start"
+}
+```
 
-### Memory Management
-- **Efficient Data Structures**: Optimized for high-frequency updates
-- **Connection Pooling**: Reuse of HTTP connections
-- **Buffer Management**: Efficient handling of large responses
+### Control Response
+```json
+{
+    "type": "controlResponse",
+    "mountPoint": "/live",
+    "action": "start",
+    "status": "success"
+}
+```
+
+## CSS Classes
+
+### Mobile Interface
+- `.mobile-container` - Main mobile container
+- `.mobile-header` - Mobile header with gradient background
+- `.mobile-nav` - Navigation tabs
+- `.nav-btn` - Navigation button
+- `.mobile-section` - Content sections
+- `.stream-card` - Stream information cards
+
+### Analytics Dashboard
+- `.analytics-container` - Main analytics container
+- `.analytics-header` - Dashboard header
+- `.analytics-grid` - Grid layout for charts
+- `.analytics-card` - Individual chart containers
+- `.chart-container` - Chart display areas
+- `.analytics-details` - Detailed statistics section
+
+### Interactive Controls
+- `.interactive-controls` - Control panel container
+- `.control-group` - Group of related controls
+- `.control-buttons` - Button container
+- `.control-btn` - Individual control buttons
+- `.status-indicator` - Stream status display
+- `.status-dot` - Status indicator dot
+
+## JavaScript Functions
+
+### Mobile Interface
+- `showSection(sectionId)` - Switch between mobile sections
+- `controlStream(mountPoint, action)` - Send stream control commands
+- `updateMobileInterface(data)` - Update mobile interface with WebSocket data
+
+### Analytics Dashboard
+- `refreshAnalytics()` - Fetch latest analytics data
+- `updateCharts()` - Update all dashboard charts
+- `exportData()` - Export analytics data as JSON
+- `formatDuration(seconds)` - Format duration for display
+- `formatBytes(bytes)` - Format bytes for display
+
+### WebSocket Integration
+- `connectWebSocket()` - Establish WebSocket connection
+- `handleWebSocketMessage(event)` - Process incoming WebSocket messages
+- `sendWebSocketCommand(command)` - Send commands via WebSocket
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Web Interface Not Loading
-```
-Error: Web interface not accessible
-Solution: Check if web interface is enabled in configuration
-```
+**WebSocket Connection Failed**
+- Check if WebSocket server is running on port 8081
+- Verify firewall settings allow WebSocket connections
+- Ensure browser supports WebSocket protocol
 
-#### Mount Points Not Displaying
-```
-Error: No mount points shown
-Solution: Verify stream manager is running and streams are active
-```
+**Mobile Interface Not Responsive**
+- Check viewport meta tag is present
+- Verify CSS media queries are working
+- Test on different mobile devices
 
-#### Statistics Not Updating
-```
-Error: Statistics remain static
-Solution: Check update interval and ensure timer is running
-```
+**Analytics Dashboard Not Loading**
+- Check if analytics data is being generated
+- Verify API endpoints are accessible
+- Check browser console for JavaScript errors
 
-### Debug Information
-- **Log Level**: Set to DEBUG for detailed web interface logs
-- **Network Monitoring**: Monitor HTTP requests and responses
-- **Performance Metrics**: Track response times and memory usage
+**Interactive Controls Not Working**
+- Verify WebSocket connection is established
+- Check if stream manager is properly initialized
+- Ensure control permissions are set correctly
+
+### Performance Optimization
+
+**High Memory Usage**
+- Reduce update interval for real-time updates
+- Limit number of concurrent WebSocket connections
+- Optimize analytics data generation
+
+**Slow Page Load**
+- Enable compression for static files
+- Optimize CSS and JavaScript files
+- Use CDN for external resources
+
+**WebSocket Lag**
+- Increase WebSocket buffer size
+- Optimize JSON data structure
+- Reduce update frequency if needed
+
+## Security Considerations
+
+### WebSocket Security
+- WebSocket server runs on separate port (8081)
+- No authentication required for basic functionality
+- Consider implementing authentication for production use
+
+### API Security
+- API endpoints are publicly accessible
+- No rate limiting implemented
+- Consider adding authentication and rate limiting
+
+### Mobile Security
+- Mobile interface uses same security as main interface
+- HTTPS recommended for production deployment
+- Consider implementing certificate pinning
 
 ## Future Enhancements
 
 ### Planned Features
-1. **Advanced Analytics**: Detailed listener demographics and behavior
-2. **Custom Themes**: Multiple pre-built themes and theme builder
-3. **Mobile App**: Companion mobile application
-4. **WebSocket Support**: Real-time updates via WebSocket
-5. **Plugin System**: Extensible interface with plugin support
+- **Authentication System** - User login and role-based access
+- **Advanced Charts** - Interactive charts with zoom and pan
+- **Custom Themes** - User-selectable interface themes
+- **Push Notifications** - Browser notifications for events
+- **Offline Support** - Service worker for offline functionality
+- **PWA Features** - Installable web app with offline capabilities
 
 ### Performance Improvements
-1. **CDN Integration**: Global content distribution
-2. **Compression**: Gzip/Brotli compression for faster loading
-3. **Image Optimization**: WebP support and lazy loading
-4. **Service Worker**: Offline support and caching
+- **WebSocket Compression** - Compress WebSocket messages
+- **Caching Strategy** - Implement intelligent caching
+- **Lazy Loading** - Load components on demand
+- **Code Splitting** - Split JavaScript into smaller chunks
 
-## Conclusion
+---
 
-The LegacyStream web interface provides a comprehensive, modern, and user-friendly way to monitor and interact with audio streams. It combines real-time statistics, embedded players, and customizable design to create a professional streaming server experience.
-
-The interface is designed to be both functional for administrators and accessible for end users, making it an essential component of the LegacyStream audio streaming server. 
+*Last Updated: [Current Date]*
+*Version: 2.0* 

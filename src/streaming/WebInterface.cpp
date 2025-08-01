@@ -14,6 +14,7 @@
 #include <QUrlQuery>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QHostAddress>
 
 Q_LOGGING_CATEGORY(webInterface, "webInterface")
 
@@ -58,6 +59,28 @@ bool WebInterface::initialize(HttpServer* httpServer, StreamManager* streamManag
     connect(m_statsTimer, &QTimer::timeout, this, &WebInterface::updateStatistics);
     m_statsTimer->start();
 
+    // Initialize WebSocket server if enabled
+    if (m_enableWebSockets) {
+        m_webSocketServer = new QWebSocketServer("LegacyStream WebSocket", QWebSocketServer::NonSecureMode, this);
+        if (m_webSocketServer->listen(QHostAddress::Any, m_webSocketPort)) {
+            connect(m_webSocketServer, &QWebSocketServer::newConnection,
+                    this, &WebInterface::onWebSocketConnection);
+            qCInfo(webInterface) << "WebSocket server started on port" << m_webSocketPort;
+        } else {
+            qCWarning(webInterface) << "Failed to start WebSocket server on port" << m_webSocketPort;
+        }
+    }
+
+    // Initialize analytics timer
+    m_analyticsTimer = new QTimer(this);
+    m_analyticsTimer->setInterval(5000); // Update analytics every 5 seconds
+    connect(m_analyticsTimer, &QTimer::timeout, [this]() {
+        m_analyticsData = createAnalyticsData();
+        emit analyticsDataUpdated(m_analyticsData);
+        broadcastToWebSockets(m_analyticsData);
+    });
+    m_analyticsTimer->start();
+
     qCInfo(webInterface) << "WebInterface initialized successfully";
     return true;
 }
@@ -66,6 +89,24 @@ void WebInterface::shutdown()
 {
     if (m_statsTimer) {
         m_statsTimer->stop();
+    }
+    
+    if (m_analyticsTimer) {
+        m_analyticsTimer->stop();
+    }
+    
+    // Clean up WebSocket server
+    if (m_webSocketServer) {
+        // Close all client connections
+        for (QWebSocket* client : m_webSocketClients) {
+            client->close();
+            client->deleteLater();
+        }
+        m_webSocketClients.clear();
+        
+        m_webSocketServer->close();
+        m_webSocketServer->deleteLater();
+        m_webSocketServer = nullptr;
     }
     
     m_mountPoints.clear();
@@ -1427,6 +1468,601 @@ QString WebInterface::escapeHtml(const QString& text) const
     escaped.replace("\"", "&quot;");
     escaped.replace("'", "&#39;");
     return escaped;
+}
+
+// WebSocket handling methods
+void WebInterface::onWebSocketConnection()
+{
+    QWebSocket* client = m_webSocketServer->nextPendingConnection();
+    if (client) {
+        connect(client, &QWebSocket::textMessageReceived,
+                this, &WebInterface::onWebSocketMessage);
+        connect(client, &QWebSocket::disconnected,
+                this, &WebInterface::onWebSocketDisconnection);
+        connect(client, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::error),
+                this, &WebInterface::onWebSocketError);
+        
+        m_webSocketClients.append(client);
+        
+        // Send initial data to the new client
+        QJsonObject initialData = createRealTimeData();
+        client->sendTextMessage(QJsonDocument(initialData).toJson());
+        
+        qCInfo(webInterface) << "WebSocket client connected. Total clients:" << m_webSocketClients.size();
+    }
+}
+
+void WebInterface::onWebSocketDisconnection()
+{
+    QWebSocket* client = qobject_cast<QWebSocket*>(sender());
+    if (client) {
+        m_webSocketClients.removeOne(client);
+        client->deleteLater();
+        qCInfo(webInterface) << "WebSocket client disconnected. Total clients:" << m_webSocketClients.size();
+    }
+}
+
+void WebInterface::onWebSocketMessage(const QString& message)
+{
+    QWebSocket* client = qobject_cast<QWebSocket*>(sender());
+    if (!client) return;
+    
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8(), &error);
+    if (error.error != QJsonParseError::NoError) {
+        qCWarning(webInterface) << "Invalid JSON from WebSocket client:" << error.errorString();
+        return;
+    }
+    
+    QJsonObject request = doc.object();
+    QString action = request["action"].toString();
+    QString mountPoint = request["mountPoint"].toString();
+    
+    if (action == "getStats") {
+        QJsonObject stats = createRealTimeData();
+        client->sendTextMessage(QJsonDocument(stats).toJson());
+    } else if (action == "controlStream") {
+        QString controlAction = request["controlAction"].toString();
+        emit streamControlRequested(mountPoint, controlAction);
+        
+        // Send confirmation
+        QJsonObject response;
+        response["type"] = "controlResponse";
+        response["mountPoint"] = mountPoint;
+        response["action"] = controlAction;
+        response["status"] = "success";
+        client->sendTextMessage(QJsonDocument(response).toJson());
+    }
+}
+
+void WebInterface::onWebSocketError(QAbstractSocket::SocketError error)
+{
+    QWebSocket* client = qobject_cast<QWebSocket*>(sender());
+    if (client) {
+        qCWarning(webInterface) << "WebSocket error:" << error << "for client:" << client->peerAddress();
+    }
+}
+
+void WebInterface::broadcastToWebSockets(const QJsonObject& data)
+{
+    if (m_webSocketClients.isEmpty()) return;
+    
+    QByteArray message = QJsonDocument(data).toJson();
+    for (QWebSocket* client : m_webSocketClients) {
+        if (client->state() == QAbstractSocket::ConnectedState) {
+            client->sendTextMessage(message);
+        }
+    }
+}
+
+// Interactive control methods
+void WebInterface::startStream(const QString& mountPoint)
+{
+    if (m_streamManager) {
+        emit streamControlRequested(mountPoint, "start");
+        qCInfo(webInterface) << "Stream control: Start" << mountPoint;
+    }
+}
+
+void WebInterface::stopStream(const QString& mountPoint)
+{
+    if (m_streamManager) {
+        emit streamControlRequested(mountPoint, "stop");
+        qCInfo(webInterface) << "Stream control: Stop" << mountPoint;
+    }
+}
+
+void WebInterface::restartStream(const QString& mountPoint)
+{
+    if (m_streamManager) {
+        emit streamControlRequested(mountPoint, "restart");
+        qCInfo(webInterface) << "Stream control: Restart" << mountPoint;
+    }
+}
+
+void WebInterface::setStreamQuality(const QString& mountPoint, const QString& quality)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint].quality = quality;
+        emit mountPointUpdated(mountPoint);
+        qCInfo(webInterface) << "Stream quality set:" << mountPoint << "->" << quality;
+    }
+}
+
+void WebInterface::setStreamBitrate(const QString& mountPoint, int bitrate)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint].bitrate = QString::number(bitrate);
+        emit mountPointUpdated(mountPoint);
+        qCInfo(webInterface) << "Stream bitrate set:" << mountPoint << "->" << bitrate;
+    }
+}
+
+void WebInterface::setStreamMetadata(const QString& mountPoint, const QString& title, const QString& artist)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint].currentSong = title;
+        m_mountPoints[mountPoint].currentArtist = artist;
+        emit mountPointUpdated(mountPoint);
+        qCInfo(webInterface) << "Stream metadata set:" << mountPoint << "->" << title << "by" << artist;
+    }
+}
+
+// Analytics and real-time data methods
+QJsonObject WebInterface::getAnalyticsData() const
+{
+    return m_analyticsData;
+}
+
+QJsonObject WebInterface::createAnalyticsData() const
+{
+    QJsonObject analytics;
+    
+    // Server statistics
+    QJsonObject serverStats;
+    serverStats["uptime"] = m_serverUptime;
+    serverStats["totalListeners"] = m_totalListeners;
+    serverStats["totalBytesServed"] = m_totalBytesServed;
+    serverStats["activeMountPoints"] = m_mountPoints.size();
+    serverStats["peakListeners"] = 0; // TODO: Track peak listeners
+    
+    analytics["server"] = serverStats;
+    
+    // Mount point statistics
+    QJsonArray mountStats;
+    for (auto it = m_mountPoints.constBegin(); it != m_mountPoints.constEnd(); ++it) {
+        QJsonObject mountStat;
+        mountStat["mountPoint"] = it.key();
+        mountStat["listeners"] = it.value().listeners;
+        mountStat["peakListeners"] = it.value().peakListeners;
+        mountStat["bytesServed"] = it.value().bytesServed;
+        mountStat["uptime"] = it.value().uptime;
+        mountStat["quality"] = it.value().quality;
+        mountStat["isLive"] = it.value().isLive;
+        mountStats.append(mountStat);
+    }
+    analytics["mountPoints"] = mountStats;
+    
+    // Performance metrics
+    QJsonObject performance;
+    performance["cpuUsage"] = 0; // TODO: Get from PerformanceManager
+    performance["memoryUsage"] = 0; // TODO: Get from PerformanceManager
+    performance["networkUsage"] = 0; // TODO: Calculate network usage
+    analytics["performance"] = performance;
+    
+    return analytics;
+}
+
+QJsonObject WebInterface::createRealTimeData() const
+{
+    QJsonObject realTime;
+    realTime["type"] = "realTimeUpdate";
+    realTime["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    realTime["serverStats"] = getServerStatsJson();
+    realTime["mountPoints"] = getMountPointsJson();
+    realTime["analytics"] = createAnalyticsData();
+    
+    return realTime;
+}
+
+// New page generation methods
+QString WebInterface::generateAnalyticsPage() const
+{
+    QString html = R"(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream Analytics</title>
+    <style>
+        )" + getAnalyticsCSS() + R"(
+    </style>
+</head>
+<body>
+    <div class="analytics-container">
+        <header class="analytics-header">
+            <h1>📊 LegacyStream Analytics Dashboard</h1>
+            <div class="analytics-controls">
+                <button id="refreshBtn" onclick="refreshAnalytics()">🔄 Refresh</button>
+                <button id="exportBtn" onclick="exportData()">📥 Export</button>
+            </div>
+        </header>
+        
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <h3>📈 Server Performance</h3>
+                <div id="serverPerformance" class="chart-container"></div>
+            </div>
+            
+            <div class="analytics-card">
+                <h3>👥 Listener Statistics</h3>
+                <div id="listenerStats" class="chart-container"></div>
+            </div>
+            
+            <div class="analytics-card">
+                <h3>🎵 Stream Analytics</h3>
+                <div id="streamAnalytics" class="chart-container"></div>
+            </div>
+            
+            <div class="analytics-card">
+                <h3>🌐 Network Usage</h3>
+                <div id="networkUsage" class="chart-container"></div>
+            </div>
+        </div>
+        
+        <div class="analytics-details">
+            <h3>📋 Detailed Statistics</h3>
+            <div id="detailedStats"></div>
+        </div>
+    </div>
+    
+    <script>
+        )" + getAnalyticsJavaScript() + R"(
+    </script>
+</body>
+</html>
+    )";
+    
+    return html;
+}
+
+QString WebInterface::generateMobilePage() const
+{
+    QString html = R"(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream Mobile</title>
+    <style>
+        )" + getMobileCSS() + R"(
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <header class="mobile-header">
+            <h1>🎵 LegacyStream</h1>
+            <div class="mobile-status" id="connectionStatus">🟢 Connected</div>
+        </header>
+        
+        <nav class="mobile-nav">
+            <button class="nav-btn active" onclick="showSection('streams')">📻 Streams</button>
+            <button class="nav-btn" onclick="showSection('stats')">📊 Stats</button>
+            <button class="nav-btn" onclick="showSection('controls')">🎛️ Controls</button>
+        </nav>
+        
+        <main class="mobile-content">
+            <section id="streams" class="mobile-section active">
+                <div id="mobileStreamsList"></div>
+            </section>
+            
+            <section id="stats" class="mobile-section">
+                <div id="mobileStats"></div>
+            </section>
+            
+            <section id="controls" class="mobile-section">
+                <div id="mobileControls"></div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        )" + getMobileJavaScript() + R"(
+    </script>
+</body>
+</html>
+    )";
+    
+    return html;
+}
+
+QString WebInterface::generateInteractiveControls(const QString& mountPoint) const
+{
+    if (!m_mountPoints.contains(mountPoint)) {
+        return "<p>Mount point not found</p>";
+    }
+    
+    const MountPointInfo& info = m_mountPoints[mountPoint];
+    
+    QString html = R"(
+    <div class="interactive-controls">
+        <h3>🎛️ Stream Controls</h3>
+        
+        <div class="control-group">
+            <label>Stream Status:</label>
+            <div class="status-indicator">
+                <span class="status-dot )" + (info.isLive ? "live" : "offline") + R"("></span>
+                <span class="status-text">)" + (info.isLive ? "LIVE" : "OFFLINE") + R"(</span>
+            </div>
+        </div>
+        
+        <div class="control-buttons">
+            <button onclick="controlStream(')" + mountPoint + R"(', 'start')" class="control-btn start">▶️ Start</button>
+            <button onclick="controlStream(')" + mountPoint + R"(', 'stop')" class="control-btn stop">⏹️ Stop</button>
+            <button onclick="controlStream(')" + mountPoint + R"(', 'restart')" class="control-btn restart">🔄 Restart</button>
+        </div>
+        
+        <div class="control-group">
+            <label>Quality Settings:</label>
+            <select id="qualitySelect" onchange="setQuality(')" + mountPoint + R"(', this.value)">
+                <option value="High" )" + (info.quality == "High" ? "selected" : "") + R"(>High Quality</option>
+                <option value="Medium" )" + (info.quality == "Medium" ? "selected" : "") + R"(>Medium Quality</option>
+                <option value="Low" )" + (info.quality == "Low" ? "selected" : "") + R"(>Low Quality</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label>Bitrate (kbps):</label>
+            <input type="number" id="bitrateInput" value=")" + info.bitrate + R"(" min="32" max="320" onchange="setBitrate(')" + mountPoint + R"(', this.value)">
+        </div>
+        
+        <div class="control-group">
+            <label>Metadata:</label>
+            <input type="text" id="titleInput" placeholder="Song Title" value=")" + escapeHtml(info.currentSong) + R"(" onchange="setMetadata(')" + mountPoint + R"(', this.value, document.getElementById('artistInput').value)">
+            <input type="text" id="artistInput" placeholder="Artist" value=")" + escapeHtml(info.currentArtist) + R"(" onchange="setMetadata(')" + mountPoint + R"(', document.getElementById('titleInput').value, this.value)">
+        </div>
+    </div>
+    )";
+    
+    return html;
+}
+
+// CSS and JavaScript methods
+QString WebInterface::getMobileCSS() const
+{
+    return R"(
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .mobile-container { max-width: 100%; overflow-x: hidden; }
+        .mobile-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; text-align: center; }
+        .mobile-header h1 { margin: 0; font-size: 1.5rem; }
+        .mobile-status { font-size: 0.9rem; opacity: 0.9; }
+        .mobile-nav { display: flex; background: white; border-bottom: 1px solid #eee; }
+        .nav-btn { flex: 1; padding: 1rem; border: none; background: white; color: #666; font-size: 0.9rem; }
+        .nav-btn.active { background: #667eea; color: white; }
+        .mobile-section { display: none; padding: 1rem; }
+        .mobile-section.active { display: block; }
+        .stream-card { background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stream-card h3 { margin: 0 0 0.5rem 0; color: #333; }
+        .stream-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; }
+        .control-btn { width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: none; border-radius: 4px; font-size: 1rem; }
+        .control-btn.start { background: #28a745; color: white; }
+        .control-btn.stop { background: #dc3545; color: white; }
+        .control-btn.restart { background: #ffc107; color: #333; }
+        @media (max-width: 480px) { .mobile-header h1 { font-size: 1.2rem; } .nav-btn { font-size: 0.8rem; } }
+    )";
+}
+
+QString WebInterface::getMobileJavaScript() const
+{
+    return R"(
+        function showSection(sectionId) {
+            document.querySelectorAll('.mobile-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function controlStream(mountPoint, action) {
+            fetch('/api/control', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mountPoint, action })
+            });
+        }
+        
+        // WebSocket connection for real-time updates
+        const ws = new WebSocket('ws://' + window.location.hostname + ':8081');
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            updateMobileInterface(data);
+        };
+        
+        function updateMobileInterface(data) {
+            // Update streams list
+            if (data.mountPoints) {
+                updateStreamsList(data.mountPoints);
+            }
+            // Update stats
+            if (data.serverStats) {
+                updateStats(data.serverStats);
+            }
+        }
+    )";
+}
+
+QString WebInterface::getAnalyticsCSS() const
+{
+    return R"(
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+        .analytics-container { max-width: 1200px; margin: 0 auto; }
+        .analytics-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .analytics-header h1 { color: #2c3e50; margin: 0; }
+        .analytics-controls button { padding: 0.5rem 1rem; margin-left: 0.5rem; border: none; border-radius: 4px; cursor: pointer; }
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .analytics-card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .analytics-card h3 { margin: 0 0 1rem 0; color: #34495e; }
+        .chart-container { height: 200px; background: #f8f9fa; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .analytics-details { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .analytics-details h3 { margin: 0 0 1rem 0; color: #34495e; }
+        .stat-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+        .stat-label { font-weight: bold; color: #666; }
+        .stat-value { color: #2c3e50; }
+        @media (max-width: 768px) { .analytics-grid { grid-template-columns: 1fr; } .analytics-header { flex-direction: column; gap: 1rem; } }
+    )";
+}
+
+QString WebInterface::getAnalyticsJavaScript() const
+{
+    return R"(
+        let analyticsData = {};
+        
+        function refreshAnalytics() {
+            fetch('/api/analytics')
+                .then(response => response.json())
+                .then(data => {
+                    analyticsData = data;
+                    updateCharts();
+                    updateDetailedStats();
+                });
+        }
+        
+        function updateCharts() {
+            // Update server performance chart
+            updateServerPerformanceChart();
+            
+            // Update listener statistics chart
+            updateListenerStatsChart();
+            
+            // Update stream analytics chart
+            updateStreamAnalyticsChart();
+            
+            // Update network usage chart
+            updateNetworkUsageChart();
+        }
+        
+        function updateServerPerformanceChart() {
+            const container = document.getElementById('serverPerformance');
+            if (analyticsData.server) {
+                container.innerHTML = \`
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: #3498db;">\${analyticsData.server.activeMountPoints}</div>
+                        <div style="color: #666;">Active Mount Points</div>
+                    </div>
+                \`;
+            }
+        }
+        
+        function updateListenerStatsChart() {
+            const container = document.getElementById('listenerStats');
+            if (analyticsData.server) {
+                container.innerHTML = \`
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: #e74c3c;">\${analyticsData.server.totalListeners}</div>
+                        <div style="color: #666;">Total Listeners</div>
+                    </div>
+                \`;
+            }
+        }
+        
+        function updateStreamAnalyticsChart() {
+            const container = document.getElementById('streamAnalytics');
+            if (analyticsData.mountPoints) {
+                const totalStreams = analyticsData.mountPoints.length;
+                const liveStreams = analyticsData.mountPoints.filter(mp => mp.isLive).length;
+                container.innerHTML = \`
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: #27ae60;">\${liveStreams}/\${totalStreams}</div>
+                        <div style="color: #666;">Live Streams</div>
+                    </div>
+                \`;
+            }
+        }
+        
+        function updateNetworkUsageChart() {
+            const container = document.getElementById('networkUsage');
+            if (analyticsData.server) {
+                const bytes = analyticsData.server.totalBytesServed;
+                const mb = (bytes / (1024 * 1024)).toFixed(2);
+                container.innerHTML = \`
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: #f39c12;">\${mb}</div>
+                        <div style="color: #666;">MB Served</div>
+                    </div>
+                \`;
+            }
+        }
+        
+        function updateDetailedStats() {
+            const container = document.getElementById('detailedStats');
+            if (analyticsData.server) {
+                container.innerHTML = \`
+                    <div class="stat-row">
+                        <span class="stat-label">Server Uptime:</span>
+                        <span class="stat-value">\${formatDuration(analyticsData.server.uptime)}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Listeners:</span>
+                        <span class="stat-value">\${analyticsData.server.totalListeners}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Data Served:</span>
+                        <span class="stat-value">\${formatBytes(analyticsData.server.totalBytesServed)}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Active Mount Points:</span>
+                        <span class="stat-value">\${analyticsData.server.activeMountPoints}</span>
+                    </div>
+                \`;
+            }
+        }
+        
+        function formatDuration(seconds) {
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            let result = '';
+            if (days > 0) result += days + 'd ';
+            if (hours > 0) result += hours + 'h ';
+            if (minutes > 0) result += minutes + 'm ';
+            result += secs + 's';
+            return result;
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+            let size = bytes;
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            return size.toFixed(2) + ' ' + units[unitIndex];
+        }
+        
+        function exportData() {
+            const dataStr = JSON.stringify(analyticsData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'legacystream-analytics.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize analytics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshAnalytics();
+            // Refresh every 30 seconds
+            setInterval(refreshAnalytics, 30000);
+        });
+    )";
 }
 
 } // namespace WebInterface
