@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - LegacyStream Documentation</title>
+    <meta name="description" content="Quick setup guide and basic configuration for LegacyStream audio streaming server">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <a href="index.html" class="logo">LegacyStream</a>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="configuration.html" class="nav-link">Configuration</a>
+                    <a href="web-interface.html" class="nav-link">Web Interface</a>
+                    <a href="api-reference.html" class="nav-link">API</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Getting Started</h1>
+                <p>Quick setup guide and basic configuration for LegacyStream</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-sidebar">
+                    <nav class="sidebar-nav">
+                        <h3>Table of Contents</h3>
+                        <ul>
+                            <li><a href="#requirements">Requirements</a></li>
+                            <li><a href="#installation">Installation</a></li>
+                            <li><a href="#quick-start">Quick Start</a></li>
+                            <li><a href="#basic-configuration">Basic Configuration</a></li>
+                            <li><a href="#first-stream">Your First Stream</a></li>
+                            <li><a href="#web-interface">Web Interface</a></li>
+                            <li><a href="#troubleshooting">Troubleshooting</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="content-main">
+                    <section id="requirements">
+                        <h2>Requirements</h2>
+                        <p>Before installing LegacyStream, ensure your system meets the following requirements:</p>
+                        
+                        <h3>System Requirements</h3>
+                        <ul>
+                            <li><strong>Operating System:</strong> Windows 7 or later (x64)</li>
+                            <li><strong>Processor:</strong> 1 GHz or faster</li>
+                            <li><strong>Memory:</strong> 2 GB RAM minimum (4 GB recommended)</li>
+                            <li><strong>Storage:</strong> 100 MB available space</li>
+                            <li><strong>Network:</strong> Stable internet connection</li>
+                        </ul>
+
+                        <h3>Development Environment (for building from source)</h3>
+                        <ul>
+                            <li><strong>Visual Studio 2019</strong> or later (with C++ workload)</li>
+                            <li><strong>CMake 3.20</strong> or later</li>
+                            <li><strong>Qt 6.2</strong> or later</li>
+                            <li><strong>OpenSSL 1.1.1</strong> or later</li>
+                        </ul>
+                    </section>
+
+                    <section id="installation">
+                        <h2>Installation</h2>
+                        
+                        <h3>Option 1: Download Pre-built Binary</h3>
+                        <ol>
+                            <li>Download the latest release from the <a href="index.html#download">download section</a></li>
+                            <li>Extract the ZIP file to your desired installation directory</li>
+                            <li>Run <code>LegacyStream.exe</code> to start the application</li>
+                        </ol>
+
+                        <h3>Option 2: Build from Source</h3>
+                        <div class="code-block">
+                            <pre><code># Clone the repository
+git clone https://github.com/yourorg/legacystream.git
+cd legacystream
+
+# Create build directory
+mkdir build
+cd build
+
+# Configure with CMake
+cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+
+# Build the project
+cmake --build . --config Release
+
+# The executable will be in Release/LegacyStream.exe</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="quick-start">
+                        <h2>Quick Start</h2>
+                        <p>Get LegacyStream running in minutes with these simple steps:</p>
+
+                        <div class="step-grid">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Launch the Application</h3>
+                                <p>Run <code>LegacyStream.exe</code> to start the server</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Configure Basic Settings</h3>
+                                <p>Set your HTTP port (default: 8000) and HTTPS port (default: 8443)</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Add a Stream</h3>
+                                <p>Create your first mount point (e.g., <code>/live</code>)</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Start Streaming</h3>
+                                <p>Connect your audio source and begin streaming</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="basic-configuration">
+                        <h2>Basic Configuration</h2>
+                        
+                        <h3>Server Settings</h3>
+                        <p>The main configuration file is <code>config.ini</code>. Here's a basic example:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>[Server]
+HttpPort=8000
+HttpsPort=8443
+MaxConnections=100000
+MaxStreams=1000
+DefaultLatency=5
+
+[SSL]
+Enabled=false
+AutoRenew=false
+
+[WebInterface]
+Enabled=true
+UpdateInterval=1000
+EnableRealTimeUpdates=true
+
+[Streaming]
+DefaultCodec=mp3
+DefaultBitrate=128
+BufferSize=65536</code></pre>
+                        </div>
+
+                        <h3>Mount Point Configuration</h3>
+                        <p>Mount points define where your streams are accessible. Example:</p>
+                        
+                        <div class="code-block">
+                            <pre><code>[MountPoints]
+/live=icecast
+/classic=shoutcast
+/backup=icecast
+
+[MountPoint:/live]
+Name=Live Stream
+Description=Main live broadcast
+Codec=mp3
+Bitrate=128
+Quality=high
+Public=true</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="first-stream">
+                        <h2>Your First Stream</h2>
+                        
+                        <h3>1. Create a Mount Point</h3>
+                        <p>In the GUI, go to the <strong>Streams</strong> tab and add a new mount point:</p>
+                        <ul>
+                            <li><strong>Mount:</strong> <code>/live</code></li>
+                            <li><strong>Protocol:</strong> IceCast</li>
+                            <li><strong>Codec:</strong> MP3</li>
+                            <li><strong>Bitrate:</strong> 128 kbps</li>
+                        </ul>
+
+                        <h3>2. Configure Audio Source</h3>
+                        <p>Set up your audio input source:</p>
+                        <ul>
+                            <li>Microphone input</li>
+                            <li>Line-in audio</li>
+                            <li>Virtual audio cable</li>
+                            <li>Audio file playback</li>
+                        </ul>
+
+                        <h3>3. Start Broadcasting</h3>
+                        <p>Click the <strong>Start Stream</strong> button to begin broadcasting. Your stream will be available at:</p>
+                        <ul>
+                            <li><strong>HTTP:</strong> <code>http://localhost:8000/live</code></li>
+                            <li><strong>HTTPS:</strong> <code>https://localhost:8443/live</code></li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>💡 Pro Tip</h4>
+                            <p>Use a media player like VLC or Winamp to test your stream by opening the stream URL.</p>
+                        </div>
+                    </section>
+
+                    <section id="web-interface">
+                        <h2>Web Interface</h2>
+                        <p>LegacyStream includes a beautiful web interface for monitoring and controlling your streams:</p>
+
+                        <h3>Accessing the Web Interface</h3>
+                        <ul>
+                            <li><strong>Main Dashboard:</strong> <code>http://localhost:8000/</code></li>
+                            <li><strong>Mount Points:</strong> <code>http://localhost:8000/mounts</code></li>
+                            <li><strong>Stream Details:</strong> <code>http://localhost:8000/live</code></li>
+                            <li><strong>API Endpoints:</strong> <code>http://localhost:8000/api/stats</code></li>
+                        </ul>
+
+                        <h3>Features</h3>
+                        <ul>
+                            <li>Real-time listener statistics</li>
+                            <li>Stream quality monitoring</li>
+                            <li>Embedded audio player</li>
+                            <li>Mobile responsive design</li>
+                            <li>Interactive controls</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>🔧 Configuration</h4>
+                            <p>The web interface can be customized in the <code>[WebInterface]</code> section of your configuration file.</p>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting">
+                        <h2>Troubleshooting</h2>
+                        
+                        <h3>Common Issues</h3>
+                        
+                        <div class="troubleshoot-item">
+                            <h4>Port Already in Use</h4>
+                            <p><strong>Error:</strong> "Failed to bind to port 8000"</p>
+                            <p><strong>Solution:</strong> Change the port in settings or stop conflicting services</p>
+                        </div>
+
+                        <div class="troubleshoot-item">
+                            <h4>Audio Not Playing</h4>
+                            <p><strong>Issue:</strong> Stream is running but no audio</p>
+                            <p><strong>Solution:</strong> Check audio input settings and ensure microphone access</p>
+                        </div>
+
+                        <div class="troubleshoot-item">
+                            <h4>High CPU Usage</h4>
+                            <p><strong>Issue:</strong> Server using too much CPU</p>
+                            <p><strong>Solution:</strong> Reduce buffer sizes or adjust thread counts</p>
+                        </div>
+
+                        <h3>Getting Help</h3>
+                        <ul>
+                            <li><strong>Documentation:</strong> Check other guides in this documentation</li>
+                            <li><strong>GitHub Issues:</strong> <a href="https://github.com/yourorg/legacystream/issues">Report bugs</a></li>
+                            <li><strong>Discussions:</strong> <a href="https://github.com/yourorg/legacystream/discussions">Ask questions</a></li>
+                            <li><strong>Email Support:</strong> <a href="mailto:support@legacystream.com">support@legacystream.com</a></li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LegacyStream</h3>
+                    <p>High-performance audio streaming server for Windows</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="configuration.html">Configuration</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/yourorg/legacystream">GitHub</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/issues">Issues</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/discussions">Discussions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                        <li><a href="mailto:support@legacystream.com">Email Support</a></li>
+                        <li><a href="license.html">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LegacyStream. Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

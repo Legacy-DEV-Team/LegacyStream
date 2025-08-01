@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration - LegacyStream Documentation</title>
+    <meta name="description" content="Server settings, SSL certificates, and optimization for LegacyStream audio streaming server">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <a href="index.html" class="logo">LegacyStream</a>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="getting-started.html" class="nav-link">Getting Started</a>
+                    <a href="web-interface.html" class="nav-link">Web Interface</a>
+                    <a href="api-reference.html" class="nav-link">API</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Configuration</h1>
+                <p>Server settings, SSL certificates, and optimization for LegacyStream</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-sidebar">
+                    <nav class="sidebar-nav">
+                        <h3>Table of Contents</h3>
+                        <ul>
+                            <li><a href="#basic-settings">Basic Settings</a></li>
+                            <li><a href="#ssl-configuration">SSL Configuration</a></li>
+                            <li><a href="#stream-settings">Stream Settings</a></li>
+                            <li><a href="#web-interface-config">Web Interface</a></li>
+                            <li><a href="#performance-tuning">Performance Tuning</a></li>
+                            <li><a href="#statistic-relay">Statistic Relay</a></li>
+                            <li><a href="#advanced-options">Advanced Options</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="content-main">
+                    <section id="basic-settings">
+                        <h2>Basic Settings</h2>
+                        <p>Configure the fundamental server parameters in the <code>[Server]</code> section of your configuration file.</p>
+
+                        <h3>Server Configuration</h3>
+                        <div class="code-block">
+                            <pre><code>[Server]
+# Network ports
+HttpPort=8000
+HttpsPort=8443
+
+# Connection limits
+MaxConnections=100000
+MaxStreams=1000
+
+# Performance settings
+DefaultLatency=5
+BufferSize=65536
+
+# Server information
+Location=My Radio Station
+Hostname=stream.mystation.com
+
+# Authentication
+SourcePassword=source123
+RelayPassword=relay456
+AdminUsername=admin
+AdminPassword=admin123</code></pre>
+                        </div>
+
+                        <h3>Parameter Descriptions</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>HttpPort</code></td>
+                                    <td>8000</td>
+                                    <td>HTTP port for streaming and web interface</td>
+                                </tr>
+                                <tr>
+                                    <td><code>HttpsPort</code></td>
+                                    <td>8443</td>
+                                    <td>HTTPS port for secure streaming</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxConnections</code></td>
+                                    <td>100000</td>
+                                    <td>Maximum concurrent connections</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxStreams</code></td>
+                                    <td>1000</td>
+                                    <td>Maximum number of active streams</td>
+                                </tr>
+                                <tr>
+                                    <td><code>DefaultLatency</code></td>
+                                    <td>5</td>
+                                    <td>Default stream latency in seconds (1-60)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BufferSize</code></td>
+                                    <td>65536</td>
+                                    <td>Audio buffer size in bytes</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section id="ssl-configuration">
+                        <h2>SSL Configuration</h2>
+                        <p>Configure SSL/TLS certificates for secure streaming and HTTPS access.</p>
+
+                        <h3>SSL Settings</h3>
+                        <div class="code-block">
+                            <pre><code>[SSL]
+# Enable SSL/TLS
+Enabled=true
+AutoRenew=true
+
+# Let's Encrypt settings
+LetsEncryptEmail=admin@example.com
+LetsEncryptDomains=stream.example.com,radio.example.com
+
+# Manual certificate paths
+CertificatePath=certs/certificate.crt
+PrivateKeyPath=certs/private.key
+CertificatePassword=
+
+# Cloudflare integration
+CloudflareApiToken=your_api_token
+CloudflareZoneId=your_zone_id</code></pre>
+                        </div>
+
+                        <h3>Certificate Types</h3>
+                        
+                        <div class="cert-type">
+                            <h4>1. Let's Encrypt (Recommended)</h4>
+                            <p>Automatic certificate generation and renewal:</p>
+                            <ul>
+                                <li>Free certificates</li>
+                                <li>Automatic renewal</li>
+                                <li>Domain validation required</li>
+                                <li>90-day validity period</li>
+                            </ul>
+                        </div>
+
+                        <div class="cert-type">
+                            <h4>2. Manual Certificates</h4>
+                            <p>Upload your own certificates:</p>
+                            <ul>
+                                <li>Any certificate authority</li>
+                                <li>Custom validity periods</li>
+                                <li>Wildcard certificates supported</li>
+                                <li>Manual renewal required</li>
+                            </ul>
+                        </div>
+
+                        <div class="cert-type">
+                            <h4>3. Cloudflare Integration</h4>
+                            <p>Use Cloudflare for DNS challenges:</p>
+                            <ul>
+                                <li>Automatic DNS validation</li>
+                                <li>No port forwarding required</li>
+                                <li>Works behind firewalls</li>
+                                <li>Requires Cloudflare account</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>🔒 Security Best Practices</h4>
+                            <ul>
+                                <li>Use strong passwords for private keys</li>
+                                <li>Keep certificates in secure locations</li>
+                                <li>Enable automatic renewal for Let's Encrypt</li>
+                                <li>Monitor certificate expiration dates</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="stream-settings">
+                        <h2>Stream Settings</h2>
+                        <p>Configure mount points and stream-specific parameters.</p>
+
+                        <h3>Mount Point Configuration</h3>
+                        <div class="code-block">
+                            <pre><code>[MountPoints]
+/live=icecast
+/classic=shoutcast
+/backup=icecast
+
+[MountPoint:/live]
+Name=Live Stream
+Description=Main live broadcast
+Codec=mp3
+Bitrate=128
+Quality=high
+Public=true
+MaxListeners=1000
+FallbackFile=fallback.mp3
+
+[MountPoint:/classic]
+Name=Classic Hits
+Description=Classic music stream
+Codec=aac
+Bitrate=64
+Quality=medium
+Public=true
+MaxListeners=500</code></pre>
+                        </div>
+
+                        <h3>Supported Codecs</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Codec</th>
+                                    <th>Extension</th>
+                                    <th>Quality</th>
+                                    <th>Bitrate Range</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MP3</td>
+                                    <td>.mp3</td>
+                                    <td>Good</td>
+                                    <td>32-320 kbps</td>
+                                </tr>
+                                <tr>
+                                    <td>AAC</td>
+                                    <td>.aac</td>
+                                    <td>Excellent</td>
+                                    <td>32-256 kbps</td>
+                                </tr>
+                                <tr>
+                                    <td>AAC+</td>
+                                    <td>.aac</td>
+                                    <td>Very Good</td>
+                                    <td>16-128 kbps</td>
+                                </tr>
+                                <tr>
+                                    <td>Ogg Vorbis</td>
+                                    <td>.ogg</td>
+                                    <td>Excellent</td>
+                                    <td>32-500 kbps</td>
+                                </tr>
+                                <tr>
+                                    <td>Opus</td>
+                                    <td>.opus</td>
+                                    <td>Excellent</td>
+                                    <td>6-510 kbps</td>
+                                </tr>
+                                <tr>
+                                    <td>FLAC</td>
+                                    <td>.flac</td>
+                                    <td>Lossless</td>
+                                    <td>Variable</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section id="web-interface-config">
+                        <h2>Web Interface Configuration</h2>
+                        <p>Customize the web interface behavior and appearance.</p>
+
+                        <h3>Web Interface Settings</h3>
+                        <div class="code-block">
+                            <pre><code>[WebInterface]
+# Enable web interface
+Enabled=true
+
+# Update intervals
+UpdateInterval=1000
+EnableRealTimeUpdates=true
+
+# Player settings
+EnablePlayerEmbed=true
+PlayerTheme=dark
+
+# Mobile settings
+EnableMobileResponsive=true
+MobileOptimization=true
+
+# Analytics
+EnableAnalyticsDashboard=true
+AnalyticsUpdateInterval=5000
+
+# Interactive controls
+EnableInteractiveControls=true
+ControlPassword=admin123</code></pre>
+                        </div>
+
+                        <h3>Available Themes</h3>
+                        <ul>
+                            <li><strong>dark</strong> - Dark theme (default)</li>
+                            <li><strong>light</strong> - Light theme</li>
+                            <li><strong>auto</strong> - Follows system preference</li>
+                        </ul>
+
+                        <div class="info-box">
+                            <h4>📱 Mobile Optimization</h4>
+                            <p>The web interface automatically adapts to mobile devices with touch-friendly controls and responsive design.</p>
+                        </div>
+                    </section>
+
+                    <section id="performance-tuning">
+                        <h2>Performance Tuning</h2>
+                        <p>Optimize LegacyStream for your specific use case and hardware.</p>
+
+                        <h3>Performance Settings</h3>
+                        <div class="code-block">
+                            <pre><code>[Performance]
+# Thread configuration
+IOThreads=4
+WorkerThreads=8
+MaxThreads=16
+
+# Memory management
+MemoryPoolSize=1048576
+BufferPoolSize=524288
+CacheSize=268435456
+
+# Network optimization
+TCPKeepAlive=true
+TCPNoDelay=true
+SocketBufferSize=65536
+
+# Compression settings
+EnableCompression=true
+CompressionLevel=6
+CompressionThreshold=1024</code></pre>
+                        </div>
+
+                        <h3>Performance Profiles</h3>
+                        
+                        <div class="perf-profile">
+                            <h4>Low Latency Profile</h4>
+                            <p>For live broadcasting with minimal delay:</p>
+                            <ul>
+                                <li><code>DefaultLatency=1</code></li>
+                                <li><code>BufferSize=32768</code></li>
+                                <li><code>TCPNoDelay=true</code></li>
+                                <li><code>CompressionLevel=1</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="perf-profile">
+                            <h4>High Capacity Profile</h4>
+                            <p>For maximum concurrent listeners:</p>
+                            <ul>
+                                <li><code>MaxConnections=1000000</code></li>
+                                <li><code>IOThreads=8</code></li>
+                                <li><code>WorkerThreads=16</code></li>
+                                <li><code>MemoryPoolSize=2097152</code></li>
+                            </ul>
+                        </div>
+
+                        <div class="perf-profile">
+                            <h4>Quality Profile</h4>
+                            <p>For high-quality audio streaming:</p>
+                            <ul>
+                                <li><code>BufferSize=131072</code></li>
+                                <li><code>CompressionLevel=9</code></li>
+                                <li><code>CacheSize=536870912</code></li>
+                                <li><code>DefaultLatency=10</code></li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="statistic-relay">
+                        <h2>Statistic Relay Configuration</h2>
+                        <p>Configure relay settings for external Shoutcast and Icecast servers.</p>
+
+                        <h3>Statistic Relay Settings</h3>
+                        <div class="code-block">
+                            <pre><code>[StatisticRelay]
+# Enable statistic relay
+Enabled=true
+UpdateInterval=30
+MaxRelays=50
+
+# Shoutcast relay
+[ShoutcastRelay]
+Name=my_shoutcast_relay
+Host=shoutcast.example.com
+Port=8000
+Password=admin
+SID=1
+MountPoint=/live
+Enabled=true
+
+# Icecast relay
+[IcecastRelay]
+Name=my_icecast_relay
+Host=icecast.example.com
+Port=8000
+Username=admin
+Password=admin
+Alias=/live
+MountPoint=/live
+Enabled=true</code></pre>
+                        </div>
+
+                        <h3>Relay Parameters</h3>
+                        <table class="config-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Name</code></td>
+                                    <td>Yes</td>
+                                    <td>Unique identifier for the relay</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Host</code></td>
+                                    <td>Yes</td>
+                                    <td>Target server hostname or IP</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Port</code></td>
+                                    <td>Yes</td>
+                                    <td>Target server port</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Password</code></td>
+                                    <td>Shoutcast</td>
+                                    <td>Shoutcast admin password</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Username</code></td>
+                                    <td>Icecast</td>
+                                    <td>Icecast admin username</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Alias</code></td>
+                                    <td>Icecast</td>
+                                    <td>Icecast mount point alias</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section id="advanced-options">
+                        <h2>Advanced Options</h2>
+                        <p>Advanced configuration options for power users.</p>
+
+                        <h3>Logging Configuration</h3>
+                        <div class="code-block">
+                            <pre><code>[Logging]
+# Log levels: DEBUG, INFO, WARN, ERROR
+Level=INFO
+LogToFile=true
+LogFilePath=logs/legacystream.log
+MaxLogSize=10485760
+LogRotation=7
+
+# Performance logging
+LogPerformance=true
+PerformanceLogInterval=60</code></pre>
+                        </div>
+
+                        <h3>Security Settings</h3>
+                        <div class="code-block">
+                            <pre><code>[Security]
+# Access control
+RequireAuthentication=false
+AllowedIPs=0.0.0.0/0
+BlockedIPs=
+
+# Rate limiting
+EnableRateLimiting=true
+MaxRequestsPerMinute=1000
+MaxConnectionsPerIP=100
+
+# DDoS protection
+EnableDDoSProtection=true
+ConnectionTimeout=30
+RequestTimeout=60</code></pre>
+                        </div>
+
+                        <h3>Monitoring and Alerts</h3>
+                        <div class="code-block">
+                            <pre><code>[Monitoring]
+# System monitoring
+EnableSystemMonitoring=true
+CPUThreshold=80
+MemoryThreshold=85
+DiskThreshold=90
+
+# Alert settings
+EnableAlerts=true
+AlertEmail=admin@example.com
+AlertWebhook=https://hooks.slack.com/your-webhook
+
+# Health checks
+HealthCheckInterval=30
+HealthCheckTimeout=10</code></pre>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>⚠️ Advanced Configuration Warning</h4>
+                            <p>Advanced settings can significantly impact performance and security. Test thoroughly in a development environment before applying to production.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LegacyStream</h3>
+                    <p>High-performance audio streaming server for Windows</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="configuration.html">Configuration</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/yourorg/legacystream">GitHub</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/issues">Issues</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/discussions">Discussions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                        <li><a href="mailto:support@legacystream.com">Email Support</a></li>
+                        <li><a href="license.html">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LegacyStream. Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

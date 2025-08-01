@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream - High-Performance Audio Streaming Server</title>
+    <meta name="description" content="A high-performance, Windows-based audio streaming server with full IceCast and SHOUTcast compatibility, supporting multiple codecs and SSL/TLS with Let's Encrypt integration.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#documentation" class="nav-link">Documentation</a>
+                    <a href="#api" class="nav-link">API</a>
+                    <a href="#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Next-Generation
+                    <span class="gradient-text">Audio Streaming</span>
+                </h1>
+                <p class="hero-description">
+                    A high-performance, Windows-based audio streaming server with full IceCast and SHOUTcast compatibility. 
+                    Supporting multiple codecs, SSL/TLS, and designed for up to 100 million concurrent listeners.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">Get Started</a>
+                    <a href="#documentation" class="btn btn-secondary">View Documentation</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">100M+</span>
+                        <span class="stat-label">Concurrent Listeners</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Audio Codecs</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1-60s</span>
+                        <span class="stat-label">Configurable Latency</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-preview">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="code-title">server.cpp</span>
+                    </div>
+                    <pre class="code-content"><code>// High-performance streaming server
+class LegacyStream {
+    // Windows IOCP for scalability
+    void initializeIOCP() {
+        // Supports 100M+ concurrent connections
+        iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+    }
+    
+    // Multi-codec support
+    void addStream(const std::string& mount, Codec codec) {
+        streams[mount] = std::make_unique<Stream>(codec);
+    }
+    
+    // SSL/TLS with Let's Encrypt
+    void setupSSL() {
+        certificateManager.requestLetsEncryptCertificate(domains);
+    }
+};</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="section-header">
+                <h2 class="section-title">Powerful Features</h2>
+                <p class="section-description">Everything you need for professional audio streaming</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13"></path>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <circle cx="18" cy="16" r="3"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Protocol Compatibility</h3>
+                    <p class="feature-description">Full IceCast and SHOUTcast protocol support with seamless integration into existing streaming infrastructure.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Multi-Codec Support</h3>
+                    <p class="feature-description">MP3, AAC, AAC+, Ogg Vorbis, Opus, and lossless Ogg FLAC with in-stream metadata support.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">High Performance</h3>
+                    <p class="feature-description">Optimized for up to 100 million concurrent listeners using Windows IOCP technology.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">SSL/TLS Security</h3>
+                    <p class="feature-description">Manual certificates, Let's Encrypt, and Cloudflare integration with automatic renewal.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M21 12h-6m-6 0H3"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Real-time Statistics</h3>
+                    <p class="feature-description">Comprehensive listener and performance monitoring with detailed analytics dashboard.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Modern GUI</h3>
+                    <p class="feature-description">User-friendly Qt interface with SSL certificate management and system tray support.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section id="documentation" class="documentation">
+            <div class="section-header">
+                <h2 class="section-title">Documentation</h2>
+                <p class="section-description">Comprehensive guides and API reference</p>
+            </div>
+
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <div class="doc-icon">📚</div>
+                    <h3 class="doc-title">Getting Started</h3>
+                    <p class="doc-description">Quick setup guide and basic configuration</p>
+                    <a href="docs/getting-started.html" class="doc-link">Read Guide →</a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon">⚙️</div>
+                    <h3 class="doc-title">Configuration</h3>
+                    <p class="doc-description">Server settings, SSL certificates, and optimization</p>
+                    <a href="docs/configuration.html" class="doc-link">Read Guide →</a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon">🌐</div>
+                    <h3 class="doc-title">Web Interface</h3>
+                    <p class="doc-description">Custom UX/UI with real-time updates and analytics</p>
+                    <a href="docs/web-interface.html" class="doc-link">Read Guide →</a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon">📊</div>
+                    <h3 class="doc-title">Statistics & Monitoring</h3>
+                    <p class="doc-description">Performance monitoring and statistic relay system</p>
+                    <a href="docs/statistics.html" class="doc-link">Read Guide →</a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon">🔧</div>
+                    <h3 class="doc-title">API Reference</h3>
+                    <p class="doc-description">Complete API documentation and examples</p>
+                    <a href="docs/api-reference.html" class="doc-link">Read Guide →</a>
+                </div>
+
+                <div class="doc-card">
+                    <div class="doc-icon">🚀</div>
+                    <h3 class="doc-title">Performance</h3>
+                    <p class="doc-description">Optimization strategies and best practices</p>
+                    <a href="docs/performance.html" class="doc-link">Read Guide →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Section -->
+        <section id="api" class="api">
+            <div class="section-header">
+                <h2 class="section-title">API Reference</h2>
+                <p class="section-description">RESTful API for integration and automation</p>
+            </div>
+
+            <div class="api-examples">
+                <div class="api-example">
+                    <h3>Stream Management</h3>
+                    <pre class="code-block"><code>// Add a new stream source
+POST /api/streams
+{
+  "mount": "/live",
+  "type": "icecast",
+  "codec": "mp3",
+  "bitrate": 128
+}
+
+// Get stream statistics
+GET /api/streams/live/stats
+{
+  "listeners": 1250,
+  "bitrate": 128,
+  "uptime": 3600
+}</code></pre>
+                </div>
+
+                <div class="api-example">
+                    <h3>SSL Certificate Management</h3>
+                    <pre class="code-block"><code>// Request Let's Encrypt certificate
+POST /api/ssl/certificates
+{
+  "domains": ["stream.example.com"],
+  "email": "admin@example.com"
+}
+
+// Check certificate status
+GET /api/ssl/certificates/status
+{
+  "valid": true,
+  "daysUntilExpiry": 45,
+  "autoRenew": true
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download" class="download">
+            <div class="section-header">
+                <h2 class="section-title">Get LegacyStream</h2>
+                <p class="section-description">Download and start streaming today</p>
+            </div>
+
+            <div class="download-options">
+                <div class="download-card">
+                    <h3>Windows x64</h3>
+                    <p>Latest stable release</p>
+                    <a href="#" class="btn btn-primary">Download v1.0.0</a>
+                    <small>Requires Windows 7 or later</small>
+                </div>
+
+                <div class="download-card">
+                    <h3>Source Code</h3>
+                    <p>Build from source</p>
+                    <a href="https://github.com/yourorg/legacystream" class="btn btn-secondary">View on GitHub</a>
+                    <small>Requires Visual Studio 2019+</small>
+                </div>
+
+                <div class="download-card">
+                    <h3>Documentation</h3>
+                    <p>Complete guides</p>
+                    <a href="docs/" class="btn btn-secondary">Browse Docs</a>
+                    <small>Comprehensive documentation</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LegacyStream</h3>
+                    <p>High-performance audio streaming server for Windows</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="docs/getting-started.html">Getting Started</a></li>
+                        <li><a href="docs/configuration.html">Configuration</a></li>
+                        <li><a href="docs/api-reference.html">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/yourorg/legacystream">GitHub</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/issues">Issues</a></li>
+                        <li><a href="https://github.com/yourorg/legacystream/discussions">Discussions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="docs/troubleshooting.html">Troubleshooting</a></li>
+                        <li><a href="mailto:support@legacystream.com">Email Support</a></li>
+                        <li><a href="docs/license.html">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LegacyStream. Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 
