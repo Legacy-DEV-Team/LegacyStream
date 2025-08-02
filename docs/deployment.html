@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Guide - LegacyStream Documentation</title>
+    <meta name="description" content="Complete guide for building, deploying, and running the LegacyStream application">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#documentation" class="nav-link">Documentation</a>
+                    <a href="index.html#api" class="nav-link">API</a>
+                    <a href="index.html#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Deployment Guide</h1>
+                <p>Complete guide for building, deploying, and running the LegacyStream application</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-sidebar">
+                    <nav class="sidebar-nav">
+                        <h3>Table of Contents</h3>
+                        <ul>
+                            <li><a href="#running-application">Running the Application</a></li>
+                            <li><a href="#required-dlls">Required DLL Files</a></li>
+                            <li><a href="#automatic-copying">Automatic DLL Copying</a></li>
+                            <li><a href="#troubleshooting">Troubleshooting</a></li>
+                            <li><a href="#application-features">Application Features</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="content-main">
+                    <section id="running-application">
+                        <h2>Running the Application</h2>
+                        <p>The LegacyStream application has been successfully compiled and should now run without DLL errors.</p>
+                        
+                        <div class="info-box">
+                            <h4>Location</h4>
+                            <p>The executable is located at: <code>build\bin\RelWithDebInfo\LegacyStream.exe</code></p>
+                        </div>
+                        
+                        <h3>Running Methods</h3>
+                        <div class="step-grid">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>From Command Line</h3>
+                                <p>Open command prompt and navigate to the build directory:</p>
+                                <div class="code-block">
+                                    <pre><code>cd build\bin\RelWithDebInfo
+LegacyStream.exe</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>From File Explorer</h3>
+                                <p>Navigate to <code>build\bin\RelWithDebInfo\</code> and double-click <code>LegacyStream.exe</code></p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="required-dlls">
+                        <h2>Required DLL Files</h2>
+                        <p>The following DLL files have been copied to the build directory and are required for the application to run:</p>
+                        
+                        <div class="control-grid">
+                            <div class="control-item">
+                                <h4>Qt6 Libraries</h4>
+                                <ul>
+                                    <li><code>Qt6Core.dll</code> - Core Qt6 functionality</li>
+                                    <li><code>Qt6Widgets.dll</code> - GUI widgets</li>
+                                    <li><code>Qt6Network.dll</code> - Network functionality</li>
+                                    <li><code>Qt6WebSockets.dll</code> - WebSocket support</li>
+                                    <li><code>Qt6Gui.dll</code> - GUI framework</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>Qt6 Platform Plugins</h4>
+                                <ul>
+                                    <li><code>platforms/qwindows.dll</code> - Windows platform plugin (required for GUI)</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>OpenSSL Libraries</h4>
+                                <ul>
+                                    <li><code>libcrypto-3-x64.dll</code> - OpenSSL cryptography</li>
+                                    <li><code>libssl-3-x64.dll</code> - OpenSSL SSL/TLS</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="automatic-copying">
+                        <h2>Automatic DLL Copying</h2>
+                        <p>The DLL copying is now <strong>fully integrated into the build process</strong>. Every time you build the application, the required DLLs are automatically copied to the build directory.</p>
+                        
+                        <div class="info-box">
+                            <h4>Build Process Integration</h4>
+                            <p>The CMakeLists.txt includes a post-build command that automatically copies all necessary DLLs and plugins:</p>
+                            <ul>
+                                <li>Qt6Core.dll</li>
+                                <li>Qt6Widgets.dll</li>
+                                <li>Qt6Network.dll</li>
+                                <li>Qt6WebSockets.dll</li>
+                                <li>Qt6Gui.dll</li>
+                                <li>libcrypto-3-x64.dll</li>
+                                <li>libssl-3-x64.dll</li>
+                                <li>platforms/qwindows.dll (Windows platform plugin)</li>
+                            </ul>
+                        </div>
+                        
+                        <h3>Manual Copy (Fallback)</h3>
+                        <p>If you need to copy DLLs manually, you can still use the batch script:</p>
+                        <div class="code-block">
+                            <pre><code>copy_dlls.bat</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting">
+                        <h2>Troubleshooting</h2>
+                        <p>If you encounter DLL errors:</p>
+                        
+                        <div class="troubleshoot-item">
+                            <h4>1. Rebuild the application</h4>
+                            <p>Run <code>cmake --build build --config RelWithDebInfo</code> - this will automatically copy all DLLs</p>
+                        </div>
+                        
+                        <div class="troubleshoot-item">
+                            <h4>2. Check DLL presence</h4>
+                            <p>Ensure all required DLL files are in the same directory as <code>LegacyStream.exe</code></p>
+                        </div>
+                        
+                        <div class="troubleshoot-item">
+                            <h4>3. Manual copy (if needed)</h4>
+                            <p>Run <code>copy_dlls.bat</code> as a fallback option</p>
+                        </div>
+                    </section>
+
+                    <section id="application-features">
+                        <h2>Application Features</h2>
+                        <p>The LegacyStream application includes:</p>
+                        
+                        <div class="control-grid">
+                            <div class="control-item">
+                                <h4>✅ Modern GUI Interface</h4>
+                                <p>Sleek, light-themed Qt6-based user interface with Rocket-style layout</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Application Icon</h4>
+                                <p>Professional audio streaming icon integrated throughout the application</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Functional Server Controls</h4>
+                                <p>Start/Stop server with real-time status updates and proper state management</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Configuration Dialog</h4>
+                                <p>Modern settings interface for server configuration</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ HTTP Server functionality</h4>
+                                <p>Complete HTTP server implementation</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Stream Management</h4>
+                                <p>Professional stream management with visual status indicators</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ SSL/TLS Support</h4>
+                                <p>Certificate management interface and secure connections</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Web Interface</h4>
+                                <p>Built-in web interface for remote management</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Statistics and Monitoring</h4>
+                                <p>Real-time statistics and performance monitoring</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ Relay Management</h4>
+                                <p>Advanced relay and distribution management</p>
+                            </div>
+                            
+                            <div class="control-item">
+                                <h4>✅ HLS Generation</h4>
+                                <p>HTTP Live Streaming support</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <h4>Notes</h4>
+                            <ul>
+                                <li>The application is compiled in Release mode with debug information (<code>RelWithDebInfo</code>)</li>
+                                <li>Protocol servers (IceCast/SHOUTcast) are currently disabled until implementation</li>
+                                <li>The application should start and be ready to accept streaming connections</li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>LegacyStream © 2025 All Rights Reserved.</p>
+                <p>Licensed under MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

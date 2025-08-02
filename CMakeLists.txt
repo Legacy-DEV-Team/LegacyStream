@@ -173,11 +173,25 @@ if(WIN32)
     )
     
     # Set application icon
-    set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/app_icon.ico")
-    if(EXISTS ${APP_ICON_RESOURCE_WINDOWS})
-        target_sources(LegacyStream PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
-        set_target_properties(LegacyStream PROPERTIES WIN32_EXECUTABLE TRUE)
+set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/app_icon.ico")
+if(EXISTS ${APP_ICON_RESOURCE_WINDOWS})
+    set_target_properties(LegacyStream PROPERTIES 
+        WIN32_EXECUTABLE TRUE
+        OUTPUT_NAME "LegacyStream"
+    )
+    
+    # Set the icon for the Windows executable
+    if(WIN32)
+        set_target_properties(LegacyStream PROPERTIES
+            LINK_FLAGS "/SUBSYSTEM:WINDOWS"
+        )
+        
+        # Create a Windows resource file for the icon
+        set(RESOURCE_FILE "${CMAKE_CURRENT_BINARY_DIR}/app_icon.rc")
+        file(WRITE ${RESOURCE_FILE} "IDI_ICON1 ICON \"${APP_ICON_RESOURCE_WINDOWS}\"")
+        target_sources(LegacyStream PRIVATE ${RESOURCE_FILE})
     endif()
+endif()
     
     # Add post-build command to copy Qt6 DLLs and platform plugins
     add_custom_command(TARGET LegacyStream POST_BUILD
