@@ -16,7 +16,7 @@ LegacyStream is a powerful, Windows-based audio streaming server with full IceCa
 
 ## 🚀 Quick Start
 
-1. **Download** the latest release from the [download section](https://github.com/yourorg/legacystream/releases)
+1. **Download** the latest release from the [download section](https://github.com/Legacy-DEV-Team/LegacyStream/releases)
 2. **Extract** and run `LegacyStream.exe`
 3. **Configure** your streams in the GUI
 4. **Start broadcasting** and access your web interface at `http://localhost:8000`
@@ -42,8 +42,8 @@ For comprehensive guides and technical documentation, visit our [documentation w
 
 - **Features Overview**: [docs/features.html](docs/features.html)
 - **Troubleshooting**: [docs/troubleshooting.html](docs/troubleshooting.html)
-- **Community**: [GitHub Discussions](https://github.com/yourorg/legacystream/discussions)
-- **Issues**: [GitHub Issues](https://github.com/yourorg/legacystream/issues)
+- **Community**: [GitHub Discussions](https://github.com/Legacy-DEV-Team/LegacyStream/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Legacy-DEV-Team/LegacyStream/issues)
 
 ## 🤝 Contributing
 
@@ -56,8 +56,8 @@ LegacyStream is licensed under the MIT License. See [LICENSE](LICENSE) file for 
 ## 🆘 Support
 
 - **📧 Email**: support@legacystream.com
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourorg/legacystream/discussions)
-- **🐛 Issues**: [GitHub Issues](https://github.com/yourorg/legacystream/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/Legacy-DEV-Team/LegacyStream/discussions)
+- **🐛 Issues**: [GitHub Issues](https://github.com/Legacy-DEV-Team/LegacyStream/issues)
 - **📖 Documentation**: [docs/](docs/)
 
 ---

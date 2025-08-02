@@ -241,6 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
     - Ctrl/Cmd + K: Search
     - Ctrl/Cmd + D: Toggle dark mode
     
-    For more information, visit: https://github.com/yourorg/legacystream
+    For more information, visit: https://github.com/Legacy-DEV-Team/LegacyStream
     `);
 }); 
