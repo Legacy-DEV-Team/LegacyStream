@@ -52,6 +52,7 @@ set(LEGACYSTREAM_CORE_HEADERS
 # GUI module
 set(LEGACYSTREAM_GUI_SOURCES
     src/gui/MainWindow.cpp
+    src/gui/SSLWidget.cpp
 )
 
 set(LEGACYSTREAM_GUI_HEADERS
@@ -103,6 +104,7 @@ add_library(LegacyStreamGUI STATIC
     ${LEGACYSTREAM_GUI_SOURCES}
     ${LEGACYSTREAM_GUI_HEADERS}
 )
+set_target_properties(LegacyStreamGUI PROPERTIES AUTOMOC ON)
 
 add_library(LegacyStreamSSL STATIC
     ${LEGACYSTREAM_SSL_SOURCES}
@@ -132,6 +134,21 @@ target_link_libraries(LegacyStreamCodecs Qt6::Core)
 # Create main executable
 add_executable(LegacyStream ${LEGACYSTREAM_MAIN_SOURCES})
 
+# Add resource file (optional - only if icon files exist)
+set(APP_RESOURCES assets/icons/resources.qrc)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${APP_RESOURCES})
+    # Check if icon files exist
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/app_icon.png AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/app_icon.ico)
+        qt_add_resources(LEGACYSTREAM_RESOURCES ${APP_RESOURCES})
+        target_sources(LegacyStream PRIVATE ${LEGACYSTREAM_RESOURCES})
+        message(STATUS "Application icon found and will be included")
+    else()
+        message(STATUS "Application icon files not found - icon will be default")
+    endif()
+else()
+    message(STATUS "Resource file not found - icon will be default")
+endif()
+
 # Link all libraries to main executable
 target_link_libraries(LegacyStream
     LegacyStreamCore
@@ -153,6 +170,34 @@ if(WIN32)
     set_target_properties(LegacyStream PROPERTIES
         WIN32_EXECUTABLE TRUE
         VS_DEBUGGER_ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin"
+    )
+    
+    # Set application icon
+    set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/app_icon.ico")
+    if(EXISTS ${APP_ICON_RESOURCE_WINDOWS})
+        target_sources(LegacyStream PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
+        set_target_properties(LegacyStream PROPERTIES WIN32_EXECUTABLE TRUE)
+    endif()
+    
+    # Add post-build command to copy Qt6 DLLs and platform plugins
+    add_custom_command(TARGET LegacyStream POST_BUILD
+        # Create platforms directory
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:LegacyStream>/platforms
+        # Copy Qt6 DLLs
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "C:/Qt/6.9.1/msvc2022_64/bin/Qt6Core.dll"
+            "C:/Qt/6.9.1/msvc2022_64/bin/Qt6Widgets.dll"
+            "C:/Qt/6.9.1/msvc2022_64/bin/Qt6Network.dll"
+            "C:/Qt/6.9.1/msvc2022_64/bin/Qt6WebSockets.dll"
+            "C:/Qt/6.9.1/msvc2022_64/bin/Qt6Gui.dll"
+            "C:/Program Files/OpenSSL-Win64/bin/libcrypto-3-x64.dll"
+            "C:/Program Files/OpenSSL-Win64/bin/libssl-3-x64.dll"
+            $<TARGET_FILE_DIR:LegacyStream>
+        # Copy Qt6 platform plugins
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "C:/Qt/6.9.1/msvc2022_64/plugins/platforms/qwindows.dll"
+            $<TARGET_FILE_DIR:LegacyStream>/platforms/
+        COMMENT "Copying Qt6 DLLs, OpenSSL DLLs, and platform plugins to build directory"
     )
 endif()
 

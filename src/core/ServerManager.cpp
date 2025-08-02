@@ -79,7 +79,7 @@ void ServerManager::initializeComponents()
     
     // Initialize SSL manager first
     m_sslManager = std::make_unique<SSLManager>();
-    m_certificateManager = std::make_unique<::CertificateManager>();
+    m_certificateManager = std::make_unique<CertificateManager>();
     
     // Initialize HTTP server
     m_httpServer = std::make_unique<HttpServer>();
@@ -296,8 +296,8 @@ void ServerManager::shutdown()
     m_webInterface.reset();
     m_statisticRelayManager.reset();
     m_hlsGenerator.reset();
-    m_shoutCastServer.reset();
-    m_iceCastServer.reset();
+    // m_shoutCastServer.reset(); // Not implemented yet
+    // m_iceCastServer.reset(); // Not implemented yet
     m_metadataManager.reset();
     m_relayManager.reset();
     m_streamManager.reset();

@@ -8,6 +8,9 @@
 #include <vector>
 #include <atomic>
 
+// CertificateManager is in global namespace
+class CertificateManager;
+
 namespace LegacyStream {
 
 class HttpServer;
@@ -25,11 +28,10 @@ namespace WebInterface {
     class WebInterface;
 }
 
-// CertificateManager is in global namespace
-
 namespace Protocols {
-    class IceCastServer;
-    class SHOUTcastServer;
+    // Protocol servers not implemented yet
+    // class IceCastServer;
+    // class SHOUTcastServer;
 }
 
 class ServerManager : public QObject
@@ -106,12 +108,12 @@ private:
     std::unique_ptr<WebInterface::WebInterface> m_webInterface;
     std::unique_ptr<StatisticRelay::StatisticRelayManager> m_statisticRelayManager;
     
-    // Protocol servers
-    std::unique_ptr<Protocols::IceCastServer> m_iceCastServer;
-    std::unique_ptr<Protocols::SHOUTcastServer> m_shoutCastServer;
+    // Protocol servers (not implemented yet)
+    // std::unique_ptr<Protocols::IceCastServer> m_iceCastServer;
+    // std::unique_ptr<Protocols::SHOUTcastServer> m_shoutCastServer;
     
     // SSL certificate management
-    std::unique_ptr<::CertificateManager> m_certificateManager;
+    std::unique_ptr<CertificateManager> m_certificateManager;
     
     // Statistics
     QTimer* m_statsTimer;

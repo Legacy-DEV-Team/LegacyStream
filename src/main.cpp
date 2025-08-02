@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QIcon>
 #include <iostream>
+#include "gui/MainWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,8 +14,17 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("1.0.0");
     app.setOrganizationName("Legacy DEV Team");
     
+    // Set application icon
+    QIcon appIcon(":/icons/app_icon.png");
+    if (!appIcon.isNull()) {
+        app.setWindowIcon(appIcon);
+    } else {
+        // Use default Qt icon if custom icon not found
+        app.setWindowIcon(QIcon());
+    }
+    
     // Create main window
-    QMainWindow mainWindow;
+    MainWindow mainWindow;
     mainWindow.setWindowTitle("LegacyStream - Audio Streaming Server");
     mainWindow.resize(800, 600);
     
