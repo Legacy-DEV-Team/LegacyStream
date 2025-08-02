@@ -36,10 +36,11 @@ private:
     QWidget *m_centralWidget;
     QVBoxLayout *m_mainLayout;
     QLabel *m_titleLabel;
-    QPushButton *m_startButton;
-    QPushButton *m_stopButton;
-    QPushButton *m_configButton;
+    QPushButton *m_startBtn;
+    QPushButton *m_stopBtn;
+    QPushButton *m_configBtn;
     QLabel *m_statusLabel;
+    QLabel *m_infoLabel;
     
     // Menu components
     QMenuBar *m_menuBar;
