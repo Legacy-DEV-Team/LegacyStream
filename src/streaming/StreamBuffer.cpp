@@ -1,5 +1,6 @@
 #include "streaming/StreamBuffer.h"
 #include <QDebug>
+#include <QtCore/qminmax.h>
 
 namespace LegacyStream {
 

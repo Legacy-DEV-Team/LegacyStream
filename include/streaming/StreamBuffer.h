@@ -26,11 +26,19 @@ public:
     void clear();
     int availableData() const;
     bool isEmpty() const;
+    
+    // Additional methods needed by implementation
+    void write(const QByteArray& data);
+    QByteArray read(qint64 maxSize = -1);
+    qint64 size() const;
+    void setMaxSize(qint64 size);
+    qint64 maxSize() const;
 
 private:
     QQueue<QByteArray> m_buffers;
     QMutex m_mutex;
     int m_maxSize = 1024 * 1024; // 1MB default
+    QByteArray m_buffer; // Additional buffer for implementation
 };
 
 } // namespace LegacyStream

@@ -66,10 +66,10 @@ bool CertificateManager::saveCertificate(const QString &certificatePath,
     return true;
 }
 
-QSslConfiguration CertificateManager::getSSLConfiguration() const
-{
-    return m_sslConfiguration;
-}
+// QSslConfiguration CertificateManager::getSSLConfiguration() const
+// {
+//     return m_sslConfiguration;
+// }
 
 bool CertificateManager::isCertificateValid() const
 {
@@ -87,16 +87,16 @@ QString CertificateManager::getCertificateInfo() const
            .arg(m_privateKeyPath);
 }
 
-bool CertificateManager::validateCertificate(const QSslCertificate &cert, const QSslKey &key)
-{
-    // This is a placeholder implementation
-    // In a real implementation, you would validate the certificate and key
-    return true;
-}
+// bool CertificateManager::validateCertificate(const QSslCertificate &cert, const QSslKey &key)
+// {
+//     // This is a placeholder implementation
+//     // In a real implementation, you would validate the certificate and key
+//     return true;
+// }
 
-QString CertificateManager::formatCertificateInfo(const QSslCertificate &cert) const
-{
-    // This is a placeholder implementation
-    // In a real implementation, you would format the certificate information
-    return "Certificate information placeholder";
-} 
+// QString CertificateManager::formatCertificateInfo(const QSslCertificate &cert) const
+// {
+//     // This is a placeholder implementation
+//     // In a real implementation, you would format the certificate information
+//     return "Certificate information placeholder";
+// } 

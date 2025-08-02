@@ -7,8 +7,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QWebSocketServer>
-#include <QWebSocket>
+// #include <QWebSocketServer>
+// #include <QWebSocket>
 #include <memory>
 
 namespace LegacyStream {
@@ -74,6 +74,7 @@ public:
     // Initialization
     bool initialize(HttpServer* httpServer, StreamManager* streamManager, StatisticRelay::StatisticRelayManager* statisticRelayManager = nullptr);
     void shutdown();
+    bool isInitialized() const;
 
     // Mount point management
     void addMountPoint(const QString& mountPoint, const QString& protocol);
@@ -120,12 +121,12 @@ private slots:
     void onListenerDisconnected(const QString& mountPoint, const QString& clientIP);
     void updateStatistics();
     
-    // WebSocket handling
-    void onWebSocketConnection();
-    void onWebSocketDisconnection();
-    void onWebSocketMessage(const QString& message);
-    void onWebSocketError(QAbstractSocket::SocketError error);
-    void broadcastToWebSockets(const QJsonObject& data);
+    // WebSocket handling (disabled - Qt WebSockets not available)
+    // void onWebSocketConnection();
+    // void onWebSocketDisconnection();
+    // void onWebSocketMessage(const QString& message);
+    // void onWebSocketError(QAbstractSocket::SocketError error);
+    // void broadcastToWebSockets(const QJsonObject& data);
 
 private:
     // HTTP request handlers
@@ -137,7 +138,7 @@ private:
     void handleRelayApiRequest(const QString& request, QString& response, QString& contentType);
     void handleAnalyticsRequest(const QString& request, QString& response, QString& contentType);
     void handleMobileRequest(const QString& request, QString& response, QString& contentType);
-    void handleWebSocketRequest(const QString& request, QString& response, QString& contentType);
+    // void handleWebSocketRequest(const QString& request, QString& response, QString& contentType);
     void handleFaviconRequest(const QString& request, QString& response, QString& contentType);
     void handleCssRequest(const QString& request, QString& response, QString& contentType);
     void handleJsRequest(const QString& request, QString& response, QString& contentType);
@@ -179,9 +180,12 @@ private:
     StreamManager* m_streamManager = nullptr;
     StatisticRelay::StatisticRelayManager* m_statisticRelayManager = nullptr;
 
-    // WebSocket server
-    QWebSocketServer* m_webSocketServer = nullptr;
-    QList<QWebSocket*> m_webSocketClients;
+    // WebSocket server (disabled - Qt WebSockets not available)
+    // QWebSocketServer* m_webSocketServer = nullptr;
+    // QList<QWebSocket*> m_webSocketClients;
+    
+    // State tracking
+    bool m_isInitialized = false;
 
     // Mount point data
     QMap<QString, MountPointInfo> m_mountPoints;
@@ -208,7 +212,7 @@ private:
     bool m_enableRealTimeUpdates = true;
     bool m_enablePlayerEmbed = true;
     bool m_enableStatistics = true;
-    bool m_enableWebSockets = true;
+    bool m_enableWebSockets = false; // Disabled - Qt WebSockets not available
     bool m_enableInteractiveControls = true;
     bool m_enableMobileResponsive = true;
     bool m_enableAnalyticsDashboard = true;

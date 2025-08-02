@@ -6,8 +6,8 @@
 #include <QNetworkReply>
 #include <QMap>
 #include <QString>
-#include <QWebSocketServer>
-#include <QWebSocket>
+// #include <QWebSocketServer>
+// #include <QWebSocket>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -98,17 +98,17 @@ public:
     QJsonObject getRealTimeStatistics() const;
     void broadcastStatistics(const QJsonObject& statistics);
 
-    // WebSocket management
-    void startWebSocketServer(int port = 8080);
-    void stopWebSocketServer();
-    bool isWebSocketServerRunning() const;
-    int getWebSocketClientCount() const;
-    void broadcastToWebSocketClients(const QJsonObject& data, const QString& topic = QString());
+    // WebSocket management (disabled - Qt WebSockets not available)
+    // void startWebSocketServer(int port = 8080);
+    // void stopWebSocketServer();
+    // bool isWebSocketServerRunning() const;
+    // int getWebSocketClientCount() const;
+    // void broadcastToWebSocketClients(const QJsonObject& data, const QString& topic = QString());
 
     // Control
     void start();
     void stop();
-    bool isRunning() const { return m_isRunning; }
+    bool isRunning() const;
 
 signals:
     void relayConnected(const QString& name, const QString& type);
@@ -117,8 +117,8 @@ signals:
     void statisticsRelayed(const QString& name, const QString& type);
     void relayStatusChanged(const QString& name, bool connected);
     void realTimeStatisticsUpdated(const QJsonObject& statistics);
-    void webSocketClientConnected(const QString& clientId);
-    void webSocketClientDisconnected(const QString& clientId);
+    // void webSocketClientConnected(const QString& clientId);
+    // void webSocketClientDisconnected(const QString& clientId);
 
 private slots:
     void updateStatistics();
@@ -126,9 +126,9 @@ private slots:
     void onIcecastRelayFinished();
     void onNetworkError(QNetworkReply::NetworkError error);
     void onRealTimeCollectionTimer();
-    void onWebSocketNewConnection();
-    void onWebSocketClientDisconnected();
-    void onWebSocketTextMessageReceived(const QString& message);
+    // void onWebSocketNewConnection();
+    // void onWebSocketClientDisconnected();
+    // void onWebSocketTextMessageReceived(const QString& message);
 
 private:
     // Relay management
@@ -145,7 +145,7 @@ private:
     // Real-time statistics
     void collectRealTimeStatistics();
     QJsonObject buildRealTimeStatisticsJson() const;
-    void processWebSocketMessage(const QJsonObject& message, WebSocketClient* client);
+    // void processWebSocketMessage(const QJsonObject& message, WebSocketClient* client);
 
     // Utility methods
     QString buildShoutcastUrl(const ShoutcastRelayConfig& config) const;
@@ -160,10 +160,10 @@ private:
     QTimer* m_updateTimer;
     QTimer* m_realTimeCollectionTimer;
 
-    // WebSocket server
-    std::unique_ptr<QWebSocketServer> m_webSocketServer;
-    QMap<QWebSocket*, WebSocketClient> m_webSocketClients;
-    int m_webSocketPort = 8080;
+    // WebSocket server (disabled - Qt WebSockets not available)
+    // std::unique_ptr<QWebSocketServer> m_webSocketServer;
+    // QMap<QWebSocket*, WebSocketClient> m_webSocketClients;
+    // int m_webSocketPort = 8080;
 
     // Real-time statistics
     bool m_realTimeCollectionEnabled = false;

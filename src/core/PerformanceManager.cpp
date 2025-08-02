@@ -372,7 +372,7 @@ void MemoryPool::initializePool()
     size_t chunks = (totalSize + 1024 * 1024 - 1) / (1024 * 1024); // 1MB chunks
     
     for (size_t i = 0; i < chunks; ++i) {
-        size_t chunkSize = std::min(1024 * 1024ULL, totalSize - i * 1024 * 1024);
+        size_t chunkSize = qMin(1024 * 1024ULL, totalSize - i * 1024 * 1024);
         auto chunk = std::make_unique<char[]>(chunkSize);
         m_poolMemory.push_back(std::move(chunk));
     }

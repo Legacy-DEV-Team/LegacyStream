@@ -43,6 +43,18 @@ public:
     void clearMetadata(const QString& mountPoint);
     QJsonObject getMetadataJson(const QString& mountPoint) const;
 
+    // Metadata management
+    bool addMetadata(const QString& key, const QString& value);
+    bool removeMetadata(const QString& key);
+    bool updateMetadata(const QString& key, const QString& value);
+    QString getMetadataValue(const QString& key) const;
+    QMap<QString, QString> getAllMetadata() const;
+    void clearMetadata();
+    
+    // Initialization and shutdown
+    bool initialize();
+    void shutdown();
+
 signals:
     void metadataUpdated(const QString& mountPoint, const MetadataInfo& metadata);
 

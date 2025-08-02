@@ -142,7 +142,7 @@ public:
     ~MemoryPool();
     
     void* allocate();
-    void deallocate(void* ptr);
+    bool deallocate(void* ptr);
     size_t getBlockSize() const { return m_blockSize; }
     size_t getAvailableBlocks() const;
     size_t getTotalBlocks() const { return m_totalBlocks; }

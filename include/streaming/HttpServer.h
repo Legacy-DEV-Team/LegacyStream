@@ -33,8 +33,12 @@ public:
     void setHost(const QString& host);
     void setWebInterface(WebInterface::WebInterface* webInterface);
     void setStreamManager(StreamManager* streamManager);
+    void setSSLManager(SSLManager* sslManager);
+    void setMaxConnections(int maxConnections);
 
     // Server control
+    bool start(int port = 8080);
+    void stop();
     bool isRunning() const;
     int getPort() const;
     QString getHost() const;
