@@ -33,4 +33,23 @@ bool HttpServer::isRunning() const
     return m_isRunning;
 }
 
+int HttpServer::getPort() const
+{
+    return m_port;
+}
+
+QString HttpServer::getHost() const
+{
+    return m_host;
+}
+
+QMap<QString, QVariant> HttpServer::getStats() const
+{
+    QMap<QString, QVariant> stats;
+    stats["totalConnections"] = m_totalRequests;
+    stats["currentListeners"] = m_clients.size();
+    stats["totalBytesServed"] = m_totalBytesServed;
+    return stats;
+}
+
 } // namespace LegacyStream 

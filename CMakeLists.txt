@@ -10,6 +10,16 @@ if(MSVC)
     add_compile_options(/Zc:__cplusplus /permissive-)
 endif()
 
+# Configure Vulkan SDK path
+set(Vulkan_INCLUDE_DIR "C:/VulkanSDK/1.4.321.1/Include")
+set(Vulkan_LIBRARY_DIR "C:/VulkanSDK/1.4.321.1/Lib")
+
+# Configure Qt6 path (adjust this path to match your Qt6 installation)
+set(Qt6_DIR "C:/Qt/6.9.1/msvc2022_64/lib/cmake/Qt6")
+
+# Set CMAKE_PREFIX_PATH to help find Vulkan
+list(APPEND CMAKE_PREFIX_PATH "C:/VulkanSDK/1.4.321.1")
+
 # Find Qt6 components
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network WebSockets)
 

@@ -22,6 +22,8 @@ set(LEGACYSTREAM_STREAMING_HEADERS
     ../../include/streaming/StatisticRelayManager.h
 )
 
+# Vulkan support is configured in main CMakeLists.txt
+
 # Create streaming library
 add_library(LegacyStreamStreaming STATIC
     ${LEGACYSTREAM_STREAMING_SOURCES}

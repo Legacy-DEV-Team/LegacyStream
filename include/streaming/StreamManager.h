@@ -86,6 +86,7 @@ public:
     StreamInfo getStreamInfo(const QString& mountPoint) const;
     QJsonObject getStatusJson() const;
     QJsonArray getStreamsJson() const;
+    int getActiveStreamCount() const;
 
     // Statistics
     qint64 getTotalBytesReceived() const;
@@ -100,6 +101,8 @@ signals:
     void streamMetadataUpdated(const QString& mountPoint, const QString& metadata);
     void streamError(const QString& mountPoint, const QString& error);
     void statusChanged(const QJsonObject& status);
+    void streamConnected(const QString& mountPoint);
+    void streamDisconnected(const QString& mountPoint);
 
 private slots:
     void onUpdateTimer();

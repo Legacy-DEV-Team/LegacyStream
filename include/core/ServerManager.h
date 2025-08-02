@@ -25,9 +25,7 @@ namespace WebInterface {
     class WebInterface;
 }
 
-namespace SSL {
-    class CertificateManager;
-}
+// CertificateManager is in global namespace
 
 namespace Protocols {
     class IceCastServer;
@@ -113,7 +111,7 @@ private:
     std::unique_ptr<Protocols::SHOUTcastServer> m_shoutCastServer;
     
     // SSL certificate management
-    std::unique_ptr<SSL::CertificateManager> m_certificateManager;
+    std::unique_ptr<::CertificateManager> m_certificateManager;
     
     // Statistics
     QTimer* m_statsTimer;

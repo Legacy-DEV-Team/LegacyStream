@@ -33,4 +33,9 @@ bool StreamManager::isRunning() const
     return m_isRunning;
 }
 
+int StreamManager::getActiveStreamCount() const
+{
+    return m_activeStreams;
+}
+
 } // namespace LegacyStream 

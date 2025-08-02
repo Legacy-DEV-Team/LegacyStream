@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
+#include <QVariant>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -11,6 +12,7 @@
 namespace LegacyStream {
 
 class StreamManager;
+class SSLManager;
 
 namespace WebInterface {
     class WebInterface;
@@ -42,12 +44,17 @@ public:
     bool isRunning() const;
     int getPort() const;
     QString getHost() const;
+    
+    // Statistics
+    QMap<QString, QVariant> getStats() const;
 
 signals:
     void clientConnected(const QString& clientIP);
     void clientDisconnected(const QString& clientIP);
     void requestReceived(const QString& method, const QString& path, const QString& clientIP);
     void errorOccurred(const QString& error);
+    void connectionAccepted(const QString& clientIP);
+    void connectionClosed(const QString& clientIP);
 
 private slots:
     void onNewConnection();

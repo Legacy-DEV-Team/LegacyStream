@@ -79,7 +79,7 @@ void ServerManager::initializeComponents()
     
     // Initialize SSL manager first
     m_sslManager = std::make_unique<SSLManager>();
-    m_certificateManager = std::make_unique<SSL::CertificateManager>();
+    m_certificateManager = std::make_unique<::CertificateManager>();
     
     // Initialize HTTP server
     m_httpServer = std::make_unique<HttpServer>();
@@ -109,16 +109,16 @@ void ServerManager::initializeComponents()
     m_statisticRelayManager = std::make_unique<StatisticRelay::StatisticRelayManager>();
     m_statisticRelayManager->initialize(m_streamManager.get());
     
-    // Initialize protocol servers
-    if (config.iceCastEnabled()) {
-        m_iceCastServer = std::make_unique<Protocols::IceCastServer>();
-        m_iceCastServer->setStreamManager(m_streamManager.get());
-    }
+    // Initialize protocol servers (disabled - classes not implemented yet)
+    // if (config.iceCastEnabled()) {
+    //     m_iceCastServer = std::make_unique<Protocols::IceCastServer>();
+    //     m_iceCastServer->setStreamManager(m_streamManager.get());
+    // }
     
-    if (config.shoutCastEnabled()) {
-        m_shoutCastServer = std::make_unique<Protocols::SHOUTcastServer>();
-        m_shoutCastServer->setStreamManager(m_streamManager.get());
-    }
+    // if (config.shoutCastEnabled()) {
+    //     m_shoutCastServer = std::make_unique<Protocols::SHOUTcastServer>();
+    //     m_shoutCastServer->setStreamManager(m_streamManager.get());
+    // }
     
     // Start performance monitoring
     perfManager.startResourceMonitoring();
@@ -126,9 +126,15 @@ void ServerManager::initializeComponents()
     
     // Connect signals
     connect(m_httpServer.get(), &HttpServer::connectionAccepted,
-            this, &ServerManager::listenerConnected);
+            this, [this](const QString& clientIP) {
+                // For now, use empty mountPoint since HttpServer doesn't provide it
+                emit listenerConnected("", clientIP);
+            });
     connect(m_httpServer.get(), &HttpServer::connectionClosed,
-            this, &ServerManager::listenerDisconnected);
+            this, [this](const QString& clientIP) {
+                // For now, use empty mountPoint since HttpServer doesn't provide it
+                emit listenerDisconnected("", clientIP);
+            });
     connect(m_httpServer.get(), &HttpServer::errorOccurred,
             this, &ServerManager::handleServerError);
     
@@ -177,19 +183,19 @@ bool ServerManager::startServers()
     auto& config = Configuration::instance();
     
     // Start HTTP server
-    if (!m_httpServer->startServer(config.httpPort(), config.httpsPort())) {
+    if (!m_httpServer->start(config.httpPort())) {
         qCCritical(serverManager) << "Failed to start HTTP server";
         return false;
     }
     
-    // Start protocol servers
-    if (m_iceCastServer && !m_iceCastServer->start()) {
-        qCWarning(serverManager) << "Failed to start IceCast server";
-    }
+    // Start protocol servers (disabled - classes not implemented yet)
+    // if (m_iceCastServer && !m_iceCastServer->start()) {
+    //     qCWarning(serverManager) << "Failed to start IceCast server";
+    // }
     
-    if (m_shoutCastServer && !m_shoutCastServer->start()) {
-        qCWarning(serverManager) << "Failed to start SHOUTcast server";
-    }
+    // if (m_shoutCastServer && !m_shoutCastServer->start()) {
+    //     qCWarning(serverManager) << "Failed to start SHOUTcast server";
+    // }
     
     // Start relay manager
     if (config.relayEnabled()) {
@@ -245,18 +251,18 @@ void ServerManager::stopServers()
         m_statisticRelayManager->stop();
     }
     
-    // Stop protocol servers
-    if (m_shoutCastServer) {
-        m_shoutCastServer->stop();
-    }
+    // Stop protocol servers (disabled - classes not implemented yet)
+    // if (m_shoutCastServer) {
+    //     m_shoutCastServer->stop();
+    // }
     
-    if (m_iceCastServer) {
-        m_iceCastServer->stop();
-    }
+    // if (m_iceCastServer) {
+    //     m_iceCastServer->stop();
+    // }
     
     // Stop HTTP server
     if (m_httpServer) {
-        m_httpServer->stopServer();
+        m_httpServer->stop();
     }
     
     m_isRunning.store(false);
@@ -314,9 +320,9 @@ ServerManager::ServerStats ServerManager::getStats() const
     
     if (m_httpServer) {
         auto httpStats = m_httpServer->getStats();
-        stats.totalConnections = httpStats.totalConnections.load();
-        stats.currentListeners = httpStats.activeConnections.load();
-        stats.totalBytesServed = httpStats.bytesServed.load();
+        stats.totalConnections = httpStats.value("totalConnections", 0).toULongLong();
+        stats.currentListeners = httpStats.value("currentListeners", 0).toULongLong();
+        stats.totalBytesServed = httpStats.value("totalBytesServed", 0).toULongLong();
     }
     
     if (m_streamManager) {
