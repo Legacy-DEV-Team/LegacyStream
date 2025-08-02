@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QMessageBox>
+#include <QTextEdit>
 
 class MainWindow : public QMainWindow
 {
@@ -24,13 +25,18 @@ private slots:
     void onStartServer();
     void onStopServer();
     void onConfiguration();
+    void onStreams();
     void onAbout();
+    void onSaveConfig();
+    void onLoadConfig();
 
 private:
     void setupUI();
     void setupMenuBar();
     void setupStatusBar();
     void setupConnections();
+    void addStreamToMainWindow(const QString& mountPoint, const QString& status);
+    void removeStreamFromMainWindow(const QString& mountPoint);
 
     // UI Components
     QWidget *m_centralWidget;
@@ -39,8 +45,12 @@ private:
     QPushButton *m_startBtn;
     QPushButton *m_stopBtn;
     QPushButton *m_configBtn;
+    QPushButton *m_streamsBtn;
     QLabel *m_statusLabel;
     QLabel *m_infoLabel;
+    QTextEdit *m_mainLog;
+    QTextEdit *m_accessLog;
+    QVBoxLayout *m_streamsLayout;
     
     // Menu components
     QMenuBar *m_menuBar;

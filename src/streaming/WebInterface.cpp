@@ -39,6 +39,37 @@ bool WebInterface::isInitialized() const
     return m_isInitialized;
 }
 
+void WebInterface::onStreamConnected(const QString& mountPoint)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+}
+
+void WebInterface::onStreamDisconnected(const QString& mountPoint)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+}
+
+void WebInterface::onListenerConnected(const QString& mountPoint, const QString& clientIP)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+    Q_UNUSED(clientIP)
+}
+
+void WebInterface::onListenerDisconnected(const QString& mountPoint, const QString& clientIP)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+    Q_UNUSED(clientIP)
+}
+
+void WebInterface::updateStatistics()
+{
+    // Stub implementation
+}
+
 } // namespace WebInterface
 
 } // namespace LegacyStream

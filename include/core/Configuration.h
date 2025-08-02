@@ -18,6 +18,7 @@ public:
     
     void initialize(const QString& configPath);
     void save();
+    void saveToFile(const QString& filePath);
     void load();
     void reset();
     
@@ -196,6 +197,41 @@ public:
     
     QString theme() const { return m_theme; }
     void setTheme(const QString& theme);
+    
+    // Mount point configuration
+    QStringList mountPoints() const { return m_mountPoints.keys(); }
+    void addMountPoint(const QString& mountPoint, const QString& protocol = "icecast");
+    void removeMountPoint(const QString& mountPoint);
+    QString getMountPointProtocol(const QString& mountPoint) const;
+    void setMountPointProtocol(const QString& mountPoint, const QString& protocol);
+    
+    // Mount point detailed settings
+    QString getMountPointName(const QString& mountPoint) const;
+    void setMountPointName(const QString& mountPoint, const QString& name);
+    
+    QString getMountPointDescription(const QString& mountPoint) const;
+    void setMountPointDescription(const QString& mountPoint, const QString& description);
+    
+    QString getMountPointCodec(const QString& mountPoint) const;
+    void setMountPointCodec(const QString& mountPoint, const QString& codec);
+    
+    int getMountPointBitrate(const QString& mountPoint) const;
+    void setMountPointBitrate(const QString& mountPoint, int bitrate);
+    
+    QString getMountPointQuality(const QString& mountPoint) const;
+    void setMountPointQuality(const QString& mountPoint, const QString& quality);
+    
+    bool getMountPointPublic(const QString& mountPoint) const;
+    void setMountPointPublic(const QString& mountPoint, bool isPublic);
+    
+    int getMountPointMaxListeners(const QString& mountPoint) const;
+    void setMountPointMaxListeners(const QString& mountPoint, int maxListeners);
+    
+    QString getMountPointFallbackFile(const QString& mountPoint) const;
+    void setMountPointFallbackFile(const QString& mountPoint, const QString& file);
+    
+    bool getMountPointEnabled(const QString& mountPoint) const;
+    void setMountPointEnabled(const QString& mountPoint, bool enabled);
 
 signals:
     void configurationChanged();
@@ -203,6 +239,9 @@ signals:
     void httpsPortChanged(int port);
     void sslConfigurationChanged();
     void codecConfigurationChanged();
+    void mountPointAdded(const QString& mountPoint);
+    void mountPointRemoved(const QString& mountPoint);
+    void mountPointUpdated(const QString& mountPoint);
 
 private:
     Configuration();
@@ -294,6 +333,9 @@ private:
     bool m_minimizeToTray = true;
     bool m_startMinimized = false;
     QString m_theme = "dark";
+    
+    // Mount points
+    QMap<QString, QMap<QString, QVariant>> m_mountPoints; // { mountPoint: { "name": "...", "protocol": "...", "description": "...", "codec": "...", "bitrate": 128, "quality": "128k", "public": true, "maxListeners": 100, "fallbackFile": "...", "enabled": true } }
     
     Q_DISABLE_COPY(Configuration)
 };

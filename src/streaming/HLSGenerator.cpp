@@ -33,4 +33,39 @@ bool HLSGenerator::isRunning() const
     return m_isRunning;
 }
 
+bool HLSGenerator::start()
+{
+    qDebug() << "HLSGenerator: Starting";
+    m_isRunning = true;
+    return true;
+}
+
+void HLSGenerator::stop()
+{
+    qDebug() << "HLSGenerator: Stopping";
+    m_isRunning = false;
+}
+
+void HLSGenerator::setStreamManager(StreamManager* streamManager)
+{
+    m_streamManager = streamManager;
+}
+
+void HLSGenerator::onSegmentTimer()
+{
+    // Stub implementation
+}
+
+void HLSGenerator::onCleanupTimer()
+{
+    // Stub implementation
+}
+
+void HLSGenerator::onStreamDataReceived(const QString& mountPoint, const QByteArray& data)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+    Q_UNUSED(data)
+}
+
 } // namespace LegacyStream 

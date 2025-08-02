@@ -92,14 +92,14 @@ void ServerManager::initializeComponents()
     
     // Initialize relay manager
     m_relayManager = std::make_unique<RelayManager>();
-    m_relayManager->setStreamManager(m_streamManager.get());
+    // m_relayManager->setStreamManager(m_streamManager.get()); // Commented out for now
     
     // Initialize metadata manager
     m_metadataManager = std::make_unique<MetadataManager>();
     
     // Initialize HLS generator
     m_hlsGenerator = std::make_unique<HLSGenerator>();
-    m_hlsGenerator->setStreamManager(m_streamManager.get());
+    // m_hlsGenerator->setStreamManager(m_streamManager.get()); // Commented out for now
     
     // Initialize web interface
     m_webInterface = std::make_unique<WebInterface::WebInterface>();

@@ -4,6 +4,7 @@
 #include <QLoggingCategory>
 #include <QDir>
 #include <QStandardPaths>
+#include <QVariant>
 
 Q_LOGGING_CATEGORY(configuration, "configuration")
 
@@ -102,28 +103,151 @@ void Configuration::save()
     m_settings->setValue("server/location", m_serverLocation);
     m_settings->setValue("server/hostname", m_serverHostname);
     
-    // Fallback
+    // Fallback settings
     m_settings->setValue("fallback/enabled", m_fallbackEnabled);
     m_settings->setValue("fallback/file", m_fallbackFile);
     m_settings->setValue("fallback/emergencyFile", m_emergencyFile);
     
-    // Logging
+    // Logging settings
     m_settings->setValue("logging/level", m_logLevel);
     m_settings->setValue("logging/maxSize", m_maxLogSize);
     m_settings->setValue("logging/retention", m_logRetention);
     
-    // Performance
+    // Performance settings
     m_settings->setValue("performance/ioThreads", m_ioThreads);
     m_settings->setValue("performance/workerThreads", m_workerThreads);
     m_settings->setValue("performance/enableCompression", m_enableCompression);
     
-    // GUI
+    // GUI settings
     m_settings->setValue("gui/minimizeToTray", m_minimizeToTray);
     m_settings->setValue("gui/startMinimized", m_startMinimized);
     m_settings->setValue("gui/theme", m_theme);
     
+    // Mount points
+    m_settings->beginGroup("mountPoints");
+    m_settings->remove(""); // Clear existing mount points
+    
+    for (auto it = m_mountPoints.begin(); it != m_mountPoints.end(); ++it) {
+        const QString& mountPoint = it.key();
+        const QMap<QString, QVariant>& settings = it.value();
+        
+        m_settings->beginGroup(mountPoint);
+        for (auto settingIt = settings.begin(); settingIt != settings.end(); ++settingIt) {
+            m_settings->setValue(settingIt.key(), settingIt.value());
+        }
+        m_settings->endGroup();
+    }
+    m_settings->endGroup();
+    
     m_settings->sync();
     qCDebug(configuration) << "Configuration saved";
+}
+
+void Configuration::saveToFile(const QString& filePath)
+{
+    // Create a temporary QSettings object for the specified file
+    QSettings tempSettings(filePath, QSettings::IniFormat);
+    
+    // Server settings
+    tempSettings.setValue("server/httpPort", m_httpPort);
+    tempSettings.setValue("server/httpsPort", m_httpsPort);
+    tempSettings.setValue("server/bindAddress", m_bindAddress.toString());
+    tempSettings.setValue("server/maxConnections", m_maxConnections);
+    tempSettings.setValue("server/maxStreams", m_maxStreams);
+    
+    // Stream settings
+    tempSettings.setValue("stream/defaultLatency", m_defaultLatency);
+    tempSettings.setValue("stream/maxLatency", m_maxLatency);
+    tempSettings.setValue("stream/minLatency", m_minLatency);
+    tempSettings.setValue("stream/bufferSize", m_bufferSize);
+    
+    // SSL settings
+    tempSettings.setValue("ssl/enabled", m_sslEnabled);
+    tempSettings.setValue("ssl/certificatePath", m_certificatePath);
+    tempSettings.setValue("ssl/privateKeyPath", m_privateKeyPath);
+    tempSettings.setValue("ssl/certificatePassword", m_certificatePassword);
+    tempSettings.setValue("ssl/autoRenewCertificates", m_autoRenewCertificates);
+    
+    // Let's Encrypt
+    tempSettings.setValue("letsencrypt/enabled", m_letsEncryptEnabled);
+    tempSettings.setValue("letsencrypt/email", m_letsEncryptEmail);
+    tempSettings.setValue("letsencrypt/domains", m_letsEncryptDomains);
+    tempSettings.setValue("letsencrypt/staging", m_letsEncryptStaging);
+    
+    // Cloudflare
+    tempSettings.setValue("cloudflare/enabled", m_cloudflareEnabled);
+    tempSettings.setValue("cloudflare/apiToken", m_cloudflareApiToken);
+    tempSettings.setValue("cloudflare/zoneId", m_cloudflareZoneId);
+    
+    // Protocols
+    tempSettings.setValue("protocols/icecast", m_iceCastEnabled);
+    tempSettings.setValue("protocols/shoutcast", m_shoutCastEnabled);
+    tempSettings.setValue("protocols/hls", m_hlsEnabled);
+    tempSettings.setValue("protocols/hlsSegmentDuration", m_hlsSegmentDuration);
+    tempSettings.setValue("protocols/hlsPlaylistSize", m_hlsPlaylistSize);
+    
+    // Codecs
+    tempSettings.setValue("codecs/enabled", m_enabledCodecs);
+    tempSettings.setValue("codecs/mp3Quality", m_mp3Quality);
+    tempSettings.setValue("codecs/aacBitrate", m_aacBitrate);
+    tempSettings.setValue("codecs/oggQuality", m_oggQuality);
+    
+    // Relay
+    tempSettings.setValue("relay/enabled", m_relayEnabled);
+    tempSettings.setValue("relay/maxRelays", m_maxRelays);
+    tempSettings.setValue("relay/reconnectInterval", m_relayReconnectInterval);
+    
+    // Statistic relay
+    tempSettings.setValue("statisticRelay/enabled", m_statisticRelayEnabled);
+    tempSettings.setValue("statisticRelay/updateInterval", m_statisticRelayUpdateInterval);
+    tempSettings.setValue("statisticRelay/maxRelays", m_maxStatisticRelays);
+    
+    // Server authentication and location settings
+    tempSettings.setValue("server/sourcePassword", m_sourcePassword);
+    tempSettings.setValue("server/relayPassword", m_relayPassword);
+    tempSettings.setValue("server/adminUsername", m_adminUsername);
+    tempSettings.setValue("server/adminPassword", m_adminPassword);
+    tempSettings.setValue("server/location", m_serverLocation);
+    tempSettings.setValue("server/hostname", m_serverHostname);
+    
+    // Fallback settings
+    tempSettings.setValue("fallback/enabled", m_fallbackEnabled);
+    tempSettings.setValue("fallback/file", m_fallbackFile);
+    tempSettings.setValue("fallback/emergencyFile", m_emergencyFile);
+    
+    // Logging settings
+    tempSettings.setValue("logging/level", m_logLevel);
+    tempSettings.setValue("logging/maxSize", m_maxLogSize);
+    tempSettings.setValue("logging/retention", m_logRetention);
+    
+    // Performance settings
+    tempSettings.setValue("performance/ioThreads", m_ioThreads);
+    tempSettings.setValue("performance/workerThreads", m_workerThreads);
+    tempSettings.setValue("performance/enableCompression", m_enableCompression);
+    
+    // GUI settings
+    tempSettings.setValue("gui/minimizeToTray", m_minimizeToTray);
+    tempSettings.setValue("gui/startMinimized", m_startMinimized);
+    tempSettings.setValue("gui/theme", m_theme);
+    
+    // Mount points
+    tempSettings.beginGroup("mountPoints");
+    tempSettings.remove(""); // Clear existing mount points
+    
+    for (auto it = m_mountPoints.begin(); it != m_mountPoints.end(); ++it) {
+        const QString& mountPoint = it.key();
+        const QMap<QString, QVariant>& settings = it.value();
+        
+        tempSettings.beginGroup(mountPoint);
+        for (auto settingIt = settings.begin(); settingIt != settings.end(); ++settingIt) {
+            tempSettings.setValue(settingIt.key(), settingIt.value());
+        }
+        tempSettings.endGroup();
+    }
+    tempSettings.endGroup();
+    
+    tempSettings.sync();
+    qCDebug(configuration) << "Configuration saved to file:" << filePath;
 }
 
 void Configuration::load()
@@ -211,6 +335,20 @@ void Configuration::load()
     m_minimizeToTray = m_settings->value("gui/minimizeToTray", m_minimizeToTray).toBool();
     m_startMinimized = m_settings->value("gui/startMinimized", m_startMinimized).toBool();
     m_theme = m_settings->value("gui/theme", m_theme).toString();
+    
+    // Mount points
+    m_settings->beginGroup("mountPoints");
+    const QStringList mountPointKeys = m_settings->childGroups();
+    for (const QString& groupName : mountPointKeys) {
+        m_settings->beginGroup(groupName);
+        QMap<QString, QVariant> mountPointSettings;
+        for (const QString& key : m_settings->childKeys()) {
+            mountPointSettings[key] = m_settings->value(key);
+        }
+        m_mountPoints[groupName] = mountPointSettings;
+        m_settings->endGroup();
+    }
+    m_settings->endGroup();
     
     qCDebug(configuration) << "Configuration loaded";
 }
@@ -305,6 +443,48 @@ void Configuration::setDefaultValues()
     m_minimizeToTray = true;
     m_startMinimized = false;
     m_theme = "dark";
+    
+    // Mount points - add some default mount points
+    m_mountPoints.clear();
+    
+    // Add default mount points
+    addMountPoint("/live", "icecast");
+    addMountPoint("/backup", "icecast");
+    addMountPoint("/classic", "shoutcast");
+    addMountPoint("/rock", "shoutcast");
+    
+    // Configure default mount point settings
+    setMountPointName("/live", "Live Stream");
+    setMountPointDescription("/live", "Main live broadcast stream");
+    setMountPointCodec("/live", "mp3");
+    setMountPointBitrate("/live", 128);
+    setMountPointQuality("/live", "128k");
+    setMountPointPublic("/live", true);
+    setMountPointMaxListeners("/live", 1000);
+    
+    setMountPointName("/backup", "Backup Stream");
+    setMountPointDescription("/backup", "Backup stream for redundancy");
+    setMountPointCodec("/backup", "aac");
+    setMountPointBitrate("/backup", 64);
+    setMountPointQuality("/backup", "64k");
+    setMountPointPublic("/backup", true);
+    setMountPointMaxListeners("/backup", 500);
+    
+    setMountPointName("/classic", "Classic Hits");
+    setMountPointDescription("/classic", "Classic music stream");
+    setMountPointCodec("/classic", "mp3");
+    setMountPointBitrate("/classic", 96);
+    setMountPointQuality("/classic", "96k");
+    setMountPointPublic("/classic", true);
+    setMountPointMaxListeners("/classic", 750);
+    
+    setMountPointName("/rock", "Rock Station");
+    setMountPointDescription("/rock", "Rock music stream");
+    setMountPointCodec("/rock", "aac");
+    setMountPointBitrate("/rock", 128);
+    setMountPointQuality("/rock", "128k");
+    setMountPointPublic("/rock", true);
+    setMountPointMaxListeners("/rock", 800);
 }
 
 void Configuration::validateSettings()
@@ -807,6 +987,177 @@ void Configuration::setTheme(const QString& theme)
 {
     if (m_theme != theme) {
         m_theme = theme;
+        emit configurationChanged();
+    }
+}
+
+// Mount point configuration methods
+void Configuration::addMountPoint(const QString& mountPoint, const QString& protocol)
+{
+    if (!m_mountPoints.contains(mountPoint)) {
+        QMap<QString, QVariant> defaultSettings;
+        defaultSettings["protocol"] = protocol;
+        defaultSettings["name"] = mountPoint.mid(1); // Remove leading slash
+        defaultSettings["description"] = "";
+        defaultSettings["codec"] = "mp3";
+        defaultSettings["bitrate"] = 128;
+        defaultSettings["quality"] = "128k";
+        defaultSettings["public"] = true;
+        defaultSettings["maxListeners"] = 1000;
+        defaultSettings["fallbackFile"] = "";
+        defaultSettings["enabled"] = true;
+        
+        m_mountPoints[mountPoint] = defaultSettings;
+        emit mountPointAdded(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+void Configuration::removeMountPoint(const QString& mountPoint)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints.remove(mountPoint);
+        emit mountPointRemoved(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointProtocol(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("protocol", "icecast").toString();
+}
+
+void Configuration::setMountPointProtocol(const QString& mountPoint, const QString& protocol)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["protocol"] = protocol;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointName(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("name", mountPoint.mid(1)).toString();
+}
+
+void Configuration::setMountPointName(const QString& mountPoint, const QString& name)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["name"] = name;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointDescription(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("description", "").toString();
+}
+
+void Configuration::setMountPointDescription(const QString& mountPoint, const QString& description)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["description"] = description;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointCodec(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("codec", "mp3").toString();
+}
+
+void Configuration::setMountPointCodec(const QString& mountPoint, const QString& codec)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["codec"] = codec;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+int Configuration::getMountPointBitrate(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("bitrate", 128).toInt();
+}
+
+void Configuration::setMountPointBitrate(const QString& mountPoint, int bitrate)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["bitrate"] = bitrate;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointQuality(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("quality", "128k").toString();
+}
+
+void Configuration::setMountPointQuality(const QString& mountPoint, const QString& quality)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["quality"] = quality;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+bool Configuration::getMountPointPublic(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("public", true).toBool();
+}
+
+void Configuration::setMountPointPublic(const QString& mountPoint, bool isPublic)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["public"] = isPublic;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+int Configuration::getMountPointMaxListeners(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("maxListeners", 1000).toInt();
+}
+
+void Configuration::setMountPointMaxListeners(const QString& mountPoint, int maxListeners)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["maxListeners"] = maxListeners;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+QString Configuration::getMountPointFallbackFile(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("fallbackFile", "").toString();
+}
+
+void Configuration::setMountPointFallbackFile(const QString& mountPoint, const QString& file)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["fallbackFile"] = file;
+        emit mountPointUpdated(mountPoint);
+        emit configurationChanged();
+    }
+}
+
+bool Configuration::getMountPointEnabled(const QString& mountPoint) const
+{
+    return m_mountPoints.value(mountPoint).value("enabled", true).toBool();
+}
+
+void Configuration::setMountPointEnabled(const QString& mountPoint, bool enabled)
+{
+    if (m_mountPoints.contains(mountPoint)) {
+        m_mountPoints[mountPoint]["enabled"] = enabled;
+        emit mountPointUpdated(mountPoint);
         emit configurationChanged();
     }
 }

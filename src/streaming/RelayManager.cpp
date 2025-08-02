@@ -33,4 +33,45 @@ bool RelayManager::isRunning() const
     return m_isRunning;
 }
 
+bool RelayManager::start()
+{
+    qDebug() << "RelayManager: Starting";
+    m_isRunning = true;
+    return true;
+}
+
+void RelayManager::stop()
+{
+    qDebug() << "RelayManager: Stopping";
+    m_isRunning = false;
+}
+
+void RelayManager::setStreamManager(StreamManager* streamManager)
+{
+    m_streamManager = streamManager;
+}
+
+void RelayManager::onStreamDataReceived(const QString& mountPoint, const QByteArray& data)
+{
+    // Stub implementation
+    Q_UNUSED(mountPoint)
+    Q_UNUSED(data)
+}
+
+void RelayManager::onRelayFinished()
+{
+    // Stub implementation
+}
+
+void RelayManager::onRelayError(QNetworkReply::NetworkError error)
+{
+    // Stub implementation
+    Q_UNUSED(error)
+}
+
+void RelayManager::onRetryTimer()
+{
+    // Stub implementation
+}
+
 } // namespace LegacyStream 

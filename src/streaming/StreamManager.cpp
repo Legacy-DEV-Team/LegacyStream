@@ -38,4 +38,9 @@ int StreamManager::getActiveStreamCount() const
     return m_activeStreams;
 }
 
+void StreamManager::onUpdateTimer()
+{
+    // Stub implementation
+}
+
 } // namespace LegacyStream 
