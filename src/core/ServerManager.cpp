@@ -51,14 +51,14 @@ bool ServerManager::initialize()
         return true;
     }
 
-    qCInfo(serverManager) << "Initializing ServerManager";
+    qDebug() << "Initializing ServerManager";
 
     try {
         initializeComponents();
         setupStatisticsTimer();
         
         m_initialized.store(true);
-        qCInfo(serverManager) << "ServerManager initialized successfully";
+        qDebug() << "ServerManager initialized successfully";
         return true;
     }
     catch (const std::exception& e) {
@@ -146,7 +146,7 @@ void ServerManager::initializeComponents()
     // Connect statistic relay signals
     connect(m_statisticRelayManager.get(), &StatisticRelay::StatisticRelayManager::relayConnected,
             this, [this](const QString& name, const QString& type) {
-                qCInfo(serverManager) << "Statistic relay connected:" << name << "(" << type << ")";
+                qDebug() << "Statistic relay connected:" << name << "(" << type << ")";
             });
     connect(m_statisticRelayManager.get(), &StatisticRelay::StatisticRelayManager::relayError,
             this, [this](const QString& name, const QString& error) {
@@ -172,7 +172,7 @@ bool ServerManager::startServers()
         return false;
     }
 
-    qCInfo(serverManager) << "Starting servers";
+    qDebug() << "Starting servers";
 
     auto& config = Configuration::instance();
     
@@ -212,7 +212,7 @@ bool ServerManager::startServers()
     m_isRunning.store(true);
     m_startTime = QDateTime::currentSecsSinceEpoch();
     
-    qCInfo(serverManager) << "Servers started successfully";
+    qDebug() << "Servers started successfully";
     emit serverStarted();
     
     return true;
@@ -225,7 +225,7 @@ void ServerManager::stopServers()
         return;
     }
 
-    qCInfo(serverManager) << "Stopping servers";
+    qDebug() << "Stopping servers";
 
     // Stop statistics timer
     m_statsTimer->stop();
@@ -261,13 +261,13 @@ void ServerManager::stopServers()
     
     m_isRunning.store(false);
     
-    qCInfo(serverManager) << "Servers stopped";
+    qDebug() << "Servers stopped";
     emit serverStopped();
 }
 
 void ServerManager::restartServers()
 {
-    qCInfo(serverManager) << "Restarting servers";
+    qDebug() << "Restarting servers";
     stopServers();
     
     // Wait a moment for cleanup
@@ -304,7 +304,7 @@ void ServerManager::shutdown()
     
     m_initialized.store(false);
     
-    qCInfo(serverManager) << "ServerManager shut down";
+    qDebug() << "ServerManager shut down";
 }
 
 ServerManager::ServerStats ServerManager::getStats() const

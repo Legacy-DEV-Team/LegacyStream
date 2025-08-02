@@ -29,7 +29,7 @@ public:
     void setHttpsPort(int port);
     
     QHostAddress bindAddress() const { return m_bindAddress; }
-    void setBind Address(const QHostAddress& address);
+    void setBindAddress(const QHostAddress& address);
     
     int maxConnections() const { return m_maxConnections; }
     void setMaxConnections(int connections);

@@ -71,7 +71,7 @@ bool RealTimeStatisticsManager::initialize(StreamManager* streamManager, Perform
     
     m_startTime = QDateTime::currentDateTime();
     
-    qCInfo(realTimeStats) << "RealTimeStatisticsManager initialized successfully";
+    qDebug() << "RealTimeStatisticsManager initialized successfully";
     return true;
 }
 
@@ -93,7 +93,7 @@ void RealTimeStatisticsManager::shutdown()
     m_performanceHistory.clear();
     m_recentAlerts.clear();
     
-    qCInfo(realTimeStats) << "RealTimeStatisticsManager shutdown complete";
+    qDebug() << "RealTimeStatisticsManager shutdown complete";
 }
 
 bool RealTimeStatisticsManager::start()
@@ -103,7 +103,7 @@ bool RealTimeStatisticsManager::start()
         return true;
     }
     
-    qCInfo(realTimeStats) << "Starting RealTimeStatisticsManager";
+    qDebug() << "Starting RealTimeStatisticsManager";
     
     // Start timers
     m_collectionTimer->start();
@@ -112,7 +112,7 @@ bool RealTimeStatisticsManager::start()
     
     m_isRunning.store(true);
     
-    qCInfo(realTimeStats) << "RealTimeStatisticsManager started successfully";
+    qDebug() << "RealTimeStatisticsManager started successfully";
     return true;
 }
 
@@ -122,7 +122,7 @@ void RealTimeStatisticsManager::stop()
         return;
     }
     
-    qCInfo(realTimeStats) << "Stopping RealTimeStatisticsManager";
+    qDebug() << "Stopping RealTimeStatisticsManager";
     
     // Stop timers
     m_collectionTimer->stop();
@@ -131,7 +131,7 @@ void RealTimeStatisticsManager::stop()
     
     m_isRunning.store(false);
     
-    qCInfo(realTimeStats) << "RealTimeStatisticsManager stopped";
+    qDebug() << "RealTimeStatisticsManager stopped";
 }
 
 void RealTimeStatisticsManager::collectStreamStatistics()
@@ -462,14 +462,14 @@ void RealTimeStatisticsManager::addAlert(const AlertConfig& alert)
 {
     QMutexLocker locker(&m_mutex);
     m_alerts[alert.name] = alert;
-    qCInfo(realTimeStats) << "Added alert:" << alert.name;
+    qDebug() << "Added alert:" << alert.name;
 }
 
 void RealTimeStatisticsManager::removeAlert(const QString& name)
 {
     QMutexLocker locker(&m_mutex);
     m_alerts.remove(name);
-    qCInfo(realTimeStats) << "Removed alert:" << name;
+    qDebug() << "Removed alert:" << name;
 }
 
 void RealTimeStatisticsManager::enableAlert(const QString& name, bool enabled)
@@ -477,7 +477,7 @@ void RealTimeStatisticsManager::enableAlert(const QString& name, bool enabled)
     QMutexLocker locker(&m_mutex);
     if (m_alerts.contains(name)) {
         m_alerts[name].enabled = enabled;
-        qCInfo(realTimeStats) << "Alert" << name << (enabled ? "enabled" : "disabled");
+        qDebug() << "Alert" << name << (enabled ? "enabled" : "disabled");
     }
 }
 
@@ -795,7 +795,7 @@ void RealTimeStatisticsManager::exportHistoricalData(const QString& category, co
     QFile file(filePath);
     if (file.open(QIODevice::WriteOnly)) {
         file.write(doc.toJson());
-        qCInfo(realTimeStats) << "Exported historical data to:" << filePath;
+        qDebug() << "Exported historical data to:" << filePath;
     } else {
         qCWarning(realTimeStats) << "Failed to export historical data to:" << filePath;
     }
@@ -825,7 +825,7 @@ void RealTimeStatisticsManager::resetStatistics()
     m_averageResponseTime = 0.0;
     m_startTime = QDateTime::currentDateTime();
     
-    qCInfo(realTimeStats) << "Statistics reset";
+    qDebug() << "Statistics reset";
 }
 
 } // namespace LegacyStream 

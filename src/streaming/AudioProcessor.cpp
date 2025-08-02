@@ -70,15 +70,15 @@ bool AudioProcessor::initialize()
     
     if (!inputDevices.isEmpty()) {
         m_inputDevice = inputDevices.first();
-        qCInfo(audioProcessor) << "Using input device:" << m_inputDevice.deviceName();
+        qDebug() << "Using input device:" << m_inputDevice.deviceName();
     }
     
     if (!outputDevices.isEmpty()) {
         m_outputDevice = outputDevices.first();
-        qCInfo(audioProcessor) << "Using output device:" << m_outputDevice.deviceName();
+        qDebug() << "Using output device:" << m_outputDevice.deviceName();
     }
     
-    qCInfo(audioProcessor) << "AudioProcessor initialized successfully";
+    qDebug() << "AudioProcessor initialized successfully";
     return true;
 }
 
@@ -104,7 +104,7 @@ void AudioProcessor::shutdown()
     m_qualitySettings.clear();
     m_qualityHistory.clear();
     
-    qCInfo(audioProcessor) << "AudioProcessor shutdown complete";
+    qDebug() << "AudioProcessor shutdown complete";
 }
 
 bool AudioProcessor::start()
@@ -114,7 +114,7 @@ bool AudioProcessor::start()
         return true;
     }
     
-    qCInfo(audioProcessor) << "Starting AudioProcessor";
+    qDebug() << "Starting AudioProcessor";
     
     // Start timers
     m_analysisTimer->start();
@@ -123,7 +123,7 @@ bool AudioProcessor::start()
     
     m_isRunning.store(true);
     
-    qCInfo(audioProcessor) << "AudioProcessor started successfully";
+    qDebug() << "AudioProcessor started successfully";
     return true;
 }
 
@@ -133,7 +133,7 @@ void AudioProcessor::stop()
         return;
     }
     
-    qCInfo(audioProcessor) << "Stopping AudioProcessor";
+    qDebug() << "Stopping AudioProcessor";
     
     // Stop timers
     m_analysisTimer->stop();
@@ -142,7 +142,7 @@ void AudioProcessor::stop()
     
     m_isRunning.store(false);
     
-    qCInfo(audioProcessor) << "AudioProcessor stopped";
+    qDebug() << "AudioProcessor stopped";
 }
 
 QByteArray AudioProcessor::processAudio(const QByteArray& inputData, const QString& streamId)
@@ -700,7 +700,7 @@ void AudioProcessor::addEffect(const QString& streamId, const AudioFilterConfig&
 {
     QMutexLocker locker(&m_mutex);
     m_streamEffects[streamId].append(effect);
-    qCInfo(audioProcessor) << "Added effect to stream:" << streamId;
+    qDebug() << "Added effect to stream:" << streamId;
 }
 
 void AudioProcessor::removeEffect(const QString& streamId, AudioEffectType effectType)
@@ -713,7 +713,7 @@ void AudioProcessor::removeEffect(const QString& streamId, AudioEffectType effec
                 effects.removeAt(i);
             }
         }
-        qCInfo(audioProcessor) << "Removed effect from stream:" << streamId;
+        qDebug() << "Removed effect from stream:" << streamId;
     }
 }
 
@@ -727,7 +727,7 @@ void AudioProcessor::clearEffects(const QString& streamId)
 {
     QMutexLocker locker(&m_mutex);
     m_streamEffects.remove(streamId);
-    qCInfo(audioProcessor) << "Cleared effects for stream:" << streamId;
+    qDebug() << "Cleared effects for stream:" << streamId;
 }
 
 QJsonObject AudioProcessor::getAnalysisJson(const AudioAnalysis& analysis) const
@@ -750,7 +750,7 @@ void AudioProcessor::startRealTimeAnalysis(const QString& streamId, bool enabled
 {
     QMutexLocker locker(&m_mutex);
     m_realTimeAnalysisEnabled[streamId] = enabled;
-    qCInfo(audioProcessor) << "Real-time analysis" << (enabled ? "enabled" : "disabled") << "for stream:" << streamId;
+    qDebug() << "Real-time analysis" << (enabled ? "enabled" : "disabled") << "for stream:" << streamId;
 }
 
 bool AudioProcessor::isRealTimeAnalysisEnabled(const QString& streamId) const
@@ -839,7 +839,7 @@ void AudioProcessor::synchronizeStreams(const QStringList& streamIds)
     }
     
     emit streamsSynchronized(streamIds);
-    qCInfo(audioProcessor) << "Synchronized streams:" << streamIds;
+    qDebug() << "Synchronized streams:" << streamIds;
 }
 
 void AudioProcessor::setStreamOffset(const QString& streamId, double offset)
@@ -847,7 +847,7 @@ void AudioProcessor::setStreamOffset(const QString& streamId, double offset)
     QMutexLocker locker(&m_mutex);
     if (m_syncInfo.contains(streamId)) {
         m_syncInfo[streamId].offset = offset;
-        qCInfo(audioProcessor) << "Set offset for stream:" << streamId << "=" << offset;
+        qDebug() << "Set offset for stream:" << streamId << "=" << offset;
     }
 }
 
@@ -868,14 +868,14 @@ void AudioProcessor::resetSynchronization(const QString& streamId)
     QMutexLocker locker(&m_mutex);
     m_syncInfo.remove(streamId);
     m_synchronizedStreams.removeAll(streamId);
-    qCInfo(audioProcessor) << "Reset synchronization for stream:" << streamId;
+    qDebug() << "Reset synchronization for stream:" << streamId;
 }
 
 void AudioProcessor::setQualitySettings(const QString& streamId, const QJsonObject& settings)
 {
     QMutexLocker locker(&m_mutex);
     m_qualitySettings[streamId] = settings;
-    qCInfo(audioProcessor) << "Set quality settings for stream:" << streamId;
+    qDebug() << "Set quality settings for stream:" << streamId;
 }
 
 QJsonObject AudioProcessor::getQualitySettings(const QString& streamId) const
@@ -888,7 +888,7 @@ void AudioProcessor::enableQualityMonitoring(const QString& streamId, bool enabl
 {
     QMutexLocker locker(&m_mutex);
     m_qualityMonitoringEnabled[streamId] = enabled;
-    qCInfo(audioProcessor) << "Quality monitoring" << (enabled ? "enabled" : "disabled") << "for stream:" << streamId;
+    qDebug() << "Quality monitoring" << (enabled ? "enabled" : "disabled") << "for stream:" << streamId;
 }
 
 bool AudioProcessor::isQualityMonitoringEnabled(const QString& streamId) const
@@ -950,7 +950,7 @@ void AudioProcessor::resetStats()
     m_processingTime.clear();
     m_effectApplications.clear();
     m_formatConversions.clear();
-    qCInfo(audioProcessor) << "Audio processing statistics reset";
+    qDebug() << "Audio processing statistics reset";
 }
 
 QByteArray AudioProcessor::resampleAudio(const QByteArray& audioData, int fromSampleRate, int toSampleRate)

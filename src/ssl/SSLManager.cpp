@@ -53,7 +53,7 @@ bool SSLManager::initialize()
     m_statistics["cloudflare_enabled"] = false;
     m_statistics["start_time"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     
-    qCInfo(sslManager) << "SSLManager initialized successfully";
+    qDebug() << "SSLManager initialized successfully";
     return true;
 }
 
@@ -66,7 +66,7 @@ void SSLManager::shutdown()
     // Stop renewal timer
     m_renewalTimer->stop();
     
-    qCInfo(sslManager) << "SSLManager shutdown complete";
+    qDebug() << "SSLManager shutdown complete";
 }
 
 bool SSLManager::start()
@@ -76,7 +76,7 @@ bool SSLManager::start()
         return true;
     }
     
-    qCInfo(sslManager) << "Starting SSLManager";
+    qDebug() << "Starting SSLManager";
     
     // Start renewal timer
     m_renewalTimer->start();
@@ -84,7 +84,7 @@ bool SSLManager::start()
     m_isRunning.store(true);
     m_startTime = QDateTime::currentDateTime();
     
-    qCInfo(sslManager) << "SSLManager started successfully";
+    qDebug() << "SSLManager started successfully";
     return true;
 }
 
@@ -94,14 +94,14 @@ void SSLManager::stop()
         return;
     }
     
-    qCInfo(sslManager) << "Stopping SSLManager";
+    qDebug() << "Stopping SSLManager";
     
     // Stop renewal timer
     m_renewalTimer->stop();
     
     m_isRunning.store(false);
     
-    qCInfo(sslManager) << "SSLManager stopped";
+    qDebug() << "SSLManager stopped";
 }
 
 void SSLManager::setSSLConfig(const SSLConfig& config)
@@ -123,7 +123,7 @@ void SSLManager::setSSLConfig(const SSLConfig& config)
         m_sslConfiguration.setCiphers(ciphers);
     }
     
-    qCInfo(sslManager) << "SSL configuration updated";
+    qDebug() << "SSL configuration updated";
 }
 
 SSLConfig SSLManager::getSSLConfig() const
@@ -194,7 +194,7 @@ bool SSLManager::loadCertificateFromMemory(const QByteArray& certData, const QBy
     m_statistics["ssl_enabled"] = true;
     m_statistics["certificate_loaded"] = true;
     
-    qCInfo(sslManager) << "Certificate loaded successfully";
+    qDebug() << "Certificate loaded successfully";
     emit certificateLoaded(m_certificateInfo);
     emit statusChanged(m_statistics);
     
@@ -229,7 +229,7 @@ void SSLManager::setLetsEncryptEnabled(bool enabled)
 {
     m_letsEncryptEnabled = enabled;
     m_statistics["lets_encrypt_enabled"] = enabled;
-    qCInfo(sslManager) << "Let's Encrypt" << (enabled ? "enabled" : "disabled");
+    qDebug() << "Let's Encrypt" << (enabled ? "enabled" : "disabled");
 }
 
 void SSLManager::setLetsEncryptEmail(const QString& email)
@@ -254,7 +254,7 @@ bool SSLManager::requestLetsEncryptCertificate()
         return false;
     }
     
-    qCInfo(sslManager) << "Requesting Let's Encrypt certificate";
+    qDebug() << "Requesting Let's Encrypt certificate";
     
     // This would implement the full ACME protocol
     // For now, we'll just log the request
@@ -267,7 +267,7 @@ bool SSLManager::renewLetsEncryptCertificate()
         return false;
     }
     
-    qCInfo(sslManager) << "Renewing Let's Encrypt certificate";
+    qDebug() << "Renewing Let's Encrypt certificate";
     return requestLetsEncryptCertificate();
 }
 
@@ -275,7 +275,7 @@ void SSLManager::setCloudflareEnabled(bool enabled)
 {
     m_cloudflareEnabled = enabled;
     m_statistics["cloudflare_enabled"] = enabled;
-    qCInfo(sslManager) << "Cloudflare" << (enabled ? "enabled" : "disabled");
+    qDebug() << "Cloudflare" << (enabled ? "enabled" : "disabled");
 }
 
 void SSLManager::setCloudflareApiToken(const QString& token)
@@ -294,7 +294,7 @@ bool SSLManager::updateCloudflareDNS()
         return false;
     }
     
-    qCInfo(sslManager) << "Updating Cloudflare DNS";
+    qDebug() << "Updating Cloudflare DNS";
     return true;
 }
 
@@ -336,7 +336,7 @@ void SSLManager::onCertificateRenewalTimer()
     
     // Check if certificate needs renewal
     if (m_certificateInfo.daysUntilExpiry <= 30) {
-        qCInfo(sslManager) << "Certificate expires in" << m_certificateInfo.daysUntilExpiry << "days, scheduling renewal";
+        qDebug() << "Certificate expires in" << m_certificateInfo.daysUntilExpiry << "days, scheduling renewal";
         
         if (m_letsEncryptEnabled) {
             renewLetsEncryptCertificate();
@@ -354,7 +354,7 @@ void SSLManager::onLetsEncryptRequestFinished()
     }
     
     if (reply->error() == QNetworkReply::NoError) {
-        qCInfo(sslManager) << "Let's Encrypt request completed successfully";
+        qDebug() << "Let's Encrypt request completed successfully";
     } else {
         qCWarning(sslManager) << "Let's Encrypt request failed:" << reply->errorString();
         emit sslError(reply->errorString());
@@ -371,7 +371,7 @@ void SSLManager::onCloudflareRequestFinished()
     }
     
     if (reply->error() == QNetworkReply::NoError) {
-        qCInfo(sslManager) << "Cloudflare request completed successfully";
+        qDebug() << "Cloudflare request completed successfully";
     } else {
         qCWarning(sslManager) << "Cloudflare request failed:" << reply->errorString();
     }
@@ -396,7 +396,7 @@ bool SSLManager::validateCertificate(const QSslCertificate& cert)
 
 bool SSLManager::renewCertificate()
 {
-    qCInfo(sslManager) << "Renewing certificate";
+    qDebug() << "Renewing certificate";
     // Implementation would depend on certificate type
     return true;
 }
@@ -425,7 +425,7 @@ void SSLManager::updateCertificateInfo()
 void SSLManager::scheduleRenewal()
 {
     if (m_sslConfig.autoRenew && m_certificateInfo.daysUntilExpiry <= 30) {
-        qCInfo(sslManager) << "Scheduling certificate renewal";
+        qDebug() << "Scheduling certificate renewal";
         // Schedule renewal
     }
 }
@@ -436,7 +436,7 @@ bool SSLManager::createLetsEncryptAccount()
         return false;
     }
     
-    qCInfo(sslManager) << "Creating Let's Encrypt account";
+    qDebug() << "Creating Let's Encrypt account";
     
     // Generate account key if not exists
     if (m_letsEncryptAccountKey.isEmpty()) {
@@ -470,7 +470,7 @@ bool SSLManager::createLetsEncryptOrder()
         return false;
     }
     
-    qCInfo(sslManager) << "Creating Let's Encrypt order";
+    qDebug() << "Creating Let's Encrypt order";
     
     // Create certificate order request
     QJsonObject orderRequest;
@@ -506,7 +506,7 @@ bool SSLManager::validateLetsEncryptDomain()
         return false;
     }
     
-    qCInfo(sslManager) << "Validating Let's Encrypt domain";
+    qDebug() << "Validating Let's Encrypt domain";
     
     // Create domain validation challenge
     QJsonObject challengeRequest;
@@ -530,7 +530,7 @@ bool SSLManager::finalizeLetsEncryptCertificate()
         return false;
     }
     
-    qCInfo(sslManager) << "Finalizing Let's Encrypt certificate";
+    qDebug() << "Finalizing Let's Encrypt certificate";
     
     // Create certificate finalization request
     QJsonObject finalizeRequest;
@@ -553,7 +553,7 @@ bool SSLManager::createCloudflareDNSRecord()
         return false;
     }
     
-    qCInfo(sslManager) << "Creating Cloudflare DNS record";
+    qDebug() << "Creating Cloudflare DNS record";
     
     // Create DNS record request
     QJsonObject dnsRecord;
@@ -582,7 +582,7 @@ bool SSLManager::deleteCloudflareDNSRecord()
         return false;
     }
     
-    qCInfo(sslManager) << "Deleting Cloudflare DNS record";
+    qDebug() << "Deleting Cloudflare DNS record";
     
     // Send DNS record deletion request
     QNetworkRequest request;
@@ -602,7 +602,7 @@ bool SSLManager::updateCloudflareDNSRecord()
         return false;
     }
     
-    qCInfo(sslManager) << "Updating Cloudflare DNS record";
+    qDebug() << "Updating Cloudflare DNS record";
     
     // Create DNS record update request
     QJsonObject dnsRecord;

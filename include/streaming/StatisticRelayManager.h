@@ -8,6 +8,9 @@
 #include <QString>
 #include <QWebSocketServer>
 #include <QWebSocket>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <memory>
 
 namespace LegacyStream {
@@ -57,10 +60,10 @@ struct RelayStatistics {
 };
 
 /**
- * @brief WebSocket client information
+ * @brief WebSocket client information (disabled - not available in current Qt installation)
  */
 struct WebSocketClient {
-    QWebSocket* socket;
+    // QWebSocket* socket;  // Disabled
     QString id;
     QDateTime connectedAt;
     QStringList subscribedTopics;

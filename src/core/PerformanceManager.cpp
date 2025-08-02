@@ -32,7 +32,7 @@ PerformanceManager::PerformanceManager()
     : QObject(nullptr)
     , m_monitoringTimer(new QTimer(this))
 {
-    qCDebug(performanceManager) << "PerformanceManager created";
+    qDebug() << "PerformanceManager created";
 }
 
 PerformanceManager::~PerformanceManager()
@@ -43,11 +43,11 @@ PerformanceManager::~PerformanceManager()
 bool PerformanceManager::initialize()
 {
     if (m_initialized.load()) {
-        qCWarning(performanceManager) << "PerformanceManager already initialized";
+        qDebug() << "PerformanceManager already initialized";
         return true;
     }
 
-    qCInfo(performanceManager) << "Initializing PerformanceManager";
+    qDebug() << "Initializing PerformanceManager";
 
     try {
         auto& config = Configuration::instance();
@@ -73,11 +73,11 @@ bool PerformanceManager::initialize()
         createMemoryPool(50 * 1024 * 1024, 1024 * 1024); // 1MB blocks for large buffers
         
         m_initialized.store(true);
-        qCInfo(performanceManager) << "PerformanceManager initialized successfully";
+        qDebug() << "PerformanceManager initialized successfully";
         return true;
     }
     catch (const std::exception& e) {
-        qCCritical(performanceManager) << "Failed to initialize PerformanceManager:" << e.what();
+        qDebug() << "Failed to initialize PerformanceManager:" << e.what();
         return false;
     }
 }
@@ -88,7 +88,7 @@ void PerformanceManager::shutdown()
         return;
     }
 
-    qCInfo(performanceManager) << "Shutting down PerformanceManager";
+    qDebug() << "Shutting down PerformanceManager";
 
     if (m_monitoringTimer) {
         m_monitoringTimer->stop();
@@ -103,13 +103,13 @@ void PerformanceManager::shutdown()
     }
 
     m_initialized.store(false);
-    qCInfo(performanceManager) << "PerformanceManager shut down";
+    qDebug() << "PerformanceManager shut down";
 }
 
 void* PerformanceManager::allocateBuffer(size_t size)
 {
     if (!m_initialized.load()) {
-        qCWarning(performanceManager) << "PerformanceManager not initialized";
+        qDebug() << "PerformanceManager not initialized";
         return nullptr;
     }
 
@@ -180,7 +180,7 @@ void PerformanceManager::deallocateBuffer(void* ptr)
 void PerformanceManager::setBufferSize(size_t size)
 {
     m_bufferSize.store(size);
-    qCInfo(performanceManager) << "Buffer size set to" << size << "bytes";
+    qDebug() << "Buffer size set to" << size << "bytes";
 }
 
 void PerformanceManager::setIOThreads(int count)
@@ -190,13 +190,13 @@ void PerformanceManager::setIOThreads(int count)
         m_iocpOptimizer->shutdown();
         m_iocpOptimizer->initialize(count);
     }
-    qCInfo(performanceManager) << "I/O threads set to" << count;
+    qDebug() << "I/O threads set to" << count;
 }
 
 void PerformanceManager::setWorkerThreads(int count)
 {
     m_workerThreads.store(count);
-    qCInfo(performanceManager) << "Worker threads set to" << count;
+    qDebug() << "Worker threads set to" << count;
 }
 
 PerformanceManager::PerformanceStats PerformanceManager::getPerformanceStats() const
@@ -212,7 +212,7 @@ void PerformanceManager::startResourceMonitoring()
     }
 
     m_resourceMonitoringActive.store(true);
-    qCInfo(performanceManager) << "Resource monitoring started";
+    qDebug() << "Resource monitoring started";
 }
 
 void PerformanceManager::stopResourceMonitoring()
@@ -222,14 +222,14 @@ void PerformanceManager::stopResourceMonitoring()
     }
 
     m_resourceMonitoringActive.store(false);
-    qCInfo(performanceManager) << "Resource monitoring stopped";
+    qDebug() << "Resource monitoring stopped";
 }
 
 void PerformanceManager::optimizeIOCP()
 {
     if (m_iocpOptimizer) {
         m_iocpOptimizer->optimize();
-        qCInfo(performanceManager) << "IOCP optimization completed";
+        qDebug() << "IOCP optimization completed";
     }
 }
 
@@ -240,14 +240,14 @@ void PerformanceManager::setIOCPThreadCount(int count)
         m_iocpOptimizer->shutdown();
         m_iocpOptimizer->initialize(count);
     }
-    qCInfo(performanceManager) << "IOCP thread count set to" << count;
+    qDebug() << "IOCP thread count set to" << count;
 }
 
 void PerformanceManager::createMemoryPool(size_t poolSize, size_t blockSize)
 {
     auto pool = std::make_unique<MemoryPool>(blockSize, poolSize / blockSize);
     m_specializedPools.push_back(std::move(pool));
-    qCDebug(performanceManager) << "Created memory pool:" << poolSize << "bytes," << blockSize << "block size";
+    qDebug() << "Created memory pool:" << poolSize << "bytes," << blockSize << "block size";
 }
 
 void* PerformanceManager::allocateFromPool(size_t size)
@@ -273,21 +273,21 @@ void PerformanceManager::deallocateToPool(void* ptr)
 void PerformanceManager::enableCompression(bool enabled)
 {
     m_compressionEnabled.store(enabled);
-    qCInfo(performanceManager) << "Compression" << (enabled ? "enabled" : "disabled");
+    qDebug() << "Compression" << (enabled ? "enabled" : "disabled");
 }
 
 void PerformanceManager::setCompressionLevel(int level)
 {
     if (level >= 1 && level <= 9) {
         m_compressionLevel.store(level);
-        qCInfo(performanceManager) << "Compression level set to" << level;
+        qDebug() << "Compression level set to" << level;
     }
 }
 
 void PerformanceManager::setCacheSize(size_t size)
 {
     m_cacheSize.store(size);
-    qCInfo(performanceManager) << "Cache size set to" << size << "bytes";
+    qDebug() << "Cache size set to" << size << "bytes";
 }
 
 void PerformanceManager::clearCache()
@@ -296,7 +296,7 @@ void PerformanceManager::clearCache()
     for (auto& pool : m_specializedPools) {
         // Reset pool (implementation would depend on pool design)
     }
-    qCInfo(performanceManager) << "Cache cleared";
+    qDebug() << "Cache cleared";
 }
 
 void PerformanceManager::updatePerformanceStats()
@@ -342,7 +342,7 @@ void PerformanceManager::optimizeMemoryUsage()
 void PerformanceManager::handleMemoryPressure()
 {
     // Implement memory pressure handling
-    qCWarning(performanceManager) << "Memory pressure detected, optimizing usage";
+    qDebug() << "Memory pressure detected, optimizing usage";
     
     // Clear caches
     clearCache();
@@ -451,7 +451,7 @@ bool IOCPOptimizer::initialize(int threadCount)
     // Create completion port
     m_completionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, 0);
     if (!m_completionPort) {
-        qCCritical(performanceManager) << "Failed to create IOCP completion port";
+        qDebug() << "Failed to create IOCP completion port";
         return false;
     }
     
@@ -464,7 +464,7 @@ bool IOCPOptimizer::initialize(int threadCount)
         }
     }
     
-    qCInfo(performanceManager) << "IOCP optimizer initialized with" << threadCount << "threads";
+    qDebug() << "IOCP optimizer initialized with" << threadCount << "threads";
     return true;
 }
 
@@ -497,7 +497,7 @@ void IOCPOptimizer::shutdown()
 void IOCPOptimizer::optimize()
 {
     // Implement IOCP optimization strategies
-    qCInfo(performanceManager) << "IOCP optimization completed";
+    qDebug() << "IOCP optimization completed";
 }
 
 DWORD WINAPI IOCPOptimizer::workerThreadProc(LPVOID param)
@@ -524,7 +524,7 @@ void IOCPOptimizer::workerThread()
         
         if (!result) {
             if (GetLastError() != WAIT_TIMEOUT) {
-                qCWarning(performanceManager) << "IOCP GetQueuedCompletionStatus failed";
+                qDebug() << "IOCP GetQueuedCompletionStatus failed";
             }
             continue;
         }
@@ -552,7 +552,7 @@ bool ResourceMonitor::initialize()
 #ifdef _WIN32
     m_processHandle = GetCurrentProcess();
     if (!m_processHandle) {
-        qCCritical(performanceManager) << "Failed to get process handle";
+        qDebug() << "Failed to get process handle";
         return false;
     }
     
@@ -562,7 +562,7 @@ bool ResourceMonitor::initialize()
     GetSystemTimeAsFileTime(&m_lastSystemTime);
 #endif
 
-    qCInfo(performanceManager) << "Resource monitor initialized";
+    qDebug() << "Resource monitor initialized";
     return true;
 }
 

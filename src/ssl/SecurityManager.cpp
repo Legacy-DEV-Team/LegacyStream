@@ -44,7 +44,7 @@ bool SecurityManager::initialize()
     // Initialize statistics
     m_securityStats.lastUpdate = QDateTime::currentDateTime();
     
-    qCInfo(securityManager) << "SecurityManager initialized successfully";
+    qDebug() << "SecurityManager initialized successfully";
     return true;
 }
 
@@ -66,7 +66,7 @@ void SecurityManager::shutdown()
     m_blockedIPs.clear();
     m_suspiciousIPs.clear();
     
-    qCInfo(securityManager) << "SecurityManager shutdown complete";
+    qDebug() << "SecurityManager shutdown complete";
 }
 
 bool SecurityManager::start()
@@ -76,7 +76,7 @@ bool SecurityManager::start()
         return true;
     }
     
-    qCInfo(securityManager) << "Starting SecurityManager";
+    qDebug() << "Starting SecurityManager";
     
     // Start timers
     m_cleanupTimer->start();
@@ -85,7 +85,7 @@ bool SecurityManager::start()
     m_isRunning.store(true);
     m_startTime = QDateTime::currentDateTime();
     
-    qCInfo(securityManager) << "SecurityManager started successfully";
+    qDebug() << "SecurityManager started successfully";
     return true;
 }
 
@@ -95,7 +95,7 @@ void SecurityManager::stop()
         return;
     }
     
-    qCInfo(securityManager) << "Stopping SecurityManager";
+    qDebug() << "Stopping SecurityManager";
     
     // Stop timers
     m_cleanupTimer->stop();
@@ -103,14 +103,14 @@ void SecurityManager::stop()
     
     m_isRunning.store(false);
     
-    qCInfo(securityManager) << "SecurityManager stopped";
+    qDebug() << "SecurityManager stopped";
 }
 
 void SecurityManager::setRateLimitConfig(const RateLimitConfig& config)
 {
     QMutexLocker locker(&m_mutex);
     m_rateLimitConfig = config;
-    qCInfo(securityManager) << "Rate limit config updated";
+    qDebug() << "Rate limit config updated";
 }
 
 bool SecurityManager::checkRateLimit(const QHostAddress& clientIP)
@@ -200,7 +200,7 @@ void SecurityManager::setDDoSProtectionConfig(const DDoSProtectionConfig& config
         }
     }
     
-    qCInfo(securityManager) << "DDoS protection config updated";
+    qDebug() << "DDoS protection config updated";
 }
 
 bool SecurityManager::checkDDoSProtection(const QHostAddress& clientIP)
@@ -256,7 +256,7 @@ void SecurityManager::blockIP(const QHostAddress& clientIP, int duration)
     
     m_blockedIPs[ipStr] = expiryTime;
     
-    qCInfo(securityManager) << "IP blocked:" << ipStr << "for" << duration << "seconds";
+    qDebug() << "IP blocked:" << ipStr << "for" << duration << "seconds";
     emit ipBlocked(clientIP, "Rate limit or DDoS protection");
 }
 
@@ -267,7 +267,7 @@ void SecurityManager::unblockIP(const QHostAddress& clientIP)
     QString ipStr = ipToString(clientIP);
     m_blockedIPs.remove(ipStr);
     
-    qCInfo(securityManager) << "IP unblocked:" << ipStr;
+    qDebug() << "IP unblocked:" << ipStr;
     emit ipUnblocked(clientIP);
 }
 
@@ -276,7 +276,7 @@ void SecurityManager::addAllowedIP(const QString& ip)
     if (isValidIP(ip)) {
         QMutexLocker locker(&m_mutex);
         m_allowedIPs.insert(ip);
-        qCInfo(securityManager) << "Added allowed IP:" << ip;
+        qDebug() << "Added allowed IP:" << ip;
     }
 }
 
@@ -284,7 +284,7 @@ void SecurityManager::removeAllowedIP(const QString& ip)
 {
     QMutexLocker locker(&m_mutex);
     m_allowedIPs.remove(ip);
-    qCInfo(securityManager) << "Removed allowed IP:" << ip;
+    qDebug() << "Removed allowed IP:" << ip;
 }
 
 void SecurityManager::addBlockedIP(const QString& ip)
@@ -292,7 +292,7 @@ void SecurityManager::addBlockedIP(const QString& ip)
     if (isValidIP(ip)) {
         QMutexLocker locker(&m_mutex);
         m_blockedIPs.insert(ip);
-        qCInfo(securityManager) << "Added blocked IP:" << ip;
+        qDebug() << "Added blocked IP:" << ip;
     }
 }
 
@@ -300,7 +300,7 @@ void SecurityManager::removeBlockedIP(const QString& ip)
 {
     QMutexLocker locker(&m_mutex);
     m_blockedIPs.remove(ip);
-    qCInfo(securityManager) << "Removed blocked IP:" << ip;
+    qDebug() << "Removed blocked IP:" << ip;
 }
 
 bool SecurityManager::isIPAllowed(const QHostAddress& clientIP) const
@@ -354,13 +354,13 @@ void SecurityManager::clearStats()
     QMutexLocker locker(&m_mutex);
     m_securityStats = SecurityStats{};
     m_securityStats.lastUpdate = QDateTime::currentDateTime();
-    qCInfo(securityManager) << "Security statistics cleared";
+    qDebug() << "Security statistics cleared";
 }
 
 void SecurityManager::setSecurityEnabled(bool enabled)
 {
     m_securityEnabled = enabled;
-    qCInfo(securityManager) << "Security" << (enabled ? "enabled" : "disabled");
+    qDebug() << "Security" << (enabled ? "enabled" : "disabled");
 }
 
 bool SecurityManager::isSecurityEnabled() const

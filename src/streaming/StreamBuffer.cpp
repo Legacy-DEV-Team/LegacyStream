@@ -1,90 +1,66 @@
 #include "streaming/StreamBuffer.h"
-#include <QMutexLocker>
+#include <QDebug>
 
 namespace LegacyStream {
 
-StreamBuffer::StreamBuffer(QObject* parent)
+StreamBuffer::StreamBuffer(QObject *parent)
     : QObject(parent)
+    , m_maxSize(1024 * 1024) // 1MB default
 {
+    qDebug() << "StreamBuffer initialized";
 }
 
 StreamBuffer::~StreamBuffer()
 {
-    clear();
+    qDebug() << "StreamBuffer destroyed";
 }
 
-void StreamBuffer::setBufferSize(int size)
+void StreamBuffer::write(const QByteArray& data)
 {
-    QMutexLocker locker(&m_mutex);
-    m_maxSize = size;
-}
-
-void StreamBuffer::addData(const QByteArray& data)
-{
-    QMutexLocker locker(&m_mutex);
+    m_buffer.append(data);
     
-    // Check if adding this data would exceed max size
-    int currentSize = 0;
-    for (const QByteArray& buffer : m_buffers) {
-        currentSize += buffer.size();
+    // Trim buffer if it exceeds max size
+    if (m_buffer.size() > m_maxSize) {
+        m_buffer = m_buffer.right(m_maxSize / 2);
     }
-    
-    if (currentSize + data.size() > m_maxSize) {
-        // Remove oldest data to make room
-        while (currentSize + data.size() > m_maxSize && !m_buffers.isEmpty()) {
-            currentSize -= m_buffers.dequeue().size();
-        }
-    }
-    
-    m_buffers.enqueue(data);
 }
 
-QByteArray StreamBuffer::getData(int maxSize)
+QByteArray StreamBuffer::read(qint64 maxSize)
 {
-    QMutexLocker locker(&m_mutex);
-    
-    if (m_buffers.isEmpty()) {
+    if (maxSize <= 0 || m_buffer.isEmpty()) {
         return QByteArray();
     }
     
-    QByteArray result;
-    int totalSize = 0;
+    qint64 readSize = qMin(maxSize, static_cast<qint64>(m_buffer.size()));
+    QByteArray data = m_buffer.left(readSize);
+    m_buffer.remove(0, readSize);
     
-    while (!m_buffers.isEmpty() && (maxSize == -1 || totalSize < maxSize)) {
-        QByteArray buffer = m_buffers.dequeue();
-        if (maxSize != -1 && totalSize + buffer.size() > maxSize) {
-            // Put back the excess data
-            QByteArray excess = buffer.mid(maxSize - totalSize);
-            m_buffers.prepend(excess);
-            buffer = buffer.left(maxSize - totalSize);
-        }
-        result.append(buffer);
-        totalSize += buffer.size();
-    }
-    
-    return result;
+    return data;
 }
 
 void StreamBuffer::clear()
 {
-    QMutexLocker locker(&m_mutex);
-    m_buffers.clear();
+    m_buffer.clear();
 }
 
-int StreamBuffer::availableData() const
+qint64 StreamBuffer::size() const
 {
-    QMutexLocker locker(&m_mutex);
-    int totalSize = 0;
-    for (const QByteArray& buffer : m_buffers) {
-        totalSize += buffer.size();
-    }
-    return totalSize;
+    return m_buffer.size();
 }
 
 bool StreamBuffer::isEmpty() const
 {
-    QMutexLocker locker(&m_mutex);
-    return m_buffers.isEmpty();
+    return m_buffer.isEmpty();
+}
+
+void StreamBuffer::setMaxSize(qint64 maxSize)
+{
+    m_maxSize = maxSize;
+}
+
+qint64 StreamBuffer::maxSize() const
+{
+    return m_maxSize;
 }
 
 } // namespace LegacyStream 

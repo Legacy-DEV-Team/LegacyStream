@@ -33,7 +33,7 @@ void Configuration::initialize(const QString& configPath)
     load();
     validateSettings();
     
-    qCInfo(configuration) << "Configuration initialized from" << configPath;
+    qDebug() << "Configuration initialized from" << configPath;
 }
 
 void Configuration::save()
@@ -219,7 +219,7 @@ void Configuration::reset()
 {
     setDefaultValues();
     save();
-    qCInfo(configuration) << "Configuration reset to defaults";
+    qDebug() << "Configuration reset to defaults";
 }
 
 void Configuration::setDefaultValues()

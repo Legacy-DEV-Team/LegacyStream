@@ -23,13 +23,13 @@ LegacyStream is a powerful, Windows-based audio streaming server with full IceCa
 
 ## 📚 Documentation
 
-For comprehensive guides and technical documentation, visit our [documentation website](docs/):
+For comprehensive guides and technical documentation, visit our [documentation website](https://legacy-dev-team.github.io/LegacyStream/):
 
-- **[Getting Started](docs/getting-started.html)** - Quick setup guide
-- **[Configuration](docs/configuration.html)** - Server settings and optimization
-- **[Web Interface](docs/web-interface.html)** - Custom UX/UI features
-- **[API Reference](docs/api-reference.html)** - RESTful API documentation
-- **[Performance](docs/performance.html)** - Optimization strategies
+- **[Getting Started](https://legacy-dev-team.github.io/LegacyStream/getting-started.html)** - Quick setup guide
+- **[Configuration](https://legacy-dev-team.github.io/LegacyStream/configuration.html)** - Server settings and optimization
+- **[Web Interface](https://legacy-dev-team.github.io/LegacyStream/web-interface.html)** - Custom UX/UI features
+- **[API Reference](https://legacy-dev-team.github.io/LegacyStream/api-reference.html)** - RESTful API documentation
+- **[Performance](https://legacy-dev-team.github.io/LegacyStream/performance.html)** - Optimization strategies
 
 ## 🛠️ System Requirements
 
@@ -40,14 +40,14 @@ For comprehensive guides and technical documentation, visit our [documentation w
 
 ## 📖 Learn More
 
-- **Features Overview**: [docs/features.html](docs/features.html)
-- **Troubleshooting**: [docs/troubleshooting.html](docs/troubleshooting.html)
-- **Community**: [GitHub Discussions](https://github.com/Legacy-DEV-Team/LegacyStream/discussions)
+- **Features Overview**: [Features Overview](https://legacy-dev-team.github.io/LegacyStream/index.html#features)
+- **Troubleshooting**: [Troubleshooting](https://legacy-dev-team.github.io/LegacyStream/troubleshooting-guide.html)
+- **Discussions**: [GitHub Discussions](https://github.com/Legacy-DEV-Team/LegacyStream/discussions)
 - **Issues**: [GitHub Issues](https://github.com/Legacy-DEV-Team/LegacyStream/issues)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](docs/contributing.html) for details.
+We welcome contributions! Please see our [Contributing Guide](https://legacy-dev-team.github.io/LegacyStream/developer-guide.html) for details.
 
 ## 📄 License
 
@@ -58,7 +58,7 @@ LegacyStream is licensed under the MIT License. See [LICENSE](LICENSE) file for 
 - **📧 Email**: support@legacystream.com
 - **💬 Discussions**: [GitHub Discussions](https://github.com/Legacy-DEV-Team/LegacyStream/discussions)
 - **🐛 Issues**: [GitHub Issues](https://github.com/Legacy-DEV-Team/LegacyStream/issues)
-- **📖 Documentation**: [docs/](docs/)
+- **📖 Documentation**: [Documentation](https://legacy-dev-team.github.io/LegacyStream/index.html#features)
 
 ---
 

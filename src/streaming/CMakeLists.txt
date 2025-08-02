@@ -12,14 +12,14 @@ set(LEGACYSTREAM_STREAMING_SOURCES
 )
 
 set(LEGACYSTREAM_STREAMING_HEADERS
-    HttpServer.h
-    StreamManager.h
-    RelayManager.h
-    MetadataManager.h
-    HLSGenerator.h
-    StreamBuffer.h
-    WebInterface.h
-    StatisticRelayManager.h
+    ../../include/streaming/HttpServer.h
+    ../../include/streaming/StreamManager.h
+    ../../include/streaming/RelayManager.h
+    ../../include/streaming/MetadataManager.h
+    ../../include/streaming/HLSGenerator.h
+    ../../include/streaming/StreamBuffer.h
+    ../../include/streaming/WebInterface.h
+    ../../include/streaming/StatisticRelayManager.h
 )
 
 # Create streaming library
@@ -39,6 +39,7 @@ target_link_libraries(LegacyStreamStreaming PUBLIC
     Qt6::Core
     Qt6::Network
     Qt6::Widgets
+    Qt6::WebSockets
     OpenSSL::SSL
     OpenSSL::Crypto
 )

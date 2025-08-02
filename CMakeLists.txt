@@ -5,8 +5,13 @@ project(LegacyStream VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Fix for MSVC and Qt6
+if(MSVC)
+    add_compile_options(/Zc:__cplusplus /permissive-)
+endif()
+
 # Find Qt6 components
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network Sql Charts WebSockets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network WebSockets)
 
 # Find OpenSSL
 find_package(OpenSSL REQUIRED)
@@ -24,17 +29,19 @@ set(LEGACYSTREAM_CORE_SOURCES
     src/core/Configuration.cpp
     src/core/ServerManager.cpp
     src/core/PerformanceManager.cpp
+    src/core/Logger.cpp
 )
 
 set(LEGACYSTREAM_CORE_HEADERS
     include/core/Configuration.h
     include/core/ServerManager.h
     include/core/PerformanceManager.h
+    include/core/Logger.h
 )
 
 # GUI module
 set(LEGACYSTREAM_GUI_SOURCES
-    # Add GUI source files here when created
+    src/gui/MainWindow.cpp
 )
 
 set(LEGACYSTREAM_GUI_HEADERS
@@ -44,42 +51,31 @@ set(LEGACYSTREAM_GUI_HEADERS
 
 # SSL module
 set(LEGACYSTREAM_SSL_SOURCES
-    # Add SSL source files here when created
+    src/ssl/CertificateManager.cpp
 )
 
 set(LEGACYSTREAM_SSL_HEADERS
     include/ssl/CertificateManager.h
 )
 
-# Streaming module
-set(LEGACYSTREAM_STREAMING_SOURCES
-    src/streaming/HttpServer.cpp
-    src/streaming/WebInterface.cpp
-    src/streaming/StatisticRelayManager.cpp
-)
-
-set(LEGACYSTREAM_STREAMING_HEADERS
-    include/streaming/HttpServer.h
-    include/streaming/WebInterface.h
-    include/streaming/StatisticRelayManager.h
-)
+# Streaming module - handled in subdirectory
 
 # Protocols module
 set(LEGACYSTREAM_PROTOCOLS_SOURCES
-    # Add protocol source files here when created
+    src/protocols/ProtocolManager.cpp
 )
 
 set(LEGACYSTREAM_PROTOCOLS_HEADERS
-    # Add protocol header files here when created
+    include/protocols/ProtocolManager.h
 )
 
 # Codecs module
 set(LEGACYSTREAM_CODECS_SOURCES
-    # Add codec source files here when created
+    src/codecs/CodecManager.cpp
 )
 
 set(LEGACYSTREAM_CODECS_HEADERS
-    # Add codec header files here when created
+    include/codecs/CodecManager.h
 )
 
 # Main application
@@ -103,10 +99,7 @@ add_library(LegacyStreamSSL STATIC
     ${LEGACYSTREAM_SSL_HEADERS}
 )
 
-add_library(LegacyStreamStreaming STATIC
-    ${LEGACYSTREAM_STREAMING_SOURCES}
-    ${LEGACYSTREAM_STREAMING_HEADERS}
-)
+# LegacyStreamStreaming library is created in src/streaming/CMakeLists.txt
 
 add_library(LegacyStreamProtocols STATIC
     ${LEGACYSTREAM_PROTOCOLS_SOURCES}
@@ -122,7 +115,7 @@ add_library(LegacyStreamCodecs STATIC
 target_link_libraries(LegacyStreamCore Qt6::Core Qt6::Network)
 target_link_libraries(LegacyStreamGUI Qt6::Core Qt6::Widgets Qt6::Network)
 target_link_libraries(LegacyStreamSSL Qt6::Core OpenSSL::SSL OpenSSL::Crypto)
-target_link_libraries(LegacyStreamStreaming Qt6::Core Qt6::Network Qt6::Widgets Qt6::WebSockets)
+# LegacyStreamStreaming linking is handled in src/streaming/CMakeLists.txt
 target_link_libraries(LegacyStreamProtocols Qt6::Core Qt6::Network)
 target_link_libraries(LegacyStreamCodecs Qt6::Core)
 
@@ -140,8 +133,7 @@ target_link_libraries(LegacyStream
     Qt6::Core
     Qt6::Widgets
     Qt6::Network
-    Qt6::Sql
-    Qt6::Charts
+    Qt6::WebSockets
     OpenSSL::SSL
     OpenSSL::Crypto
 )
