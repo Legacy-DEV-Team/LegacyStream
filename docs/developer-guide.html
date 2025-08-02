@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream Developer Guide</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .developer-guide {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .guide-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .guide-section h2 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        .guide-section h3 {
+            color: #495057;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .code-block {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .tip {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .architecture-diagram {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .table-of-contents {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+        }
+        .table-of-contents li {
+            margin: 5px 0;
+        }
+        .table-of-contents a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+        .contribution-guidelines {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #28a745;
+        }
+        .contribution-guidelines h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="developer-guide">
+        <h1>LegacyStream Developer Guide</h1>
+        <p class="lead">Complete guide for developers contributing to the LegacyStream project.</p>
+
+        <div class="table-of-contents">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#architecture">2. Architecture Overview</a></li>
+                <li><a href="#development-setup">3. Development Setup</a></li>
+                <li><a href="#code-organization">4. Code Organization</a></li>
+                <li><a href="#coding-standards">5. Coding Standards</a></li>
+                <li><a href="#testing">6. Testing</a></li>
+                <li><a href="#documentation">7. Documentation</a></li>
+                <li><a href="#contribution-guidelines">8. Contribution Guidelines</a></li>
+                <li><a href="#build-system">9. Build System</a></li>
+                <li><a href="#deployment">10. Deployment</a></li>
+                <li><a href="#api-reference">11. API Reference</a></li>
+                <li><a href="#troubleshooting">12. Troubleshooting</a></li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="introduction">
+            <h2>1. Introduction</h2>
+            <p>LegacyStream is an open-source, high-performance audio streaming server built with C++ and Qt. This guide provides comprehensive information for developers who want to contribute to the project.</p>
+            
+            <h3>Project Goals</h3>
+            <ul>
+                <li><strong>High Performance:</strong> Optimized for Windows with IOCP</li>
+                <li><strong>Multi-Protocol Support:</strong> IceCast and SHOUTcast compatibility</li>
+                <li><strong>Modern Architecture:</strong> Modular, extensible design</li>
+                <li><strong>Developer Friendly:</strong> Comprehensive documentation and tools</li>
+                <li><strong>Cross-Platform:</strong> Windows-focused with potential for other platforms</li>
+            </ul>
+
+            <h3>Technology Stack</h3>
+            <ul>
+                <li><strong>Language:</strong> C++17/20</li>
+                <li><strong>Framework:</strong> Qt 6.x</li>
+                <li><strong>Build System:</strong> CMake</li>
+                <li><strong>Testing:</strong> Google Test</li>
+                <li><strong>Documentation:</strong> Doxygen</li>
+                <li><strong>Version Control:</strong> Git</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="architecture">
+            <h2>2. Architecture Overview</h2>
+            
+            <h3>2.1 Core Components</h3>
+            <p>LegacyStream follows a modular architecture with clear separation of concerns:</p>
+            
+            <h4>Core Module</h4>
+            <ul>
+                <li><strong>ServerManager:</strong> Central coordination and lifecycle management</li>
+                <li><strong>ConfigurationManager:</strong> Settings and configuration management</li>
+                <li><strong>PerformanceManager:</strong> Performance optimization and monitoring</li>
+                <li><strong>LogManager:</strong> Logging and debugging facilities</li>
+            </ul>
+
+            <h4>Streaming Module</h4>
+            <ul>
+                <li><strong>StreamManager:</strong> Audio stream management</li>
+                <li><strong>CodecManager:</strong> Audio codec handling</li>
+                <li><strong>ProtocolManager:</strong> IceCast/SHOUTcast protocols</li>
+                <li><strong>HttpServer:</strong> HTTP server implementation</li>
+            </ul>
+
+            <h4>GUI Module</h4>
+            <ul>
+                <li><strong>MainWindow:</strong> Primary GUI interface</li>
+                <li><strong>ThemeManager:</strong> UI theming and customization</li>
+                <li><strong>AccessibilityManager:</strong> Accessibility features</li>
+            </ul>
+
+            <h3>2.2 Design Patterns</h3>
+            <ul>
+                <li><strong>Singleton Pattern:</strong> Used for managers and global services</li>
+                <li><strong>Observer Pattern:</strong> Event-driven architecture</li>
+                <li><strong>Factory Pattern:</strong> Object creation and management</li>
+                <li><strong>Strategy Pattern:</strong> Pluggable algorithms and protocols</li>
+            </ul>
+
+            <h3>2.3 Data Flow</h3>
+            <ol>
+                <li>Audio input is captured or loaded from files</li>
+                <li>Audio data is processed and encoded</li>
+                <li>Encoded data is buffered and queued</li>
+                <li>HTTP server delivers streams to clients</li>
+                <li>Real-time statistics are collected and displayed</li>
+            </ol>
+        </div>
+
+        <div class="guide-section" id="development-setup">
+            <h2>3. Development Setup</h2>
+            
+            <h3>3.1 Prerequisites</h3>
+            <ul>
+                <li><strong>Windows 10/11:</strong> Development environment</li>
+                <li><strong>Visual Studio 2019/2022:</strong> C++ compiler and IDE</li>
+                <li><strong>Qt 6.x:</strong> Application framework</li>
+                <li><strong>CMake 3.16+:</strong> Build system</li>
+                <li><strong>Git:</strong> Version control</li>
+            </ul>
+
+            <h3>3.2 Environment Setup</h3>
+            <ol>
+                <li>Clone the repository:
+                    <div class="code-block">
+                        git clone https://github.com/legacystream/legacystream.git
+                        cd legacystream
+                    </div>
+                </li>
+                <li>Install Qt 6.x and set environment variables</li>
+                <li>Install Visual Studio with C++ development tools</li>
+                <li>Install CMake and add to PATH</li>
+                <li>Install additional dependencies:
+                    <div class="code-block">
+                        # Install vcpkg for dependencies
+                        git clone https://github.com/Microsoft/vcpkg.git
+                        cd vcpkg
+                        .\bootstrap-vcpkg.bat
+                        .\vcpkg install openssl:x64-windows
+                        .\vcpkg install zlib:x64-windows
+                    </div>
+                </li>
+            </ol>
+
+            <h3>3.3 Building from Source</h3>
+            <div class="code-block">
+                # Create build directory
+                mkdir build
+                cd build
+
+                # Configure with CMake
+                cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+                # Build the project
+                cmake --build . --config Release
+
+                # Run tests
+                ctest --output-on-failure
+            </div>
+
+            <div class="tip">
+                <strong>Tip:</strong> Use Visual Studio's CMake integration for a better development experience.
+            </div>
+        </div>
+
+        <div class="guide-section" id="code-organization">
+            <h2>4. Code Organization</h2>
+            
+            <h3>4.1 Directory Structure</h3>
+            <div class="code-block">
+                LegacyStream/
+                ├── include/           # Header files
+                │   ├── core/         # Core functionality
+                │   ├── gui/          # GUI components
+                │   ├── streaming/    # Streaming modules
+                │   ├── ssl/          # Security components
+                │   └── realtime/     # Real-time features
+                ├── src/              # Source files
+                │   ├── core/         # Core implementation
+                │   ├── gui/          # GUI implementation
+                │   ├── streaming/    # Streaming implementation
+                │   └── ssl/          # Security implementation
+                ├── tests/            # Test files
+                ├── docs/             # Documentation
+                ├── scripts/          # Build and deployment scripts
+                └── resources/        # Application resources
+            </div>
+
+            <h3>4.2 Naming Conventions</h3>
+            <ul>
+                <li><strong>Classes:</strong> PascalCase (e.g., <code>StreamManager</code>)</li>
+                <li><strong>Functions:</strong> camelCase (e.g., <code>startStream()</code>)</li>
+                <li><strong>Variables:</strong> camelCase (e.g., <code>streamName</code>)</li>
+                <li><strong>Constants:</strong> UPPER_SNAKE_CASE (e.g., <code>MAX_CONNECTIONS</code>)</li>
+                <li><strong>Files:</strong> PascalCase (e.g., <code>StreamManager.h</code>)</li>
+            </ul>
+
+            <h3>4.3 File Organization</h3>
+            <ul>
+                <li>One class per header/source file pair</li>
+                <li>Header files contain declarations only</li>
+                <li>Source files contain implementations</li>
+                <li>Use forward declarations when possible</li>
+                <li>Include guards for all header files</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="coding-standards">
+            <h2>5. Coding Standards</h2>
+            
+            <h3>5.1 C++ Standards</h3>
+            <ul>
+                <li>Use C++17/20 features where appropriate</li>
+                <li>Prefer modern C++ over C-style code</li>
+                <li>Use smart pointers instead of raw pointers</li>
+                <li>Use RAII for resource management</li>
+                <li>Prefer const correctness</li>
+            </ul>
+
+            <h3>5.2 Code Style</h3>
+            <div class="code-block">
+                // Good example
+                class StreamManager {
+                public:
+                    explicit StreamManager(QObject* parent = nullptr);
+                    ~StreamManager();
+                    
+                    bool startStream(const QString& streamName);
+                    void stopStream(const QString& streamName);
+                    
+                private:
+                    void initializeStream();
+                    void cleanupStream();
+                    
+                    QString m_streamName;
+                    bool m_isRunning = false;
+                };
+            </div>
+
+            <h3>5.3 Documentation</h3>
+            <ul>
+                <li>Use Doxygen comments for all public APIs</li>
+                <li>Include examples in documentation</li>
+                <li>Document exceptions and error conditions</li>
+                <li>Keep documentation up to date</li>
+            </ul>
+
+            <h3>5.4 Error Handling</h3>
+            <ul>
+                <li>Use exceptions for exceptional conditions</li>
+                <li>Return error codes for expected failures</li>
+                <li>Log errors with appropriate detail</li>
+                <li>Provide meaningful error messages</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="testing">
+            <h2>6. Testing</h2>
+            
+            <h3>6.1 Test Types</h3>
+            <ul>
+                <li><strong>Unit Tests:</strong> Test individual components</li>
+                <li><strong>Integration Tests:</strong> Test component interactions</li>
+                <li><strong>Performance Tests:</strong> Test performance characteristics</li>
+                <li><strong>GUI Tests:</strong> Test user interface functionality</li>
+            </ul>
+
+            <h3>6.2 Writing Tests</h3>
+            <div class="code-block">
+                #include <gtest/gtest.h>
+                #include "StreamManager.h"
+
+                class StreamManagerTest : public ::testing::Test {
+                protected:
+                    void SetUp() override {
+                        manager = std::make_unique<StreamManager>();
+                    }
+
+                    void TearDown() override {
+                        manager.reset();
+                    }
+
+                    std::unique_ptr<StreamManager> manager;
+                };
+
+                TEST_F(StreamManagerTest, StartStream_ValidName_ReturnsTrue) {
+                    // Arrange
+                    QString streamName = "test_stream";
+                    
+                    // Act
+                    bool result = manager->startStream(streamName);
+                    
+                    // Assert
+                    EXPECT_TRUE(result);
+                    EXPECT_TRUE(manager->isStreamRunning(streamName));
+                }
+            </div>
+
+            <h3>6.3 Running Tests</h3>
+            <div class="code-block">
+                # Run all tests
+                ctest --output-on-failure
+
+                # Run specific test
+                ./tests/StreamManagerTest --gtest_filter=StartStream_ValidName_ReturnsTrue
+
+                # Run with verbose output
+                ctest --verbose
+            </div>
+        </div>
+
+        <div class="guide-section" id="documentation">
+            <h2>7. Documentation</h2>
+            
+            <h3>7.1 Code Documentation</h3>
+            <div class="code-block">
+                /**
+                 * @brief Manages audio streams and their lifecycle
+                 * 
+                 * The StreamManager class provides functionality to create, start, stop,
+                 * and monitor audio streams. It handles stream configuration, encoding,
+                 * and delivery to clients.
+                 * 
+                 * @example
+                 * @code
+                 * StreamManager manager;
+                 * manager.startStream("my_stream");
+                 * @endcode
+                 */
+                class StreamManager : public QObject {
+                    Q_OBJECT
+                public:
+                    /**
+                     * @brief Starts a new audio stream
+                     * @param streamName The name of the stream to start
+                     * @return true if stream started successfully, false otherwise
+                     * @throws std::runtime_error if stream configuration is invalid
+                     */
+                    bool startStream(const QString& streamName);
+                };
+            </div>
+
+            <h3>7.2 API Documentation</h3>
+            <ul>
+                <li>Document all public APIs with Doxygen</li>
+                <li>Include usage examples</li>
+                <li>Document parameters and return values</li>
+                <li>Explain error conditions and exceptions</li>
+            </ul>
+
+            <h3>7.3 Architecture Documentation</h3>
+            <ul>
+                <li>Maintain architecture diagrams</li>
+                <li>Document design decisions</li>
+                <li>Keep component relationships current</li>
+                <li>Document data flow and state management</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="contribution-guidelines">
+            <h2>8. Contribution Guidelines</h2>
+            
+            <div class="contribution-guidelines">
+                <h3>8.1 Before Contributing</h3>
+                <ul>
+                    <li>Read the project documentation</li>
+                    <li>Check existing issues and pull requests</li>
+                    <li>Discuss major changes in issues first</li>
+                    <li>Ensure your development environment is set up</li>
+                </ul>
+
+                <h3>8.2 Development Workflow</h3>
+                <ol>
+                    <li>Fork the repository</li>
+                    <li>Create a feature branch:
+                        <div class="code-block">
+                            git checkout -b feature/your-feature-name
+                        </div>
+                    </li>
+                    <li>Make your changes following coding standards</li>
+                    <li>Write tests for new functionality</li>
+                    <li>Update documentation as needed</li>
+                    <li>Run the full test suite</li>
+                    <li>Commit your changes with clear messages</li>
+                    <li>Push to your fork and create a pull request</li>
+                </ol>
+
+                <h3>8.3 Commit Messages</h3>
+                <p>Use clear, descriptive commit messages:</p>
+                <div class="code-block">
+                    feat: add support for AAC audio codec
+                    fix: resolve memory leak in StreamManager
+                    docs: update API documentation
+                    test: add unit tests for new features
+                    refactor: improve error handling in HttpServer
+                </div>
+
+                <h3>8.4 Pull Request Guidelines</h3>
+                <ul>
+                    <li>Provide a clear description of changes</li>
+                    <li>Include tests for new functionality</li>
+                    <li>Update documentation if needed</li>
+                    <li>Ensure all tests pass</li>
+                    <li>Follow the project's coding standards</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="guide-section" id="build-system">
+            <h2>9. Build System</h2>
+            
+            <h3>9.1 CMake Configuration</h3>
+            <div class="code-block">
+                # CMakeLists.txt example
+                cmake_minimum_required(VERSION 3.16)
+                project(LegacyStream VERSION 1.0.0 LANGUAGES CXX)
+
+                set(CMAKE_CXX_STANDARD 17)
+                set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+                find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
+                find_package(OpenSSL REQUIRED)
+
+                add_executable(LegacyStream
+                    src/main.cpp
+                    src/core/ServerManager.cpp
+                    src/streaming/StreamManager.cpp
+                )
+
+                target_link_libraries(LegacyStream
+                    Qt6::Core
+                    Qt6::Widgets
+                    Qt6::Network
+                    OpenSSL::SSL
+                    OpenSSL::Crypto
+                )
+            </div>
+
+            <h3>9.2 Build Configurations</h3>
+            <ul>
+                <li><strong>Debug:</strong> Development with debug symbols</li>
+                <li><strong>Release:</strong> Optimized production build</li>
+                <li><strong>RelWithDebInfo:</strong> Release with debug info</li>
+                <li><strong>MinSizeRel:</strong> Minimal size release</li>
+            </ul>
+
+            <h3>9.3 Dependencies</h3>
+            <ul>
+                <li><strong>Qt 6.x:</strong> Application framework</li>
+                <li><strong>OpenSSL:</strong> SSL/TLS support</li>
+                <li><strong>Google Test:</strong> Testing framework</li>
+                <li><strong>Doxygen:</strong> Documentation generation</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="deployment">
+            <h2>10. Deployment</h2>
+            
+            <h3>10.1 Release Process</h3>
+            <ol>
+                <li>Update version numbers in CMakeLists.txt</li>
+                <li>Update CHANGELOG.md with release notes</li>
+                <li>Create a release tag:
+                    <div class="code-block">
+                        git tag -a v1.0.0 -m "Release version 1.0.0"
+                        git push origin v1.0.0
+                    </div>
+                </li>
+                <li>Build release packages</li>
+                <li>Test release packages</li>
+                <li>Upload to release page</li>
+            </ol>
+
+            <h3>10.2 Packaging</h3>
+            <ul>
+                <li>Create Windows installer with NSIS</li>
+                <li>Include all required dependencies</li>
+                <li>Provide portable version</li>
+                <li>Include documentation and examples</li>
+            </ul>
+
+            <h3>10.3 Continuous Integration</h3>
+            <ul>
+                <li>Automated builds on multiple platforms</li>
+                <li>Automated testing</li>
+                <li>Code quality checks</li>
+                <li>Automated deployment</li>
+            </ul>
+        </div>
+
+        <div class="guide-section" id="api-reference">
+            <h2>11. API Reference</h2>
+            
+            <h3>11.1 Core APIs</h3>
+            <div class="code-block">
+                // ServerManager API
+                class ServerManager {
+                public:
+                    bool initialize();
+                    void shutdown();
+                    bool isRunning() const;
+                    
+                    // Stream management
+                    bool createStream(const QString& name);
+                    bool startStream(const QString& name);
+                    bool stopStream(const QString& name);
+                    bool deleteStream(const QString& name);
+                };
+
+                // ConfigurationManager API
+                class ConfigurationManager {
+                public:
+                    void loadConfiguration(const QString& file);
+                    void saveConfiguration(const QString& file);
+                    QVariant getValue(const QString& key);
+                    void setValue(const QString& key, const QVariant& value);
+                };
+            </div>
+
+            <h3>11.2 Streaming APIs</h3>
+            <div class="code-block">
+                // StreamManager API
+                class StreamManager {
+                public:
+                    bool addMountPoint(const QString& path, const StreamConfig& config);
+                    bool removeMountPoint(const QString& path);
+                    QList<StreamInfo> getActiveStreams() const;
+                    
+                    // Audio processing
+                    void setAudioFormat(const QString& stream, const AudioFormat& format);
+                    void setBitrate(const QString& stream, int bitrate);
+                    void setSampleRate(const QString& stream, int sampleRate);
+                };
+            </div>
+
+            <h3>11.3 GUI APIs</h3>
+            <div class="code-block">
+                // MainWindow API
+                class MainWindow : public QMainWindow {
+                public:
+                    void showStreamManager();
+                    void showConfiguration();
+                    void showStatistics();
+                    void showLogs();
+                };
+            </div>
+        </div>
+
+        <div class="guide-section" id="troubleshooting">
+            <h2>12. Troubleshooting</h2>
+            
+            <h3>12.1 Common Build Issues</h3>
+            
+            <h4>Qt Not Found</h4>
+            <div class="code-block">
+                # Set Qt6_DIR environment variable
+                set Qt6_DIR=C:\Qt\6.5.0\msvc2019_64\lib\cmake\Qt6
+                
+                # Or specify in CMake
+                cmake .. -DQt6_DIR=C:\Qt\6.5.0\msvc2019_64\lib\cmake\Qt6
+            </div>
+
+            <h4>OpenSSL Not Found</h4>
+            <div class="code-block">
+                # Use vcpkg for dependencies
+                cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+            </div>
+
+            <h4>Compiler Errors</h4>
+            <ul>
+                <li>Ensure you're using C++17 or later</li>
+                <li>Check that all required headers are included</li>
+                <li>Verify Qt modules are properly linked</li>
+                <li>Check for missing dependencies</li>
+            </ul>
+
+            <h3>12.2 Runtime Issues</h3>
+            
+            <h4>Application Won't Start</h4>
+            <ul>
+                <li>Check if all DLLs are in PATH</li>
+                <li>Verify Qt plugins are accessible</li>
+                <li>Check for missing configuration files</li>
+                <li>Review application logs</li>
+            </ul>
+
+            <h4>Streaming Issues</h4>
+            <ul>
+                <li>Verify audio codecs are available</li>
+                <li>Check network port availability</li>
+                <li>Review stream configuration</li>
+                <li>Check firewall settings</li>
+            </ul>
+
+            <h3>12.3 Debugging</h3>
+            <ul>
+                <li>Use Visual Studio debugger</li>
+                <li>Enable debug logging</li>
+                <li>Use Qt Creator for GUI debugging</li>
+                <li>Check Windows Event Viewer</li>
+            </ul>
+        </div>
+
+        <div class="guide-section">
+            <h2>Support and Resources</h2>
+            <p>For additional developer support:</p>
+            <ul>
+                <li><strong>GitHub Repository:</strong> <a href="https://github.com/legacystream/legacystream">https://github.com/legacystream/legacystream</a></li>
+                <li><strong>Developer Documentation:</strong> <a href="https://legacystream.com/dev-docs">https://legacystream.com/dev-docs</a></li>
+                <li><strong>API Reference:</strong> <a href="https://legacystream.com/api">https://legacystream.com/api</a></li>
+                <li><strong>Developer Forum:</strong> <a href="https://forum.legacystream.com/dev">https://forum.legacystream.com/dev</a></li>
+                <li><strong>Email:</strong> dev@legacystream.com</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream User Manual</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .user-manual {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .manual-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .manual-section h2 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .manual-section h3 {
+            color: #495057;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step-list li::before {
+            content: counter(step-counter);
+            background: #007bff;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .code-block {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .tip {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .table-of-contents {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+        }
+        .table-of-contents li {
+            margin: 5px 0;
+        }
+        .table-of-contents a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="user-manual">
+        <h1>LegacyStream User Manual</h1>
+        <p class="lead">Complete guide to installing, configuring, and using LegacyStream audio streaming server.</p>
+
+        <div class="table-of-contents">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#system-requirements">2. System Requirements</a></li>
+                <li><a href="#installation">3. Installation</a></li>
+                <li><a href="#initial-setup">4. Initial Setup</a></li>
+                <li><a href="#configuration">5. Configuration</a></li>
+                <li><a href="#gui-interface">6. GUI Interface</a></li>
+                <li><a href="#web-interface">7. Web Interface</a></li>
+                <li><a href="#streaming">8. Streaming</a></li>
+                <li><a href="#security">9. Security</a></li>
+                <li><a href="#monitoring">10. Monitoring</a></li>
+                <li><a href="#troubleshooting">11. Troubleshooting</a></li>
+                <li><a href="#advanced-features">12. Advanced Features</a></li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="introduction">
+            <h2>1. Introduction</h2>
+            <p>LegacyStream is a high-performance Windows-based audio streaming server with IceCast and SHOUTcast compatibility. It features a modern Qt-based GUI and comprehensive web interface for easy management of audio streams.</p>
+            
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Multi-Protocol Support:</strong> IceCast and SHOUTcast compatibility</li>
+                <li><strong>Multi-Codec Support:</strong> MP3, AAC, OGG, FLAC, and more</li>
+                <li><strong>Modern GUI:</strong> Qt-based desktop interface</li>
+                <li><strong>Web Interface:</strong> Browser-based management</li>
+                <li><strong>Real-time Monitoring:</strong> Live statistics and performance metrics</li>
+                <li><strong>Security:</strong> SSL/TLS encryption and advanced security features</li>
+                <li><strong>High Performance:</strong> Windows IOCP optimization</li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="system-requirements">
+            <h2>2. System Requirements</h2>
+            
+            <h3>Minimum Requirements</h3>
+            <ul>
+                <li><strong>Operating System:</strong> Windows 10 (64-bit) or later</li>
+                <li><strong>Processor:</strong> Intel Core i3 or AMD equivalent</li>
+                <li><strong>Memory:</strong> 4 GB RAM</li>
+                <li><strong>Storage:</strong> 2 GB available disk space</li>
+                <li><strong>Network:</strong> Broadband internet connection</li>
+            </ul>
+
+            <h3>Recommended Requirements</h3>
+            <ul>
+                <li><strong>Operating System:</strong> Windows 11 (64-bit)</li>
+                <li><strong>Processor:</strong> Intel Core i5 or AMD equivalent</li>
+                <li><strong>Memory:</strong> 8 GB RAM or more</li>
+                <li><strong>Storage:</strong> SSD with 10 GB available space</li>
+                <li><strong>Network:</strong> High-speed internet connection</li>
+            </ul>
+
+            <div class="warning">
+                <strong>Note:</strong> LegacyStream requires administrator privileges for certain features like SSL certificate management and port binding.
+            </div>
+        </div>
+
+        <div class="manual-section" id="installation">
+            <h2>3. Installation</h2>
+            
+            <h3>3.1 Download</h3>
+            <ol class="step-list">
+                <li>Visit the official LegacyStream website</li>
+                <li>Download the latest version for Windows</li>
+                <li>Verify the download checksum for security</li>
+            </ol>
+
+            <h3>3.2 Installation Process</h3>
+            <ol class="step-list">
+                <li>Run the installer as administrator</li>
+                <li>Accept the license agreement</li>
+                <li>Choose installation directory (default: C:\Program Files\LegacyStream)</li>
+                <li>Select components to install:
+                    <ul>
+                        <li>Core Server (required)</li>
+                        <li>GUI Interface (recommended)</li>
+                        <li>Web Interface (recommended)</li>
+                        <li>Documentation (optional)</li>
+                    </ul>
+                </li>
+                <li>Configure firewall settings</li>
+                <li>Complete installation</li>
+            </ol>
+
+            <h3>3.3 Silent Installation</h3>
+            <p>For automated deployment, use the silent installation option:</p>
+            <div class="code-block">
+                LegacyStream-Setup.exe /S /D=C:\LegacyStream
+            </div>
+
+            <div class="tip">
+                <strong>Tip:</strong> The installer will automatically configure Windows Firewall rules for the required ports.
+            </div>
+        </div>
+
+        <div class="manual-section" id="initial-setup">
+            <h2>4. Initial Setup</h2>
+            
+            <h3>4.1 First Launch</h3>
+            <ol class="step-list">
+                <li>Launch LegacyStream from the Start Menu or desktop shortcut</li>
+                <li>The setup wizard will guide you through initial configuration</li>
+                <li>Configure basic server settings:
+                    <ul>
+                        <li>Server name and description</li>
+                        <li>Admin username and password</li>
+                        <li>Default ports (8000 for IceCast, 8001 for SHOUTcast)</li>
+                        <li>Stream directory location</li>
+                    </ul>
+                </li>
+                <li>Test the configuration</li>
+                <li>Complete setup</li>
+            </ol>
+
+            <h3>4.2 Configuration File</h3>
+            <p>The main configuration file is located at:</p>
+            <div class="code-block">
+                C:\Program Files\LegacyStream\config\legacystream.ini
+            </div>
+
+            <h3>4.3 Default Settings</h3>
+            <ul>
+                <li><strong>Admin Username:</strong> admin</li>
+                <li><strong>Default Password:</strong> (set during installation)</li>
+                <li><strong>IceCast Port:</strong> 8000</li>
+                <li><strong>SHOUTcast Port:</strong> 8001</li>
+                <li><strong>Web Interface Port:</strong> 8080</li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="configuration">
+            <h2>5. Configuration</h2>
+            
+            <h3>5.1 Server Configuration</h3>
+            <p>Edit the main configuration file to customize server settings:</p>
+            <div class="code-block">
+                [Server]
+                Name=My LegacyStream Server
+                Description=High-quality audio streaming
+                AdminUsername=admin
+                AdminPassword=your_secure_password
+                
+                [Network]
+                IceCastPort=8000
+                ShoutcastPort=8001
+                WebInterfacePort=8080
+                MaxConnections=1000
+                
+                [Security]
+                EnableSSL=true
+                SSLCertificatePath=certs/server.crt
+                SSLPrivateKeyPath=certs/server.key
+            </div>
+
+            <h3>5.2 Mount Point Configuration</h3>
+            <p>Configure mount points for your audio streams:</p>
+            <div class="code-block">
+                [MountPoints]
+                /live=Live Stream
+                /music=Music Stream
+                /news=News Stream
+                
+                [MountPoint:/live]
+                Type=live
+                Format=mp3
+                Bitrate=128
+                Channels=2
+                SampleRate=44100
+            </div>
+
+            <h3>5.3 SSL/TLS Configuration</h3>
+            <p>For secure streaming, configure SSL certificates:</p>
+            <ol class="step-list">
+                <li>Obtain SSL certificates (Let's Encrypt recommended)</li>
+                <li>Place certificates in the certs directory</li>
+                <li>Update configuration with certificate paths</li>
+                <li>Enable SSL in the configuration</li>
+                <li>Restart the server</li>
+            </ol>
+        </div>
+
+        <div class="manual-section" id="gui-interface">
+            <h2>6. GUI Interface</h2>
+            
+            <h3>6.1 Main Window</h3>
+            <p>The GUI interface provides easy access to all server functions:</p>
+            <ul>
+                <li><strong>Server Status:</strong> Real-time server status and statistics</li>
+                <li><strong>Stream Management:</strong> Create and manage audio streams</li>
+                <li><strong>Configuration:</strong> Modify server settings</li>
+                <li><strong>Monitoring:</strong> View performance metrics</li>
+                <li><strong>Logs:</strong> Access server logs</li>
+            </ul>
+
+            <h3>6.2 Stream Management</h3>
+            <ol class="step-list">
+                <li>Click "Add Stream" in the GUI</li>
+                <li>Configure stream settings:
+                    <ul>
+                        <li>Stream name and description</li>
+                        <li>Audio format and quality</li>
+                        <li>Source configuration</li>
+                        <li>Mount point path</li>
+                    </ul>
+                </li>
+                <li>Test the stream configuration</li>
+                <li>Start the stream</li>
+            </ol>
+
+            <h3>6.3 System Tray</h3>
+            <p>LegacyStream runs in the system tray for easy access:</p>
+            <ul>
+                <li>Right-click tray icon for quick menu</li>
+                <li>View server status</li>
+                <li>Access web interface</li>
+                <li>Stop/start server</li>
+                <li>Exit application</li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="web-interface">
+            <h2>7. Web Interface</h2>
+            
+            <h3>7.1 Accessing the Web Interface</h3>
+            <ol class="step-list">
+                <li>Open your web browser</li>
+                <li>Navigate to: <code>http://localhost:8080</code></li>
+                <li>Login with admin credentials</li>
+                <li>Access the dashboard</li>
+            </ol>
+
+            <h3>7.2 Dashboard Features</h3>
+            <ul>
+                <li><strong>Server Overview:</strong> Real-time server statistics</li>
+                <li><strong>Stream Management:</strong> Web-based stream controls</li>
+                <li><strong>Mount Points:</strong> View and manage mount points</li>
+                <li><strong>Statistics:</strong> Detailed performance metrics</li>
+                <li><strong>Configuration:</strong> Web-based settings management</li>
+            </ul>
+
+            <h3>7.3 Mobile Interface</h3>
+            <p>The web interface is fully responsive and works on mobile devices:</p>
+            <ul>
+                <li>Optimized for touch interfaces</li>
+                <li>Responsive design for all screen sizes</li>
+                <li>Mobile-friendly controls</li>
+                <li>Touch-optimized navigation</li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="streaming">
+            <h2>8. Streaming</h2>
+            
+            <h3>8.1 Creating Streams</h3>
+            <ol class="step-list">
+                <li>Configure audio source (file, microphone, or external input)</li>
+                <li>Set audio format and quality parameters</li>
+                <li>Choose mount point path</li>
+                <li>Configure metadata settings</li>
+                <li>Start the stream</li>
+            </ol>
+
+            <h3>8.2 Supported Formats</h3>
+            <ul>
+                <li><strong>Input Formats:</strong> MP3, AAC, OGG, FLAC, WAV</li>
+                <li><strong>Output Formats:</strong> MP3, AAC, OGG, FLAC</li>
+                <li><strong>Bitrates:</strong> 32 kbps to 320 kbps</li>
+                <li><strong>Sample Rates:</strong> 22050 Hz to 48000 Hz</li>
+                <li><strong>Channels:</strong> Mono and Stereo</li>
+            </ul>
+
+            <h3>8.3 Stream URLs</h3>
+            <p>Once streams are created, they can be accessed via:</p>
+            <ul>
+                <li><strong>IceCast:</strong> <code>http://your-server:8000/mountpoint</code></li>
+                <li><strong>SHOUTcast:</strong> <code>http://your-server:8001/mountpoint</code></li>
+                <li><strong>SSL:</strong> <code>https://your-server:8443/mountpoint</code></li>
+            </ul>
+
+            <h3>8.4 Metadata</h3>
+            <p>Configure stream metadata for better listener experience:</p>
+            <div class="code-block">
+                [Metadata]
+                Title=My Radio Station
+                Artist=Various Artists
+                Genre=Pop
+                Description=Best music 24/7
+                URL=http://myradio.com
+            </div>
+        </div>
+
+        <div class="manual-section" id="security">
+            <h2>9. Security</h2>
+            
+            <h3>9.1 SSL/TLS Configuration</h3>
+            <ol class="step-list">
+                <li>Obtain SSL certificates from a trusted CA</li>
+                <li>Install certificates in the certs directory</li>
+                <li>Update configuration with certificate paths</li>
+                <li>Enable SSL in server settings</li>
+                <li>Test secure connections</li>
+            </ol>
+
+            <h3>9.2 Access Control</h3>
+            <ul>
+                <li><strong>Admin Authentication:</strong> Secure admin login</li>
+                <li><strong>Source Authentication:</strong> Protect stream sources</li>
+                <li><strong>IP Filtering:</strong> Restrict access by IP address</li>
+                <li><strong>Rate Limiting:</strong> Prevent abuse</li>
+            </ul>
+
+            <h3>9.3 Firewall Configuration</h3>
+            <p>Configure your firewall to allow LegacyStream traffic:</p>
+            <ul>
+                <li><strong>TCP Port 8000:</strong> IceCast streaming</li>
+                <li><strong>TCP Port 8001:</strong> SHOUTcast streaming</li>
+                <li><strong>TCP Port 8080:</strong> Web interface</li>
+                <li><strong>TCP Port 8443:</strong> SSL streaming (if enabled)</li>
+            </ul>
+
+            <div class="warning">
+                <strong>Security Note:</strong> Always use strong passwords and keep your system updated.
+            </div>
+        </div>
+
+        <div class="manual-section" id="monitoring">
+            <h2>10. Monitoring</h2>
+            
+            <h3>10.1 Real-time Statistics</h3>
+            <p>Monitor your server performance in real-time:</p>
+            <ul>
+                <li><strong>Connection Count:</strong> Active listener connections</li>
+                <li><strong>Bandwidth Usage:</strong> Current data transfer rates</li>
+                <li><strong>CPU Usage:</strong> Server processor utilization</li>
+                <li><strong>Memory Usage:</strong> RAM consumption</li>
+                <li><strong>Stream Quality:</strong> Audio quality metrics</li>
+            </ul>
+
+            <h3>10.2 Log Files</h3>
+            <p>Access detailed logs for troubleshooting:</p>
+            <ul>
+                <li><strong>Server Log:</strong> <code>logs/server.log</code></li>
+                <li><strong>Error Log:</strong> <code>logs/error.log</code></li>
+                <li><strong>Access Log:</strong> <code>logs/access.log</code></li>
+                <li><strong>Debug Log:</strong> <code>logs/debug.log</code></li>
+            </ul>
+
+            <h3>10.3 Performance Metrics</h3>
+            <p>Track key performance indicators:</p>
+            <ul>
+                <li><strong>Uptime:</strong> Server availability</li>
+                <li><strong>Response Time:</strong> Request processing speed</li>
+                <li><strong>Error Rate:</strong> Failed request percentage</li>
+                <li><strong>Peak Load:</strong> Maximum concurrent connections</li>
+            </ul>
+        </div>
+
+        <div class="manual-section" id="troubleshooting">
+            <h2>11. Troubleshooting</h2>
+            
+            <h3>11.1 Common Issues</h3>
+            
+            <h4>Server Won't Start</h4>
+            <ul>
+                <li>Check if ports are already in use</li>
+                <li>Verify configuration file syntax</li>
+                <li>Check administrator privileges</li>
+                <li>Review error logs</li>
+            </ul>
+
+            <h4>Streams Not Working</h4>
+            <ul>
+                <li>Verify audio source configuration</li>
+                <li>Check mount point settings</li>
+                <li>Test audio file formats</li>
+                <li>Review stream logs</li>
+            </ul>
+
+            <h4>Web Interface Not Accessible</h4>
+            <ul>
+                <li>Check if web server is running</li>
+                <li>Verify port 8080 is open</li>
+                <li>Check firewall settings</li>
+                <li>Test with different browser</li>
+            </ul>
+
+            <h3>11.2 Log Analysis</h3>
+            <p>Use log files to diagnose problems:</p>
+            <div class="code-block">
+                # View recent server logs
+                tail -f logs/server.log
+                
+                # Check for errors
+                grep ERROR logs/error.log
+                
+                # Monitor access logs
+                tail -f logs/access.log
+            </div>
+        </div>
+
+        <div class="manual-section" id="advanced-features">
+            <h2>12. Advanced Features</h2>
+            
+            <h3>12.1 Auto-scaling</h3>
+            <p>Configure automatic scaling based on load:</p>
+            <ul>
+                <li>Set connection thresholds</li>
+                <li>Configure scaling policies</li>
+                <li>Monitor scaling events</li>
+                <li>Optimize resource usage</li>
+            </ul>
+
+            <h3>12.2 Load Balancing</h3>
+            <p>Distribute load across multiple servers:</p>
+            <ol class="step-list">
+                <li>Configure multiple server instances</li>
+                <li>Set up load balancer</li>
+                <li>Configure health checks</li>
+                <li>Monitor load distribution</li>
+            </ol>
+
+            <h3>12.3 API Integration</h3>
+            <p>Use the REST API for automation:</p>
+            <div class="code-block">
+                # Get server statistics
+                curl http://localhost:8080/api/stats
+                
+                # Create new stream
+                curl -X POST http://localhost:8080/api/streams \
+                     -H "Content-Type: application/json" \
+                     -d '{"name":"newstream","format":"mp3"}'
+            </div>
+
+            <h3>12.4 Custom Themes</h3>
+            <p>Customize the web interface appearance:</p>
+            <ul>
+                <li>Modify CSS styles</li>
+                <li>Create custom themes</li>
+                <li>Configure branding</li>
+                <li>Add custom logos</li>
+            </ul>
+        </div>
+
+        <div class="manual-section">
+            <h2>Support</h2>
+            <p>For additional support and resources:</p>
+            <ul>
+                <li><strong>Documentation:</strong> <a href="https://legacystream.com/docs">https://legacystream.com/docs</a></li>
+                <li><strong>Community Forum:</strong> <a href="https://forum.legacystream.com">https://forum.legacystream.com</a></li>
+                <li><strong>GitHub Issues:</strong> <a href="https://github.com/legacystream/issues">https://github.com/legacystream/issues</a></li>
+                <li><strong>Email Support:</strong> support@legacystream.com</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 

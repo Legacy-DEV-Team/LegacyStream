@@ -1,0 +1,1 @@
+#ifndef INSTALLERMANAGER_H 

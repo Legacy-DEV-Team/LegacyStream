@@ -13,6 +13,9 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QThread>
+#include <QWebSocketServer>
+#include <QWebSocket>
+#include <QUuid>
 
 Q_LOGGING_CATEGORY(statisticRelay, "statisticRelay")
 
@@ -23,6 +26,8 @@ StatisticRelayManager::StatisticRelayManager(QObject* parent)
     : QObject(parent)
     , m_networkManager(std::make_unique<QNetworkAccessManager>())
     , m_updateTimer(new QTimer(this))
+    , m_realTimeCollectionTimer(new QTimer(this))
+    , m_webSocketServer(std::make_unique<QWebSocketServer>(QStringLiteral("LegacyStream Statistics"), QWebSocketServer::NonSecureMode, this))
 {
     qCDebug(statisticRelay) << "StatisticRelayManager created";
     
@@ -31,6 +36,16 @@ StatisticRelayManager::StatisticRelayManager(QObject* parent)
     
     connect(m_updateTimer, &QTimer::timeout,
             this, &StatisticRelayManager::updateStatistics);
+    
+    // Set up real-time collection timer
+    m_realTimeCollectionTimer->setSingleShot(false);
+    m_realTimeCollectionTimer->setInterval(m_realTimeUpdateInterval * 1000);
+    connect(m_realTimeCollectionTimer, &QTimer::timeout,
+            this, &StatisticRelayManager::onRealTimeCollectionTimer);
+    
+    // Set up WebSocket server
+    connect(m_webSocketServer.get(), &QWebSocketServer::newConnection,
+            this, &StatisticRelayManager::onWebSocketNewConnection);
 }
 
 StatisticRelayManager::~StatisticRelayManager()
@@ -608,6 +623,327 @@ void StatisticRelayManager::onNetworkError(QNetworkReply::NetworkError error)
         emit relayError(relayName, reply->errorString());
         qCWarning(statisticRelay) << "Network error for relay" << relayName << ":" << reply->errorString();
     }
+}
+
+void StatisticRelayManager::enableRealTimeCollection(bool enabled)
+{
+    m_realTimeCollectionEnabled = enabled;
+    
+    if (enabled) {
+        m_realTimeCollectionTimer->start();
+        qCInfo(statisticRelay) << "Real-time statistics collection enabled";
+    } else {
+        m_realTimeCollectionTimer->stop();
+        qCInfo(statisticRelay) << "Real-time statistics collection disabled";
+    }
+}
+
+void StatisticRelayManager::setRealTimeUpdateInterval(int seconds)
+{
+    m_realTimeUpdateInterval = seconds;
+    m_realTimeCollectionTimer->setInterval(seconds * 1000);
+    qCInfo(statisticRelay) << "Real-time update interval set to" << seconds << "seconds";
+}
+
+QJsonObject StatisticRelayManager::getRealTimeStatistics() const
+{
+    return m_realTimeStatistics;
+}
+
+void StatisticRelayManager::broadcastStatistics(const QJsonObject& statistics)
+{
+    m_realTimeStatistics = statistics;
+    broadcastToWebSocketClients(statistics, "statistics");
+    emit realTimeStatisticsUpdated(statistics);
+}
+
+void StatisticRelayManager::startWebSocketServer(int port)
+{
+    if (m_webSocketServer->isListening()) {
+        qCWarning(statisticRelay) << "WebSocket server already running";
+        return;
+    }
+    
+    m_webSocketPort = port;
+    
+    if (m_webSocketServer->listen(QHostAddress::Any, port)) {
+        qCInfo(statisticRelay) << "WebSocket server started on port" << port;
+    } else {
+        qCWarning(statisticRelay) << "Failed to start WebSocket server on port" << port;
+    }
+}
+
+void StatisticRelayManager::stopWebSocketServer()
+{
+    if (m_webSocketServer->isListening()) {
+        m_webSocketServer->close();
+        
+        // Close all client connections
+        for (auto it = m_webSocketClients.begin(); it != m_webSocketClients.end(); ++it) {
+            it->socket->close();
+        }
+        m_webSocketClients.clear();
+        
+        qCInfo(statisticRelay) << "WebSocket server stopped";
+    }
+}
+
+bool StatisticRelayManager::isWebSocketServerRunning() const
+{
+    return m_webSocketServer->isListening();
+}
+
+int StatisticRelayManager::getWebSocketClientCount() const
+{
+    return m_webSocketClients.size();
+}
+
+void StatisticRelayManager::broadcastToWebSocketClients(const QJsonObject& data, const QString& topic)
+{
+    if (m_webSocketClients.isEmpty()) {
+        return;
+    }
+    
+    QJsonObject message;
+    message["type"] = "broadcast";
+    message["topic"] = topic;
+    message["data"] = data;
+    message["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    
+    QJsonDocument doc(message);
+    QString jsonMessage = doc.toJson(QJsonDocument::Compact);
+    
+    for (auto it = m_webSocketClients.begin(); it != m_webSocketClients.end(); ++it) {
+        WebSocketClient& client = it.value();
+        
+        // Check if client is subscribed to the topic
+        if (topic.isEmpty() || client.subscribedTopics.contains(topic) || client.subscribedTopics.contains("*")) {
+            client.socket->sendTextMessage(jsonMessage);
+        }
+    }
+}
+
+void StatisticRelayManager::onRealTimeCollectionTimer()
+{
+    if (!m_isRunning || !m_realTimeCollectionEnabled) {
+        return;
+    }
+    
+    collectRealTimeStatistics();
+}
+
+void StatisticRelayManager::onWebSocketNewConnection()
+{
+    QWebSocket* socket = m_webSocketServer->nextPendingConnection();
+    
+    if (!socket) {
+        return;
+    }
+    
+    // Create client info
+    WebSocketClient client;
+    client.socket = socket;
+    client.id = generateClientId();
+    client.connectedAt = QDateTime::currentDateTime();
+    client.subscribedTopics << "*"; // Subscribe to all topics by default
+    
+    m_webSocketClients[socket] = client;
+    
+    // Connect signals
+    connect(socket, &QWebSocket::disconnected, this, &StatisticRelayManager::onWebSocketClientDisconnected);
+    connect(socket, &QWebSocket::textMessageReceived, this, &StatisticRelayManager::onWebSocketTextMessageReceived);
+    
+    // Send welcome message
+    QJsonObject welcomeMessage;
+    welcomeMessage["type"] = "welcome";
+    welcomeMessage["client_id"] = client.id;
+    welcomeMessage["server_time"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    welcomeMessage["available_topics"] = QJsonArray{"statistics", "performance", "alerts", "streams"};
+    
+    QJsonDocument doc(welcomeMessage);
+    socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
+    
+    qCInfo(statisticRelay) << "WebSocket client connected:" << client.id;
+    emit webSocketClientConnected(client.id);
+}
+
+void StatisticRelayManager::onWebSocketClientDisconnected()
+{
+    QWebSocket* socket = qobject_cast<QWebSocket*>(sender());
+    if (!socket) {
+        return;
+    }
+    
+    auto it = m_webSocketClients.find(socket);
+    if (it != m_webSocketClients.end()) {
+        QString clientId = it->id;
+        m_webSocketClients.remove(socket);
+        
+        qCInfo(statisticRelay) << "WebSocket client disconnected:" << clientId;
+        emit webSocketClientDisconnected(clientId);
+    }
+    
+    socket->deleteLater();
+}
+
+void StatisticRelayManager::onWebSocketTextMessageReceived(const QString& message)
+{
+    QWebSocket* socket = qobject_cast<QWebSocket*>(sender());
+    if (!socket) {
+        return;
+    }
+    
+    auto it = m_webSocketClients.find(socket);
+    if (it == m_webSocketClients.end()) {
+        return;
+    }
+    
+    WebSocketClient* client = &it.value();
+    
+    // Parse JSON message
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8(), &error);
+    
+    if (error.error != QJsonParseError::NoError) {
+        qCWarning(statisticRelay) << "Invalid JSON from WebSocket client:" << error.errorString();
+        return;
+    }
+    
+    QJsonObject jsonMessage = doc.object();
+    processWebSocketMessage(jsonMessage, client);
+}
+
+void StatisticRelayManager::collectRealTimeStatistics()
+{
+    if (!m_streamManager) {
+        return;
+    }
+    
+    QJsonObject statistics = buildRealTimeStatisticsJson();
+    broadcastStatistics(statistics);
+}
+
+QJsonObject StatisticRelayManager::buildRealTimeStatisticsJson() const
+{
+    QJsonObject statistics;
+    
+    // System information
+    statistics["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    statistics["uptime"] = m_streamManager ? m_streamManager->isRunning() : false;
+    
+    // Stream statistics
+    if (m_streamManager) {
+        QList<StreamInfo> streams = m_streamManager->getStreams();
+        QJsonArray streamsArray;
+        
+        for (const StreamInfo& stream : streams) {
+            QJsonObject streamObj;
+            streamObj["mount_point"] = stream.mountPoint;
+            streamObj["codec"] = stream.codec;
+            streamObj["bitrate"] = stream.bitrate;
+            streamObj["listeners"] = stream.listeners;
+            streamObj["active"] = stream.active;
+            streamObj["bytes_sent"] = stream.bytesSent;
+            streamObj["start_time"] = stream.startTime.toString(Qt::ISODate);
+            streamObj["metadata"] = stream.metadata;
+            
+            streamsArray.append(streamObj);
+        }
+        
+        statistics["streams"] = streamsArray;
+        statistics["total_streams"] = streams.size();
+        statistics["active_streams"] = m_streamManager->getActiveStreams();
+        statistics["total_listeners"] = m_streamManager->getTotalListeners();
+        statistics["total_bytes_sent"] = m_streamManager->getTotalBytesSent();
+    }
+    
+    // Relay statistics
+    QJsonArray relayArray;
+    for (auto it = m_relayStatistics.begin(); it != m_relayStatistics.end(); ++it) {
+        const RelayStatistics& relay = it.value();
+        QJsonObject relayObj;
+        relayObj["name"] = it.key();
+        relayObj["mount_point"] = relay.mountPoint;
+        relayObj["protocol"] = relay.protocol;
+        relayObj["current_listeners"] = relay.currentListeners;
+        relayObj["peak_listeners"] = relay.peakListeners;
+        relayObj["bytes_served"] = relay.bytesServed;
+        relayObj["uptime"] = relay.uptime;
+        relayObj["is_live"] = relay.isLive;
+        relayObj["last_update"] = relay.lastUpdate.toString(Qt::ISODate);
+        
+        relayArray.append(relayObj);
+    }
+    
+    statistics["relays"] = relayArray;
+    statistics["total_relays"] = m_relayStatistics.size();
+    
+    // WebSocket client information
+    statistics["websocket_clients"] = m_webSocketClients.size();
+    statistics["websocket_server_running"] = m_webSocketServer->isListening();
+    statistics["websocket_port"] = m_webSocketPort;
+    
+    return statistics;
+}
+
+void StatisticRelayManager::processWebSocketMessage(const QJsonObject& message, WebSocketClient* client)
+{
+    QString type = message["type"].toString();
+    
+    if (type == "subscribe") {
+        QStringList topics = message["topics"].toVariant().toStringList();
+        client->subscribedTopics = topics;
+        
+        QJsonObject response;
+        response["type"] = "subscribed";
+        response["topics"] = QJsonArray::fromStringList(topics);
+        
+        QJsonDocument doc(response);
+        client->socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
+        
+        qCInfo(statisticRelay) << "Client" << client->id << "subscribed to topics:" << topics;
+        
+    } else if (type == "unsubscribe") {
+        QStringList topics = message["topics"].toVariant().toStringList();
+        for (const QString& topic : topics) {
+            client->subscribedTopics.removeAll(topic);
+        }
+        
+        QJsonObject response;
+        response["type"] = "unsubscribed";
+        response["topics"] = QJsonArray::fromStringList(topics);
+        
+        QJsonDocument doc(response);
+        client->socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
+        
+        qCInfo(statisticRelay) << "Client" << client->id << "unsubscribed from topics:" << topics;
+        
+    } else if (type == "get_statistics") {
+        QJsonObject statistics = buildRealTimeStatisticsJson();
+        
+        QJsonObject response;
+        response["type"] = "statistics";
+        response["data"] = statistics;
+        
+        QJsonDocument doc(response);
+        client->socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
+        
+    } else if (type == "ping") {
+        QJsonObject response;
+        response["type"] = "pong";
+        response["timestamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+        
+        QJsonDocument doc(response);
+        client->socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
+        
+    } else {
+        qCWarning(statisticRelay) << "Unknown WebSocket message type:" << type;
+    }
+}
+
+QString StatisticRelayManager::generateClientId() const
+{
+    return QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
 
 } // namespace StatisticRelay

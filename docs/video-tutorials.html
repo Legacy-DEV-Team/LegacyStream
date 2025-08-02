@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyStream Video Tutorials</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .video-tutorials {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .tutorial-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+        }
+        .tutorial-section h2 {
+            color: #17a2b8;
+            margin-bottom: 15px;
+        }
+        .tutorial-section h3 {
+            color: #495057;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-placeholder {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(45deg, #17a2b8, #6c757d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+        .tutorial-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #17a2b8;
+        }
+        .tutorial-card h4 {
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+        .tutorial-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .difficulty {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .difficulty.beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+        .difficulty.intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .difficulty.advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .learning-path {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .learning-path h3 {
+            color: #17a2b8;
+            margin-bottom: 15px;
+        }
+        .path-steps {
+            list-style: none;
+            padding: 0;
+        }
+        .path-steps li {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+        }
+        .table-of-contents {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+        }
+        .table-of-contents li {
+            margin: 5px 0;
+        }
+        .table-of-contents a {
+            color: #17a2b8;
+            text-decoration: none;
+        }
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+        .playlist {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #17a2b8;
+            margin-bottom: 20px;
+        }
+        .playlist h3 {
+            color: #17a2b8;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-tutorials">
+        <h1>LegacyStream Video Tutorials</h1>
+        <p class="lead">Learn LegacyStream through comprehensive video tutorials and visual guides.</p>
+
+        <div class="table-of-contents">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#getting-started">1. Getting Started</a></li>
+                <li><a href="#installation-guides">2. Installation Guides</a></li>
+                <li><a href="#basic-configuration">3. Basic Configuration</a></li>
+                <li><a href="#streaming-tutorials">4. Streaming Tutorials</a></li>
+                <li><a href="#web-interface">5. Web Interface</a></li>
+                <li><a href="#gui-tutorials">6. GUI Tutorials</a></li>
+                <li><a href="#security-setup">7. Security Setup</a></li>
+                <li><a href="#advanced-features">8. Advanced Features</a></li>
+                <li><a href="#troubleshooting">9. Troubleshooting</a></li>
+                <li><a href="#best-practices">10. Best Practices</a></li>
+            </ul>
+        </div>
+
+        <div class="learning-path">
+            <h3>🎯 Recommended Learning Path</h3>
+            <p>Follow this structured path to master LegacyStream efficiently:</p>
+            <ol class="path-steps">
+                <li><strong>Installation & Setup</strong> - Install and configure LegacyStream</li>
+                <li><strong>Basic Configuration</strong> - Configure server settings and mount points</li>
+                <li><strong>Streaming Basics</strong> - Create and manage audio streams</li>
+                <li><strong>Web Interface</strong> - Use the web-based management interface</li>
+                <li><strong>GUI Features</strong> - Master the desktop application</li>
+                <li><strong>Security</strong> - Implement SSL/TLS and security features</li>
+                <li><strong>Advanced Features</strong> - Explore advanced functionality</li>
+                <li><strong>Optimization</strong> - Performance tuning and best practices</li>
+            </ol>
+        </div>
+
+        <div class="tutorial-section" id="getting-started">
+            <h2>1. Getting Started</h2>
+            
+            <div class="tutorial-card">
+                <h4>Introduction to LegacyStream</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 5:30</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Overview of LegacyStream features, architecture, and use cases. Learn what makes LegacyStream unique and how it compares to other streaming solutions.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Introduction to LegacyStream</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 5:30 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>System Requirements & Prerequisites</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 3:45</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Learn about system requirements, supported operating systems, and prerequisites needed to run LegacyStream effectively.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 System Requirements & Prerequisites</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 3:45 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="installation-guides">
+            <h2>2. Installation Guides</h2>
+            
+            <div class="playlist">
+                <h3>📦 Installation Playlist</h3>
+                <p>Complete installation guide series covering all installation methods and scenarios.</p>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Windows Installation Guide</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 8:15</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Step-by-step guide to installing LegacyStream on Windows 10/11. Covers GUI installer, silent installation, and troubleshooting common installation issues.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Windows Installation Guide</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 8:15 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Silent Installation & Deployment</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 6:20</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Learn how to perform silent installations for automated deployment scenarios. Covers command-line options, configuration management, and enterprise deployment.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Silent Installation & Deployment</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 6:20 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Docker Installation & Containerization</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 10:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Install and run LegacyStream using Docker containers. Learn container management, volume mounting, and multi-container deployments.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Docker Installation & Containerization</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 10:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="basic-configuration">
+            <h2>3. Basic Configuration</h2>
+            
+            <div class="tutorial-card">
+                <h4>First Launch & Initial Setup</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 7:30</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Complete first launch setup wizard, configure basic server settings, and understand the initial configuration options.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 First Launch & Initial Setup</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 7:30 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Configuration File Management</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 12:15</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Deep dive into configuration file structure, editing settings, and understanding all configuration options available in LegacyStream.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Configuration File Management</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 12:15 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Network Configuration & Ports</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 9:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Configure network settings, port assignments, firewall rules, and network optimization for optimal streaming performance.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Network Configuration & Ports</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 9:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="streaming-tutorials">
+            <h2>4. Streaming Tutorials</h2>
+            
+            <div class="playlist">
+                <h3>🎵 Streaming Playlist</h3>
+                <p>Complete guide to creating, managing, and optimizing audio streams with LegacyStream.</p>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Creating Your First Stream</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 11:20</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Step-by-step guide to creating your first audio stream. Learn about audio sources, formats, and basic stream configuration.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Creating Your First Stream</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 11:20 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Audio Format Configuration</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 15:30</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Configure audio formats, codecs, bitrates, and quality settings. Learn about MP3, AAC, OGG, and FLAC support.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Audio Format Configuration</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 15:30 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Mount Point Management</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 8:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Learn how to create, configure, and manage mount points for your audio streams. Understand URL structures and access patterns.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Mount Point Management</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 8:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Advanced Streaming Features</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 18:15</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Explore advanced streaming features including HLS streaming, metadata management, relay configuration, and load balancing.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Advanced Streaming Features</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 18:15 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="web-interface">
+            <h2>5. Web Interface</h2>
+            
+            <div class="tutorial-card">
+                <h4>Web Interface Overview</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 6:30</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Introduction to the web-based management interface. Learn how to access, navigate, and use the web interface effectively.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Web Interface Overview</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 6:30 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Dashboard & Statistics</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 9:15</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Learn how to interpret real-time statistics, monitor performance metrics, and use the dashboard for server management.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Dashboard & Statistics</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 9:15 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Stream Management via Web</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 12:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Create, configure, and manage streams directly through the web interface. Learn web-based stream controls and configuration.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Stream Management via Web</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 12:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Mobile Interface & Responsive Design</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 7:20</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Learn how to use LegacyStream's mobile-responsive web interface on smartphones and tablets for remote management.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Mobile Interface & Responsive Design</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 7:20 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="gui-tutorials">
+            <h2>6. GUI Tutorials</h2>
+            
+            <div class="tutorial-card">
+                <h4>Desktop Application Overview</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 8:45</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Introduction to the Qt-based desktop application. Learn about the main window, menus, toolbars, and basic navigation.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Desktop Application Overview</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 8:45 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Stream Management GUI</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 14:30</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Master the GUI-based stream management interface. Learn how to create, edit, and monitor streams using the desktop application.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Stream Management GUI</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 14:30 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Theme Customization & Accessibility</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 11:15</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Customize the GUI appearance with themes, enable accessibility features, and configure user interface preferences.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Theme Customization & Accessibility</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 11:15 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>System Tray & Background Operation</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 6:45</span>
+                    <span class="difficulty beginner">Beginner</span>
+                </div>
+                <p>Learn how to use the system tray functionality, run LegacyStream in the background, and manage notifications.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 System Tray & Background Operation</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 6:45 | Difficulty: Beginner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="security-setup">
+            <h2>7. Security Setup</h2>
+            
+            <div class="tutorial-card">
+                <h4>SSL/TLS Configuration</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 16:20</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Configure SSL/TLS encryption for secure streaming. Learn about certificate management, Let's Encrypt integration, and secure connections.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 SSL/TLS Configuration</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 16:20 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Authentication & Access Control</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 12:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Set up user authentication, access control, IP filtering, and security policies to protect your streaming server.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Authentication & Access Control</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 12:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Firewall Configuration</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 9:30</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Configure Windows Firewall rules, network security, and port management for secure LegacyStream operation.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Firewall Configuration</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 9:30 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="advanced-features">
+            <h2>8. Advanced Features</h2>
+            
+            <div class="tutorial-card">
+                <h4>Performance Optimization</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 20:15</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Optimize LegacyStream performance for high-concurrency scenarios. Learn about IOCP optimization, memory management, and resource tuning.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Performance Optimization</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 20:15 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Load Balancing & High Availability</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 18:45</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Set up load balancing across multiple LegacyStream instances, configure failover, and implement high availability solutions.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Load Balancing & High Availability</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 18:45 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>API Integration & Automation</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 15:30</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Use the REST API for automation, integrate with external systems, and build custom management tools.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 API Integration & Automation</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 15:30 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Cloud Deployment</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 22:10</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Deploy LegacyStream on cloud platforms like AWS, Azure, and GCP. Learn about container orchestration and cloud-native deployment.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Cloud Deployment</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 22:10 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="troubleshooting">
+            <h2>9. Troubleshooting</h2>
+            
+            <div class="tutorial-card">
+                <h4>Common Issues & Solutions</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 14:20</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Learn how to diagnose and resolve common LegacyStream issues including startup problems, streaming issues, and configuration errors.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Common Issues & Solutions</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 14:20 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Log Analysis & Debugging</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 12:45</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Learn how to read and analyze log files, enable debug mode, and use diagnostic tools to troubleshoot problems.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Log Analysis & Debugging</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 12:45 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Performance Troubleshooting</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 16:30</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Identify and resolve performance issues, memory leaks, high CPU usage, and network bottlenecks.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Performance Troubleshooting</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 16:30 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section" id="best-practices">
+            <h2>10. Best Practices</h2>
+            
+            <div class="tutorial-card">
+                <h4>Production Deployment Best Practices</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 19:45</span>
+                    <span class="difficulty advanced">Advanced</span>
+                </div>
+                <p>Learn best practices for deploying LegacyStream in production environments, including security, monitoring, and maintenance.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Production Deployment Best Practices</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 19:45 | Difficulty: Advanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Monitoring & Maintenance</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 13:20</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Set up monitoring systems, implement maintenance schedules, and establish backup and recovery procedures.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Monitoring & Maintenance</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 13:20 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Security Best Practices</h4>
+                <div class="tutorial-meta">
+                    <span>Duration: 15:10</span>
+                    <span class="difficulty intermediate">Intermediate</span>
+                </div>
+                <p>Implement security best practices including regular updates, vulnerability management, and secure configuration guidelines.</p>
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div>
+                            <h4>🎥 Security Best Practices</h4>
+                            <p>Video tutorial coming soon</p>
+                            <p>Duration: 15:10 | Difficulty: Intermediate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorial-section">
+            <h2>Additional Resources</h2>
+            
+            <div class="tutorial-card">
+                <h4>Video Tutorial Playlist</h4>
+                <p>All LegacyStream video tutorials are available in organized playlists:</p>
+                <ul>
+                    <li><strong>Getting Started Playlist:</strong> Complete beginner's guide</li>
+                    <li><strong>Installation Playlist:</strong> All installation methods</li>
+                    <li><strong>Configuration Playlist:</strong> Setup and configuration guides</li>
+                    <li><strong>Advanced Features Playlist:</strong> Advanced functionality tutorials</li>
+                    <li><strong>Troubleshooting Playlist:</strong> Problem-solving guides</li>
+                </ul>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Interactive Learning</h4>
+                <p>Enhance your learning experience with these additional resources:</p>
+                <ul>
+                    <li><strong>Practice Exercises:</strong> Hands-on exercises to reinforce learning</li>
+                    <li><strong>Quiz Modules:</strong> Test your knowledge with interactive quizzes</li>
+                    <li><strong>Community Forums:</strong> Connect with other users and share experiences</li>
+                    <li><strong>Live Webinars:</strong> Join live training sessions</li>
+                    <li><strong>Certification Program:</strong> Earn LegacyStream certification</li>
+                </ul>
+            </div>
+
+            <div class="tutorial-card">
+                <h4>Support & Feedback</h2>
+                <p>We value your feedback and are here to help:</p>
+                <ul>
+                    <li><strong>Video Comments:</strong> Leave comments on tutorial videos</li>
+                    <li><strong>Feature Requests:</strong> Suggest new tutorial topics</li>
+                    <li><strong>Bug Reports:</strong> Report issues with tutorials</li>
+                    <li><strong>Community Support:</strong> Get help from the community</li>
+                    <li><strong>Direct Contact:</strong> Email us at tutorials@legacystream.com</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 
