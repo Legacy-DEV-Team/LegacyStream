@@ -3,921 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegacyStream Troubleshooting Guide</title>
+    <title>Troubleshooting Guide - LegacyStream Documentation</title>
+    <meta name="description" content="Common issues and solutions for LegacyStream audio streaming server">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        .troubleshooting-guide {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .troubleshooting-section {
-            margin-bottom: 40px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #dc3545;
-        }
-        .troubleshooting-section h2 {
-            color: #dc3545;
-            margin-bottom: 15px;
-        }
-        .troubleshooting-section h3 {
-            color: #495057;
-            margin-top: 25px;
-            margin-bottom: 10px;
-        }
-        .code-block {
-            background: #f1f3f4;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            margin: 10px 0;
-            border-left: 4px solid #dc3545;
-            overflow-x: auto;
-        }
-        .error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .solution {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .diagnostic {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .table-of-contents {
-            background: #e9ecef;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .table-of-contents ul {
-            list-style: none;
-            padding: 0;
-        }
-        .table-of-contents li {
-            margin: 5px 0;
-        }
-        .table-of-contents a {
-            color: #dc3545;
-            text-decoration: none;
-        }
-        .table-of-contents a:hover {
-            text-decoration: underline;
-        }
-        .issue-category {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #dc3545;
-            margin-bottom: 20px;
-        }
-        .issue-category h3 {
-            color: #dc3545;
-            margin-bottom: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="troubleshooting-guide">
-        <h1>LegacyStream Troubleshooting Guide</h1>
-        <p class="lead">Comprehensive guide to diagnosing and resolving common issues with LegacyStream.</p>
-
-        <div class="table-of-contents">
-            <h2>Table of Contents</h2>
-            <ul>
-                <li><a href="#quick-diagnostics">1. Quick Diagnostics</a></li>
-                <li><a href="#installation-issues">2. Installation Issues</a></li>
-                <li><a href="#startup-problems">3. Startup Problems</a></li>
-                <li><a href="#streaming-issues">4. Streaming Issues</a></li>
-                <li><a href="#web-interface-problems">5. Web Interface Problems</a></li>
-                <li><a href="#gui-issues">6. GUI Issues</a></li>
-                <li><a href="#network-problems">7. Network Problems</a></li>
-                <li><a href="#security-issues">8. Security Issues</a></li>
-                <li><a href="#performance-problems">9. Performance Problems</a></li>
-                <li><a href="#audio-issues">10. Audio Issues</a></li>
-                <li><a href="#log-analysis">11. Log Analysis</a></li>
-                <li><a href="#advanced-troubleshooting">12. Advanced Troubleshooting</a></li>
-            </ul>
-        </div>
-
-        <div class="troubleshooting-section" id="quick-diagnostics">
-            <h2>1. Quick Diagnostics</h2>
-            
-            <h3>1.1 System Health Check</h3>
-            <p>Run these quick checks to identify common issues:</p>
-            
-            <div class="diagnostic">
-                <h4>Check Server Status</h4>
-                <div class="code-block">
-                    # Check if LegacyStream is running
-                    tasklist /FI "IMAGENAME eq LegacyStream.exe"
-                    
-                    # Check listening ports
-                    netstat -an | findstr ":8000\|:8001\|:8080"
+<body class="dark-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h1 class="logo">LegacyStream</h1>
+                    <span class="tagline">High-Performance Audio Streaming</span>
                 </div>
+                <div class="nav-menu">
+                    <a href="index.html#features" class="nav-link">Features</a>
+                    <a href="index.html#documentation" class="nav-link">Documentation</a>
+                    <a href="index.html#api" class="nav-link">API</a>
+                    <a href="index.html#download" class="nav-link">Download</a>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Troubleshooting Guide</h1>
+                <p>Common issues and solutions for LegacyStream audio streaming server</p>
             </div>
 
-            <div class="diagnostic">
-                <h4>Check Configuration</h4>
-                <div class="code-block">
-                    # Verify configuration file exists
-                    dir "C:\Program Files\LegacyStream\config\legacystream.ini"
-                    
-                    # Check configuration syntax
-                    type "C:\Program Files\LegacyStream\config\legacystream.ini"
+            <div class="content-grid">
+                <div class="content-sidebar">
+                    <nav class="sidebar-nav">
+                        <h3>Table of Contents</h3>
+                        <ul>
+                            <li><a href="#quick-diagnostics">Quick Diagnostics</a></li>
+                            <li><a href="#installation-issues">Installation Issues</a></li>
+                            <li><a href="#startup-problems">Startup Problems</a></li>
+                            <li><a href="#streaming-issues">Streaming Issues</a></li>
+                            <li><a href="#web-interface-problems">Web Interface Problems</a></li>
+                            <li><a href="#gui-issues">GUI Issues</a></li>
+                            <li><a href="#network-problems">Network Problems</a></li>
+                            <li><a href="#security-issues">Security Issues</a></li>
+                            <li><a href="#performance-problems">Performance Problems</a></li>
+                            <li><a href="#audio-issues">Audio Issues</a></li>
+                            <li><a href="#log-analysis">Log Analysis</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="content-main">
+                    <section id="quick-diagnostics">
+                        <h2>Quick Diagnostics</h2>
+                        
+                        <h3>System Check</h3>
+                        <p>Run these quick checks to identify common issues:</p>
+                        <ol>
+                            <li><strong>Check Server Status:</strong> Verify LegacyStream is running</li>
+                            <li><strong>Port Availability:</strong> Ensure ports 8000, 8001 are not in use</li>
+                            <li><strong>Firewall Settings:</strong> Check Windows Firewall configuration</li>
+                            <li><strong>Network Connectivity:</strong> Test internet connection</li>
+                            <li><strong>Audio Devices:</strong> Verify audio hardware is working</li>
+                        </ol>
+
+                        <h3>Common Error Messages</h3>
+                        <ul>
+                            <li><strong>"Port already in use":</strong> Another application is using the port</li>
+                            <li><strong>"Access denied":</strong> Administrator privileges required</li>
+                            <li><strong>"SSL certificate error":</strong> Certificate configuration issue</li>
+                            <li><strong>"Stream not found":</strong> Mount point configuration problem</li>
+                            <li><strong>"Connection refused":</strong> Network or firewall issue</li>
+                        </ul>
+                    </section>
+
+                    <section id="installation-issues">
+                        <h2>Installation Issues</h2>
+                        
+                        <h3>Installer Won't Start</h3>
+                        <ul>
+                            <li>Check if you have administrator privileges</li>
+                            <li>Verify the installer file is not corrupted</li>
+                            <li>Disable antivirus temporarily</li>
+                            <li>Try running in compatibility mode</li>
+                        </ul>
+
+                        <h3>Missing Dependencies</h3>
+                        <p>If you encounter missing DLL errors:</p>
+                        <ul>
+                            <li>Install Visual C++ Redistributable</li>
+                            <li>Update Windows to latest version</li>
+                            <li>Install .NET Framework if required</li>
+                            <li>Check system requirements</li>
+                        </ul>
+
+                        <h3>Installation Fails</h3>
+                        <ul>
+                            <li>Free up disk space (minimum 100 MB required)</li>
+                            <li>Close other applications</li>
+                            <li>Run installer as administrator</li>
+                            <li>Check Windows Event Viewer for errors</li>
+                        </ul>
+                    </section>
+
+                    <section id="startup-problems">
+                        <h2>Startup Problems</h2>
+                        
+                        <h3>Application Won't Launch</h3>
+                        <ul>
+                            <li>Check if all required files are present</li>
+                            <li>Verify Qt libraries are accessible</li>
+                            <li>Run as administrator</li>
+                            <li>Check Windows Event Viewer</li>
+                        </ul>
+
+                        <h3>Server Won't Start</h3>
+                        <ul>
+                            <li>Check if ports are already in use:
+                                <pre class="code-block"><code>netstat -an | findstr :8000
+netstat -an | findstr :8001</code></pre>
+                            </li>
+                            <li>Verify configuration file syntax</li>
+                            <li>Check administrator privileges</li>
+                            <li>Review error logs</li>
+                        </ul>
+
+                        <h3>Configuration Errors</h3>
+                        <ul>
+                            <li>Validate INI file format</li>
+                            <li>Check file paths and permissions</li>
+                            <li>Verify SSL certificate paths</li>
+                            <li>Test configuration with default settings</li>
+                        </ul>
+                    </section>
+
+                    <section id="streaming-issues">
+                        <h2>Streaming Issues</h2>
+                        
+                        <h3>No Audio Output</h3>
+                        <ul>
+                            <li>Check audio source configuration</li>
+                            <li>Verify audio codec support</li>
+                            <li>Test audio file formats</li>
+                            <li>Check audio device settings</li>
+                        </ul>
+
+                        <h3>Stream Quality Problems</h3>
+                        <ul>
+                            <li>Adjust bitrate settings</li>
+                            <li>Check network bandwidth</li>
+                            <li>Verify audio source quality</li>
+                            <li>Monitor CPU usage</li>
+                        </ul>
+
+                        <h3>Mount Point Issues</h3>
+                        <ul>
+                            <li>Verify mount point configuration</li>
+                            <li>Check stream source availability</li>
+                            <li>Test mount point URLs</li>
+                            <li>Review stream logs</li>
+                        </ul>
+
+                        <h3>Metadata Problems</h3>
+                        <ul>
+                            <li>Check metadata format</li>
+                            <li>Verify character encoding</li>
+                            <li>Test metadata updates</li>
+                            <li>Review metadata configuration</li>
+                        </ul>
+                    </section>
+
+                    <section id="web-interface-problems">
+                        <h2>Web Interface Problems</h2>
+                        
+                        <h3>Can't Access Web Interface</h3>
+                        <ul>
+                            <li>Check if web server is running</li>
+                            <li>Verify port 8000 is accessible</li>
+                            <li>Test with different browser</li>
+                            <li>Check firewall settings</li>
+                        </ul>
+
+                        <h3>WebSocket Connection Issues</h3>
+                        <ul>
+                            <li>Check browser WebSocket support</li>
+                            <li>Verify proxy settings</li>
+                            <li>Test with different browser</li>
+                            <li>Check network connectivity</li>
+                        </ul>
+
+                        <h3>Real-time Updates Not Working</h3>
+                        <ul>
+                            <li>Check WebSocket connection</li>
+                            <li>Verify JavaScript is enabled</li>
+                            <li>Test browser console for errors</li>
+                            <li>Check network connectivity</li>
+                        </ul>
+                    </section>
+
+                    <section id="gui-issues">
+                        <h2>GUI Issues</h2>
+                        
+                        <h3>Interface Not Responding</h3>
+                        <ul>
+                            <li>Check system resources</li>
+                            <li>Restart the application</li>
+                            <li>Update graphics drivers</li>
+                            <li>Check for conflicting software</li>
+                        </ul>
+
+                        <h3>Theme Problems</h3>
+                        <ul>
+                            <li>Reset to default theme</li>
+                            <li>Check theme file integrity</li>
+                            <li>Verify theme compatibility</li>
+                            <li>Update application</li>
+                        </ul>
+
+                        <h3>Accessibility Issues</h3>
+                        <ul>
+                            <li>Check screen reader compatibility</li>
+                            <li>Verify keyboard navigation</li>
+                            <li>Test high contrast mode</li>
+                            <li>Update accessibility settings</li>
+                        </ul>
+                    </section>
+
+                    <section id="network-problems">
+                        <h2>Network Problems</h2>
+                        
+                        <h3>Connection Issues</h3>
+                        <ul>
+                            <li>Check network connectivity</li>
+                            <li>Verify firewall settings</li>
+                            <li>Test port accessibility</li>
+                            <li>Check router configuration</li>
+                        </ul>
+
+                        <h3>Bandwidth Problems</h3>
+                        <ul>
+                            <li>Monitor network usage</li>
+                            <li>Adjust stream quality</li>
+                            <li>Check for network congestion</li>
+                            <li>Optimize stream settings</li>
+                        </ul>
+
+                        <h3>DNS Issues</h3>
+                        <ul>
+                            <li>Check DNS configuration</li>
+                            <li>Test with IP address</li>
+                            <li>Verify domain settings</li>
+                            <li>Check DNS resolution</li>
+                        </ul>
+                    </section>
+
+                    <section id="security-issues">
+                        <h2>Security Issues</h2>
+                        
+                        <h3>SSL Certificate Problems</h3>
+                        <ul>
+                            <li>Check certificate validity</li>
+                            <li>Verify certificate paths</li>
+                            <li>Test Let's Encrypt connectivity</li>
+                            <li>Check certificate permissions</li>
+                        </ul>
+
+                        <h3>Authentication Issues</h3>
+                        <ul>
+                            <li>Verify admin credentials</li>
+                            <li>Check password complexity</li>
+                            <li>Reset admin password</li>
+                            <li>Review access logs</li>
+                        </ul>
+
+                        <h3>Access Control Problems</h3>
+                        <ul>
+                            <li>Check IP filtering settings</li>
+                            <li>Verify rate limiting configuration</li>
+                            <li>Review security policies</li>
+                            <li>Test access restrictions</li>
+                        </ul>
+                    </section>
+
+                    <section id="performance-problems">
+                        <h2>Performance Problems</h2>
+                        
+                        <h3>High CPU Usage</h3>
+                        <ul>
+                            <li>Check stream count and quality</li>
+                            <li>Monitor system resources</li>
+                            <li>Optimize audio processing</li>
+                            <li>Update hardware drivers</li>
+                        </ul>
+
+                        <h3>Memory Issues</h3>
+                        <ul>
+                            <li>Monitor memory usage</li>
+                            <li>Check for memory leaks</li>
+                            <li>Optimize buffer settings</li>
+                            <li>Restart application periodically</li>
+                        </ul>
+
+                        <h3>Slow Response Times</h3>
+                        <ul>
+                            <li>Check network latency</li>
+                            <li>Optimize server settings</li>
+                            <li>Monitor disk I/O</li>
+                            <li>Update system drivers</li>
+                        </ul>
+                    </section>
+
+                    <section id="audio-issues">
+                        <h2>Audio Issues</h2>
+                        
+                        <h3>Audio Quality Problems</h3>
+                        <ul>
+                            <li>Check audio codec settings</li>
+                            <li>Verify bitrate configuration</li>
+                            <li>Test different audio formats</li>
+                            <li>Monitor audio processing</li>
+                        </ul>
+
+                        <h3>Audio Synchronization</h3>
+                        <ul>
+                            <li>Check buffer settings</li>
+                            <li>Verify sample rate settings</li>
+                            <li>Test audio latency</li>
+                            <li>Optimize audio processing</li>
+                        </ul>
+
+                        <h3>Audio Device Problems</h3>
+                        <ul>
+                            <li>Check audio device drivers</li>
+                            <li>Verify device permissions</li>
+                            <li>Test with different devices</li>
+                            <li>Update audio drivers</li>
+                        </ul>
+                    </section>
+
+                    <section id="log-analysis">
+                        <h2>Log Analysis</h2>
+                        
+                        <h3>Log File Locations</h3>
+                        <ul>
+                            <li><strong>Server Log:</strong> <code>logs/server.log</code></li>
+                            <li><strong>Error Log:</strong> <code>logs/error.log</code></li>
+                            <li><strong>Access Log:</strong> <code>logs/access.log</code></li>
+                            <li><strong>Debug Log:</strong> <code>logs/debug.log</code></li>
+                        </ul>
+
+                        <h3>Common Log Entries</h3>
+                        <pre class="code-block"><code># Server startup
+[INFO] LegacyStream server starting...
+[INFO] Loading configuration from config.ini
+[INFO] SSL certificate loaded successfully
+[INFO] Server started on port 8000
+
+# Error examples
+[ERROR] Failed to bind port 8000: Address already in use
+[ERROR] SSL certificate not found: certs/server.crt
+[ERROR] Stream mount point /live not found
+[ERROR] Audio codec not supported: invalid_codec</code></pre>
+
+                        <h3>Debugging Commands</h3>
+                        <ul>
+                            <li><strong>View recent logs:</strong> <code>tail -f logs/server.log</code></li>
+                            <li><strong>Check for errors:</strong> <code>grep ERROR logs/error.log</code></li>
+                            <li><strong>Monitor access:</strong> <code>tail -f logs/access.log</code></li>
+                            <li><strong>Debug mode:</strong> Enable debug logging in configuration</li>
+                        </ul>
+
+                        <h3>Getting Help</h3>
+                        <ul>
+                            <li><strong>Documentation:</strong> Check the <a href="user-manual.html">User Manual</a></li>
+                            <li><strong>Community:</strong> Visit the project forums</li>
+                            <li><strong>GitHub:</strong> Report issues on GitHub</li>
+                            <li><strong>Email:</strong> support@legacystream.com</li>
+                        </ul>
+                    </section>
                 </div>
             </div>
+        </main>
 
-            <div class="diagnostic">
-                <h4>Check Log Files</h4>
-                <div class="code-block">
-                    # View recent error logs
-                    type "C:\Program Files\LegacyStream\logs\error.log"
-                    
-                    # View server logs
-                    type "C:\Program Files\LegacyStream\logs\server.log"
-                </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-bottom">
+                <p>LegacyStream © 2025 All Rights Reserved.</p>
+                <p>Licensed under MIT License.</p>
             </div>
-
-            <h3>1.2 Common Error Messages</h3>
-            <ul>
-                <li><strong>"Port already in use":</strong> Another application is using the required port</li>
-                <li><strong>"Access denied":</strong> Administrator privileges required</li>
-                <li><strong>"Configuration file not found":</strong> Installation or file corruption issue</li>
-                <li><strong>"SSL certificate error":</strong> Certificate configuration problem</li>
-                <li><strong>"Audio codec not supported":</strong> Missing audio codec or format issue</li>
-            </ul>
-        </div>
-
-        <div class="troubleshooting-section" id="installation-issues">
-            <h2>2. Installation Issues</h2>
-            
-            <div class="issue-category">
-                <h3>2.1 Installation Fails</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Installation process fails or stops unexpectedly.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Run installer as administrator</li>
-                        <li>Disable antivirus temporarily during installation</li>
-                        <li>Check available disk space (minimum 2 GB)</li>
-                        <li>Verify Windows version compatibility (Windows 10/11)</li>
-                        <li>Download installer again to check for corruption</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check available disk space
-                    dir C:\
-                    
-                    # Run installer as administrator
-                    Right-click installer → "Run as administrator"
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>2.2 Missing Dependencies</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Application fails to start due to missing DLLs or dependencies.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Install Visual C++ Redistributable packages</li>
-                        <li>Install Qt runtime libraries</li>
-                        <li>Check PATH environment variable</li>
-                        <li>Reinstall LegacyStream</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Install Visual C++ Redistributable
-                    # Download from Microsoft website
-                    
-                    # Check PATH for Qt libraries
-                    echo %PATH%
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>2.3 Silent Installation Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Silent installation fails or doesn't complete properly.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Use correct command line parameters</li>
-                        <li>Check for existing installations</li>
-                        <li>Run with administrator privileges</li>
-                        <li>Check installation logs</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Correct silent installation command
-                    LegacyStream-Setup.exe /S /D=C:\LegacyStream /L*V install.log
-                    
-                    # Check installation log
-                    type install.log
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="startup-problems">
-            <h2>3. Startup Problems</h2>
-            
-            <div class="issue-category">
-                <h3>3.1 Application Won't Start</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> LegacyStream application fails to launch or crashes immediately.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check Windows Event Viewer for error details</li>
-                        <li>Run application as administrator</li>
-                        <li>Check for conflicting applications</li>
-                        <li>Verify configuration file integrity</li>
-                        <li>Reinstall the application</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check Windows Event Viewer
-                    eventvwr.msc
-                    
-                    # Run as administrator
-                    Right-click LegacyStream → "Run as administrator"
-                    
-                    # Check for conflicting processes
-                    tasklist /FI "IMAGENAME eq LegacyStream.exe"
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>3.2 Port Binding Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Server fails to start due to port binding errors.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check if ports are already in use</li>
-                        <li>Change default ports in configuration</li>
-                        <li>Run as administrator for privileged ports</li>
-                        <li>Check firewall settings</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check port usage
-                    netstat -an | findstr ":8000\|:8001\|:8080"
-                    
-                    # Kill process using port
-                    netstat -ano | findstr :8000
-                    taskkill /PID [PID] /F
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>3.3 Configuration Errors</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Application fails to start due to configuration file errors.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Verify configuration file syntax</li>
-                        <li>Restore default configuration</li>
-                        <li>Check file permissions</li>
-                        <li>Validate configuration parameters</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Backup current configuration
-                    copy "C:\Program Files\LegacyStream\config\legacystream.ini" "legacystream.ini.backup"
-                    
-                    # Restore default configuration
-                    copy "C:\Program Files\LegacyStream\config\legacystream.ini.default" "legacystream.ini"
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="streaming-issues">
-            <h2>4. Streaming Issues</h2>
-            
-            <div class="issue-category">
-                <h3>4.1 Streams Not Working</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Audio streams fail to start or are not accessible.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check audio source configuration</li>
-                        <li>Verify mount point settings</li>
-                        <li>Test audio file formats</li>
-                        <li>Check stream logs</li>
-                        <li>Verify network connectivity</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Test stream URL
-                    curl http://localhost:8000/stream
-                    
-                    # Check stream logs
-                    type "C:\Program Files\LegacyStream\logs\stream.log"
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>4.2 Audio Quality Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Poor audio quality, distortion, or dropouts.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check audio bitrate settings</li>
-                        <li>Verify sample rate configuration</li>
-                        <li>Test different audio codecs</li>
-                        <li>Check system audio settings</li>
-                        <li>Monitor CPU and memory usage</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check audio configuration
-                    [Audio]
-                    Bitrate=128
-                    SampleRate=44100
-                    Channels=2
-                    Codec=mp3
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>4.3 Connection Problems</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Clients cannot connect to streams or experience disconnections.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check firewall settings</li>
-                        <li>Verify network port configuration</li>
-                        <li>Test local and remote connections</li>
-                        <li>Check bandwidth limitations</li>
-                        <li>Monitor connection logs</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Test local connection
-                    telnet localhost 8000
-                    
-                    # Check firewall rules
-                    netsh advfirewall firewall show rule name="LegacyStream"
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="web-interface-problems">
-            <h2>5. Web Interface Problems</h2>
-            
-            <div class="issue-category">
-                <h3>5.1 Web Interface Not Accessible</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Cannot access the web interface at http://localhost:8080.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check if web server is running</li>
-                        <li>Verify port 8080 is not blocked</li>
-                        <li>Check firewall settings</li>
-                        <li>Try different browser</li>
-                        <li>Check web server logs</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Test web interface
-                    curl http://localhost:8080
-                    
-                    # Check web server process
-                    tasklist /FI "IMAGENAME eq LegacyStream.exe"
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>5.2 Authentication Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Cannot login to web interface or authentication fails.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Verify admin credentials</li>
-                        <li>Reset admin password</li>
-                        <li>Check authentication configuration</li>
-                        <li>Clear browser cache and cookies</li>
-                        <li>Try incognito/private browsing</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Reset admin password in configuration
-                    [Admin]
-                    Username=admin
-                    Password=new_password
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>5.3 Real-time Updates Not Working</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Web interface doesn't show real-time updates or statistics.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check WebSocket connection</li>
-                        <li>Verify JavaScript is enabled</li>
-                        <li>Check browser console for errors</li>
-                        <li>Test with different browser</li>
-                        <li>Check WebSocket server logs</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check WebSocket connection
-                    # Open browser developer tools (F12)
-                    # Look for WebSocket connection errors
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="gui-issues">
-            <h2>6. GUI Issues</h2>
-            
-            <div class="issue-category">
-                <h3>6.1 GUI Not Responding</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> GUI interface freezes or becomes unresponsive.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check system resources (CPU, memory)</li>
-                        <li>Restart the application</li>
-                        <li>Update graphics drivers</li>
-                        <li>Check for conflicting applications</li>
-                        <li>Run in compatibility mode</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Check system resources
-                    taskmgr
-                    
-                    # Kill unresponsive process
-                    taskkill /IM LegacyStream.exe /F
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>6.2 Theme Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> GUI themes not working or display incorrectly.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Reset to default theme</li>
-                        <li>Check theme file integrity</li>
-                        <li>Update Qt libraries</li>
-                        <li>Check display settings</li>
-                        <li>Reinstall application</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Reset theme configuration
-                    [GUI]
-                    Theme=default
-                    EnableCustomThemes=false
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="network-problems">
-            <h2>7. Network Problems</h2>
-            
-            <div class="issue-category">
-                <h3>7.1 Firewall Issues</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Network connections blocked by firewall.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Add LegacyStream to firewall exceptions</li>
-                        <li>Configure specific port rules</li>
-                        <li>Check Windows Defender settings</li>
-                        <li>Test with firewall temporarily disabled</li>
-                        <li>Check third-party security software</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Add firewall rule
-                    netsh advfirewall firewall add rule name="LegacyStream" dir=in action=allow protocol=TCP localport=8000,8001,8080
-                    
-                    # Check existing rules
-                    netsh advfirewall firewall show rule name="LegacyStream"
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>7.2 Port Conflicts</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Ports already in use by other applications.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Identify applications using ports</li>
-                        <li>Stop conflicting applications</li>
-                        <li>Change LegacyStream port configuration</li>
-                        <li>Use different port ranges</li>
-                        <li>Check for multiple LegacyStream instances</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Find process using port
-                    netstat -ano | findstr :8000
-                    
-                    # Kill process by PID
-                    taskkill /PID [PID] /F
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="security-issues">
-            <h2>8. Security Issues</h2>
-            
-            <div class="issue-category">
-                <h3>8.1 SSL Certificate Problems</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> SSL certificate errors or secure connections failing.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Verify certificate file paths</li>
-                        <li>Check certificate validity</li>
-                        <li>Update certificate files</li>
-                        <li>Configure Let's Encrypt properly</li>
-                        <li>Test certificate with OpenSSL</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Test SSL certificate
-                    openssl s_client -connect localhost:8443
-                    
-                    # Check certificate file
-                    openssl x509 -in certs/server.crt -text -noout
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>8.2 Authentication Failures</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> User authentication failing or access denied errors.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Reset admin password</li>
-                        <li>Check user permissions</li>
-                        <li>Verify authentication configuration</li>
-                        <li>Check IP filtering settings</li>
-                        <li>Review security logs</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Reset admin password
-                    [Admin]
-                    Username=admin
-                    Password=new_secure_password
-                    
-                    # Check security logs
-                    type "C:\Program Files\LegacyStream\logs\security.log"
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="performance-problems">
-            <h2>9. Performance Problems</h2>
-            
-            <div class="issue-category">
-                <h3>9.1 High CPU Usage</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> LegacyStream using excessive CPU resources.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check audio encoding settings</li>
-                        <li>Reduce number of concurrent streams</li>
-                        <li>Optimize audio quality settings</li>
-                        <li>Check for background processes</li>
-                        <li>Update to latest version</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Monitor CPU usage
-                    tasklist /FI "IMAGENAME eq LegacyStream.exe" /FO TABLE
-                    
-                    # Check performance settings
-                    [Performance]
-                    MaxThreads=4
-                    EnableOptimization=true
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>9.2 Memory Leaks</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Application memory usage increasing over time.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Restart application periodically</li>
-                        <li>Check for memory leaks in logs</li>
-                        <li>Update to latest version</li>
-                        <li>Monitor memory usage</li>
-                        <li>Configure memory limits</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Monitor memory usage
-                    wmic process where name="LegacyStream.exe" get WorkingSetSize
-                    
-                    # Set memory limits
-                    [Memory]
-                    MaxMemoryUsage=512MB
-                    EnableGarbageCollection=true
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="audio-issues">
-            <h2>10. Audio Issues</h2>
-            
-            <div class="issue-category">
-                <h3>10.1 No Audio Output</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Streams have no audio or silent output.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Check audio source configuration</li>
-                        <li>Verify audio file integrity</li>
-                        <li>Test different audio formats</li>
-                        <li>Check system audio settings</li>
-                        <li>Verify audio codec support</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Test audio file
-                    ffprobe audio_file.mp3
-                    
-                    # Check audio configuration
-                    [Audio]
-                    InputDevice=default
-                    OutputDevice=default
-                    Volume=100
-                </div>
-            </div>
-
-            <div class="issue-category">
-                <h3>10.2 Audio Quality Problems</h3>
-                
-                <div class="error">
-                    <strong>Problem:</strong> Poor audio quality, distortion, or artifacts.
-                </div>
-                
-                <div class="solution">
-                    <strong>Solutions:</strong>
-                    <ol>
-                        <li>Increase audio bitrate</li>
-                        <li>Check sample rate settings</li>
-                        <li>Test different audio codecs</li>
-                        <li>Verify audio hardware</li>
-                        <li>Check for interference</li>
-                    </ol>
-                </div>
-                
-                <div class="code-block">
-                    # Optimize audio settings
-                    [Audio]
-                    Bitrate=192
-                    SampleRate=48000
-                    Channels=2
-                    Codec=aac
-                    Quality=high
-                </div>
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="log-analysis">
-            <h2>11. Log Analysis</h2>
-            
-            <h3>11.1 Log File Locations</h3>
-            <ul>
-                <li><strong>Server Log:</strong> <code>logs/server.log</code></li>
-                <li><strong>Error Log:</strong> <code>logs/error.log</code></li>
-                <li><strong>Access Log:</strong> <code>logs/access.log</code></li>
-                <li><strong>Debug Log:</strong> <code>logs/debug.log</code></li>
-                <li><strong>Security Log:</strong> <code>logs/security.log</code></li>
-            </ul>
-
-            <h3>11.2 Common Log Messages</h3>
-            <div class="code-block">
-                # Error messages to look for
-                ERROR: Port 8000 already in use
-                ERROR: SSL certificate not found
-                ERROR: Audio codec not supported
-                ERROR: Configuration file invalid
-                WARNING: High memory usage detected
-                INFO: Stream started successfully
-            </div>
-
-            <h3>11.3 Log Analysis Tools</h3>
-            <div class="code-block">
-                # Search for errors
-                findstr /i "error" logs\*.log
-                
-                # Search for warnings
-                findstr /i "warning" logs\*.log
-                
-                # Monitor logs in real-time
-                powershell "Get-Content logs\server.log -Wait"
-            </div>
-        </div>
-
-        <div class="troubleshooting-section" id="advanced-troubleshooting">
-            <h2>12. Advanced Troubleshooting</h2>
-            
-            <h3>12.1 Debug Mode</h3>
-            <p>Enable debug mode for detailed troubleshooting:</p>
-            <div class="code-block">
-                # Enable debug logging
-                [Logging]
-                LogLevel=debug
-                EnableDebugOutput=true
-                LogToFile=true
-                LogToConsole=true
-            </div>
-
-            <h3>12.2 Performance Profiling</h3>
-            <p>Use built-in performance monitoring:</p>
-            <div class="code-block">
-                # Enable performance monitoring
-                [Performance]
-                EnableProfiling=true
-                ProfileInterval=1000
-                LogPerformanceMetrics=true
-            </div>
-
-            <h3>12.3 Network Diagnostics</h3>
-            <div class="code-block">
-                # Test network connectivity
-                ping localhost
-                telnet localhost 8000
-                netstat -an | findstr ":8000"
-                
-                # Test external connectivity
-                ping google.com
-                nslookup legacystream.com
-            </div>
-
-            <h3>12.4 System Diagnostics</h3>
-            <div class="code-block">
-                # Check system information
-                systeminfo
-                
-                # Check disk space
-                dir C:\
-                
-                # Check memory usage
-                wmic OS get TotalVisibleMemorySize,FreePhysicalMemory
-            </div>
-        </div>
-
-        <div class="troubleshooting-section">
-            <h2>Getting Help</h2>
-            <p>If you're still experiencing issues after trying these solutions:</p>
-            <ul>
-                <li><strong>Community Forum:</strong> <a href="https://forum.legacystream.com">https://forum.legacystream.com</a></li>
-                <li><strong>GitHub Issues:</strong> <a href="https://github.com/legacystream/issues">https://github.com/legacystream/issues</a></li>
-                <li><strong>Email Support:</strong> support@legacystream.com</li>
-                <li><strong>Documentation:</strong> <a href="https://legacystream.com/docs">https://legacystream.com/docs</a></li>
-            </ul>
-            
-            <div class="warning">
-                <strong>Note:</strong> When reporting issues, please include:
-                <ul>
-                    <li>LegacyStream version</li>
-                    <li>Windows version</li>
-                    <li>Error messages and logs</li>
-                    <li>Steps to reproduce the issue</li>
-                    <li>System specifications</li>
-                </ul>
-            </div>
-        </div>
+        </footer>
     </div>
 
     <script src="assets/js/main.js"></script>
